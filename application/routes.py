@@ -2,8 +2,11 @@ from flask import current_app as app
 from flask import render_template, flash, redirect
 from application.forms import LoginForm
 
-# from .mentor_view import MentorApi
-# app.register_blueprint(MentorApi, url_prefix='/mentor')
+from .mentor_view import MentorApi
+app.register_blueprint(MentorApi, url_prefix='/mentor')
+
+# from .admin_view import AdminApi
+# app.register_blueprint(AdminApi, url_prefix='/admin')
 
 
 
@@ -14,12 +17,8 @@ def index():
     user = {'username': 'Miguel'}
     posts = [
         {
-            'author': {'username': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
+            'author': {'username': 'John Doe'},
+            'body': 'Welcome to your Mentor Portal!'
         }
     ]
     return render_template('index.html', title='Home', user=user, posts=posts)
