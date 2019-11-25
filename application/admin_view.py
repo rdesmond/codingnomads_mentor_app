@@ -8,19 +8,10 @@ AdminApi = Blueprint('admin_api', __name__)
 # Mentor list overview
 
 # Assign student to mentor page
-@AdminApi.route()
+@AdminApi.route('<admin_id>', methods=['POST'])
 def assign_student():
-    user_id = str(current_user.get_id())
-    messagetext = request.json["content"]
+    
 
-    try:
-        newmessage = Message.from_messages(messagetext, chat_id, user_id)
-    except KeyError as e:
-        return jsonify(f'Missing key: {e.args[0]}'), 400
-
-    db.session.add(newmessage)
-    db.session.commit()
-    return jsonify(newmessage.to_messages()), 200
 # Assigned students list overview
 
 # Mentor detail page. Log of support given
