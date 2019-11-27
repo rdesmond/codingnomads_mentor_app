@@ -15,12 +15,12 @@ def get_mentor_students(mentor_id):
     
     return jsonify([student.from_dict() for student in students])
 
-@Mentor.route('/<student_id>', methods=['GET'])
+@Mentor.route('/<mentor_id>/students/<student_id>', methods=['GET'])
 # Student Detail Page. GET from support logs
-def get_student_details(student_id):
+def get_student_details(mentor_id, student_id):
     pass
 
-# Mentor Detail Page. GET from mentors
+# Mentor Detail Page. GET from mentors. 
 @Mentor.route('/<mentor_id>', methods=['GET'])
 def get_mentor_details(mentor_id):
     pass

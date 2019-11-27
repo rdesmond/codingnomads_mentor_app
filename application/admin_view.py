@@ -6,33 +6,33 @@ from .models import User, Mentor
 Admin = Blueprint('admin', __name__)
 
 # Assigned students list overview. GET from student_mentors
-@Admin.route('/<admin_id>', methods=['GET'])
+@Admin.route('/<admin_id>/students', methods=['GET'])
 def get_student_mentors(admin_id):
     pass
 
 # Assign mentors and students. POST to student_mentors
-@Admin.route('/<admin_id>', methods=['POST'])
+@Admin.route('/<admin_id>/students', methods=['POST'])
 def assign_student_mentors(admin_id):
     pass
 
 # Mentor detail page. GET from support_logs
-@Admin.route('/<mentor_id', methods=['GET'])
-def get_mentor_details(mentor_id):
+@Admin.route('/<admin_id>/mentors/<mentor_id>', methods=['GET'])
+def get_mentor_details(admin_id, mentor_id):
     pass
 
 # Student detail page. GET from support_logs
-@Admin.route('/<student_id>', methods=['GET'])
-def get_student_details(student_id):
+@Admin.route('/<admin_id>/students/<student_id>', methods=['GET'])
+def get_student_details(admin_id, student_id):
     pass
 
 # Mentored list stats.  API request / GET request from students table.
-@Admin.route('/analytics/mentored', methods=['GET'])
-def get_student_stats():
+@Admin.route('<admin_id>/analytics/mentored', methods=['GET'])
+def get_student_stats(admin_id):
     pass
 
 # Non-mentored student list stats. API request / GET request from students table.
-@Admin.route('/analytics/non-mentored', methods=['GET'])
-def get_non_student_stats():
+@Admin.route('<admin_id>/analytics/non-mentored', methods=['GET'])
+def get_non_student_stats(admin_id):
     pass
 
 

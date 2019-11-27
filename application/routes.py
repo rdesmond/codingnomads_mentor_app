@@ -2,11 +2,11 @@ from flask import current_app as app
 from flask import render_template, flash, redirect
 from application.forms import LoginForm
 
-from .mentor_view import Mentor
-app.register_blueprint(Mentor, url_prefix='/mentor')
+# from .mentor_view import Mentor
+# app.register_blueprint(Mentor, url_prefix='/mentor')
 
-from .admin_view import Admin
-app.register_blueprint(Admin, url_prefix='/admin')
+# from .admin_view import Admin
+# app.register_blueprint(Admin, url_prefix='/admin')
 
 @app.route('/')
 @app.route('/index')

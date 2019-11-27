@@ -15,25 +15,25 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True, nullable=False)
-    email = db.Column(db.String(120), index=True, unique=True)
+    email = db.Column(db.String(120), nullable=False)
     password_hash = db.Column(db.String(128))
     first_name = db.Column(db.String(128))
-    created_at = db.Column(db.DateTime, default=func.utcnow())
-    updated_at = db.Column(db.DateTime, default=func.utcnow(), onupdate=func.utcnow())
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     telephone = db.Column(db.String(128))
     learning_platform = db.Column(db.String(128))
     forum = db.Column(db.String(128))
     slack = db.Column(db.String(128))
     timezone = db.Column(db.String(128))
     bio = db.Column(db.String(500))
-    role = db.Column(db.String(500), default='student')
+    role = db.Column(db.String(500), server_default='student')
 
 
     # 1-1 relationship between users and mentors
-    mentor = db.relationship('Mentor', uselist=False, back_populates='users')
+    mentor = db.relationship('Mentor', backref=db.backref('user', uselist=False))
 
     # 1-1 relationship between users and students
-    student = db.relationship('Student', uselist=False, back_populates='users')
+    student = db.relationship('Student', backref=db.backref('user', uselist=False)) 
 
     # Many to many relationship between users and courses
     user_courses = db.relationship('Course', secondary='user_courses', backref=db.backref('users', lazy='dynamic'))
@@ -105,14 +105,11 @@ class Mentor(db.Model):
     rating = db.Column(db.Integer) # Need to think about how we calculate this
     is_admin = db.Column(db.Boolean)
 
-    # 1 to 1 relationship between users and mentors
-    user = db.relationship('User', back_populates='mentors')
+    # 1-Many relationship between mentors and students
+    students = db.relationship('Student', backref='mentor')
 
-    # Many to 1 relationship between mentors and students 
-    student = db.relationship('Student', back_populates='mentors', uselist=False)
-
-    # 1 to Many relationship between mentors and support_logs
-    support_logs = db.relationship('SupportLog', back_populates='mentors', uselist=False)
+    def __repr__(self):
+        return '<Mentor id: {}>'.format(self.id)    
 
     @staticmethod
     def from_dict(dict):
@@ -156,14 +153,8 @@ class Student(db.Model):
     end_date = db.Column(db.DateTime(timezone=True))
     mentor_id = db.Column(db.Integer, db.ForeignKey(Mentor.id))
 
-    # 1 to 1 relationship between users and students
-    user = db.relationship('User', back_populates='students')
-
-    # Many to 1 relationship between students and mentors
-    mentor = db.relationship('Mentor', back_populates='students')
-
-    # 1 to Many relationship between students and support_logs
-    support_logs = db.relationship('SupportLog', back_populates='students', uselist=False)
+    def __repr__(self):
+        return '<Student id: {}>'.format(self.id)    
 
     @staticmethod
     def from_dict(dict):
@@ -196,6 +187,9 @@ class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     course_name = db.Column(db.String(128))
     is_active = db.Column(db.Boolean)
+
+    def __repr__(self):
+        return '<Course id: {}>'.format(self.id)    
 
 
     @staticmethod
@@ -230,10 +224,13 @@ class SupportLog(db.Model):
     mentor_assesment = db.Column(db.Integer) # Struggle factor from 1-5. Can use this for 
 
     # Many to 1 relationship for support_logs and mentors
-    mentor = db.relationship('Mentor', back_populates='support_log')
+    mentor = db.relationship('Mentor', backref='support_log')
 
     # Many to 1 relationship for support_logs and students
-    student = db.relationship('Student', back_populates='support_log')
+    student = db.relationship('Student', backref='support_log')
+
+    def __repr__(self):
+        return '<SupportLog id: {}>'.format(self.id)    
 
 
     @staticmethod
@@ -268,10 +265,8 @@ class TimeZone(db.Model):
     timezone = db.Column(db.String(128), primary_key=True)
     time_difference = db.Column(db.Integer)
 
-
 # Association able betyween courses and users
 user_courses = db.Table('user_courses',
                  db.Column('user_id', db.ForeignKey('users.id')),
                  db.Column('course_id', db.ForeignKey('courses.id'))
 )
-    
