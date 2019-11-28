@@ -219,7 +219,8 @@ class SupportLog(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     mentor_id = db.Column(db.Integer, db.ForeignKey(Mentor.id))
     student_id = db.Column(db.Integer, db.ForeignKey(Student.id))
-    time_spent = db.Column(db.Integer)
+    support_type = db.Column(db.String(50), server_default='call')
+    time`_spent = db.Column(db.Integer)
     notes = db.Column(db.String(500))
     mentor_assesment = db.Column(db.Integer) # Struggle factor from 1-5. Can use this for 
 
