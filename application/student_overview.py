@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
 from . import db
-from .models import User, Mentor, Student, Course, SupportLog, user_courses
+from .models import User, Mentor, Student, Course, SupportLog, UserCourse
 
 StudentOverview = Blueprint('student_overview', __name__)
 
@@ -9,7 +9,7 @@ StudentOverview = Blueprint('student_overview', __name__)
 @StudentOverview.route('/<mentor_id>', methods=['GET'])
 def get_student_overview(mentor_id):
     # dummy data
-    student_overview = user_courses.query.join(Student).filter(Student.mentor_id==mentor_id)
+    student_overview = UserCourse.query.join(Student).filter(Student.mentor_id==mentor_id)
 
  
 
@@ -20,7 +20,7 @@ def log_support(mentor_id, student_id):
     # dummy data
     data = {
         'mentor_id': '1',
-        'student_id': '2'
+        'student_id': '2',
         'support_type': 'call',
         'created_at': '2019-11-28 00:00:00',
         'time_spent': '30',

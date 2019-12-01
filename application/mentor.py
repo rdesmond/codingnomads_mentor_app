@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
 from . import db
-from .models import User, Mentor, Student, Course, SupportLog, user_courses
+from .models import User, Mentor, Student, Course, SupportLog, UserCourse
 
 Mentor = Blueprint('mentor', __name__)
 

@@ -1,8 +1,9 @@
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta 
 from sqlalchemy import Column, DateTime, event, CheckConstraint
 from sqlalchemy.sql import func
+from sqlalchemy.ext.associationproxy import association_proxy
 
 class User(db.Model):
     """
@@ -18,6 +19,7 @@ class User(db.Model):
     email = db.Column(db.String(120), nullable=False)
     password_hash = db.Column(db.String(128))
     first_name = db.Column(db.String(128))
+    last_name = db.Column(db.String(128))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     telephone = db.Column(db.String(128))
@@ -36,7 +38,10 @@ class User(db.Model):
     student = db.relationship('Student', backref=db.backref('user', uselist=False)) 
 
     # Many to many relationship between users and courses
-    user_courses = db.relationship('Course', secondary='user_courses', backref=db.backref('users', lazy='dynamic'))
+    course = db.relationship('Course', secondary='user_courses', backref=db.backref('users', lazy='dynamic'))
+
+
+    # user_courses = db.relationship('Course', secondary='user_courses', backref=db.backref('users', lazy='dynamic'))
 
     def __repr__(self):
         return '<User {}>'.format(self.username)    
@@ -259,15 +264,21 @@ class SupportLog(db.Model):
             'mentor_assesment': self.mentor_assesment
         }
 
-class TimeZone(db.Model):
-
-    __tablename__ = 'timezones'
-
-    timezone = db.Column(db.String(128), primary_key=True)
-    time_difference = db.Column(db.Integer)
-
 # Association able betyween courses and users
-user_courses = db.Table('user_courses',
-                 db.Column('user_id', db.ForeignKey('users.id')),
-                 db.Column('course_id', db.ForeignKey('courses.id'))
-)
+
+class UserCourse(db.Model):
+
+    __tablename__ = 'user_courses'
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), primary_key=True)
+    is_completed = db.Column(db.Boolean, server_default='False')
+
+    user = db.relationship('User', backref=db.backref('user_courses', passive_deletes='all'))
+    course = db.relationship('Course', backref=db.backref('user_courses', passive_deletes='all'))
+
+# user_courses = db.Table('user_courses',
+#                  db.Column('user_id', db.ForeignKey('users.id')),
+#                  db.Column('course_id', db.ForeignKey('courses.id')),
+#                  db.Column('is_completed', db.Boolean, server_default=False)
+# )
