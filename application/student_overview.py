@@ -8,8 +8,11 @@ StudentOverview = Blueprint('student_overview', __name__)
 # Returns students for a given mentor and some stats (time since last login, course completion percentage, time since last contact)
 @StudentOverview.route('/<mentor_id>', methods=['GET'])
 def get_student_overview(mentor_id):
-    # dummy data
     student_overview = UserCourse.query.join(Student).filter(Student.mentor_id==mentor_id)
+
+    if student_overview is None:
+        return 'not found', 404
+    return jsonify(student_overview.to_dict()), 200
 
  
 

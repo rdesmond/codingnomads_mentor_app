@@ -2,8 +2,7 @@ from crontab import CronTab
 
 
 # Command for importing users from the Moodle DB
-response = request.get()
-my_command = 
+response = request.get('URL')
 
 # Accessing cron
 cron = CronTab(user='roger')

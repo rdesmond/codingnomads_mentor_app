@@ -10,26 +10,29 @@ from . import db
 # Get all users created after max_date
 # response = requests.get('URL')
 
-# Inputting dummy data
-users = {
-    {
-        'id':'1',
-        'username': 'roger',
-        'email': 'rogerpan95@gmail.com',
-        'first_name': 'Roger',
-        'last_name': 'Pan',
-        'created_at': '2019-11-29 00:00:00',
-        'telephone': '+447791109641',
-        'learning_platform': 'roger',
-        'forum': 'roger',
-        'slack': 'roger',
-        'timezone': 'UK/London',
-        'bio': 'My name is Roger',
-        'role': 'Student'
-    }
-}
+# Dummy data
+data = '
+    "4": {
+    "currentlogin": 1568128077,
+    "email": "cadenmackenzie@gmail.com",
+    "firstaccess": 1538401309,
+    "firstname": "Caden",
+    "id": 4,
+    "lastaccess": 1568128139,
+    "lastlogin": 1566185569,
+    "lastname": "Mackenzie",
+    "mentor": true,
+    "roles": [
+        "student",
+        "manager",
+        "editingteacher",
+        "coursecreator"
+    ],
+    "student": true,
+    "username": "caden"
+},'
 
-# Creates a new user in the users table. Also creates a new row in the student or mentors table depending on their role. 
+# IF existis update / insert. Creates a new user in the users table. Also creates a new row in the student or mentors table depending on their role. 
 for row in users:
     user = User.from_dict(user)
     db.session.add(user)
