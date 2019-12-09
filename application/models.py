@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import Column, DateTime, event, CheckConstraint
 from sqlalchemy.sql import func
 from sqlalchemy.ext.associationproxy import association_proxy
+from geoip import geolite2
 
 class User(db.Model):
     """
@@ -11,8 +12,8 @@ class User(db.Model):
     """
     __tablename__ = 'users'
 
-    # Adding a constraint for the role column
-    __table_args__ = (CheckConstraint("role::text = ANY (ARRAY['student'::character varying, 'mentor'::character varying]::text[])", name="check_roles"),)
+    # # Adding a constraint for the role column
+    # __table_args__ = (CheckConstraint("role::text = ANY (ARRAY['student'::character varying, 'mentor'::character varying]::text[])", name="check_roles"),)
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True, nullable=False)
@@ -20,6 +21,11 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))
     first_name = db.Column(db.String(128))
     last_name = db.Column(db.String(128))
+    first_access = db.Column(db.DateTime)
+    last_access = db.Column(db.DateTime)
+    last_login = db.Column(db.DateTime)
+    time_created = db.Column(db.DateTime)
+    time_modified = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     telephone = db.Column(db.String(128))
@@ -28,8 +34,8 @@ class User(db.Model):
     slack = db.Column(db.String(128))
     timezone = db.Column(db.String(128))
     bio = db.Column(db.String(500))
-    role = db.Column(db.String(500), server_default='student')
-
+    is_student = db.Column(db.Boolean)
+    is_mentor = db.Column(db.Boolean)
 
     # 1-1 relationship between users and mentors
     mentor = db.relationship('Mentor', backref=db.backref('user', uselist=False))
@@ -56,20 +62,18 @@ class User(db.Model):
     def from_dict(dict):
         return User(
                id = dict['id'], 
-               username = dict['username'],
+               username = dict['userName'],
                email = dict['email'],
-               password_hash = dict['password_hash'],
-               first_name = dict['first_name'],
-               last_name = dict['last_name'],
-               created_at = dict['created_at'],
-               updated_at = dict['updated_at'],
-               telephone = dict['telephone'],
-               learning_platform = dict['learning_platform'],
-               forum = dict['forum'],
-               slack = dict['slack'],
-               timezone = dict['timezone'],
-               bio = dict['bio'],
-               role = dict['role']
+               first_name = dict['firstName'],
+               last_name = dict['lastName'],
+               first_access = dict['firstAccess'],
+               last_access = dict['lastAccess'],
+               last_login = dict['lastLogin'],
+               time_created = dict['timeCreated'],
+               time_modified = dict['timeModified'],
+               timezone = geolite2.lookup(dict['lastIP']).timezone,
+               is_student = True if dict['student'] == 'true' else False,
+               is_mentor = True if dict['mentor'] == 'true' else False,
         )
     
     def to_dict(self):
@@ -80,6 +84,11 @@ class User(db.Model):
             'password_hash': self.password_hash,
             'first_name': self.first_name,
             'last_name': self.last_name,
+            'first_access': self.first_access,
+            'last_access': self.last_access,
+            'last_login': self.last_login,
+            'time_created': self.time_created,
+            'time_modified':self.time_modified,
             'created_at': self.created_at,
             'updated_at': self.updated_at,
             'telephone': self.telephone,
@@ -88,7 +97,9 @@ class User(db.Model):
             'slack': self.slack,
             'timezone': self.timezone,
             'bio': self.bio,
-            'role': self.role
+            'role': self.role,
+            'is_student': self.is_student,
+            'is_mentor': self.is_mentor
         }
 
 class Mentor(db.Model):
@@ -105,8 +116,8 @@ class Mentor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     max_students = db.Column(db.Integer)
-    current_students = db.Column(db.Integer) # API call / update query
-    completed_students = db.Column(db.Integer) # API call / update query
+    current_students = db.Column(db.Integer) 
+    completed_students = db.Column(db.Integer) 
     rating = db.Column(db.Integer) # Need to think about how we calculate this
     is_admin = db.Column(db.Boolean)
 
@@ -119,13 +130,12 @@ class Mentor(db.Model):
     @staticmethod
     def from_dict(dict):
         return Mentor(
-            id = dict['id'],
-            user_id = dict['user_id'],
+            user_id = dict['id'],
             max_students = dict['max_students'],
             current_students = dict['current_students'],
             completed_students = dict['completed_students'],
             rating = dict['rating'],
-            is_admin = dict['is_admin']
+            is_admin = dict['is_admin'] # Need to modify criteria for this
         )
     
     def to_dict(self):
@@ -154,8 +164,8 @@ class Student(db.Model):
     goals = db.Column(db.String(250))
     preferred_learning = db.Column(db.String(128))
     status = db.Column(db.String(128))
-    start_date = db.Column(db.DateTime(timezone=True))
-    end_date = db.Column(db.DateTime(timezone=True))
+    start_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime)
     mentor_id = db.Column(db.Integer, db.ForeignKey(Mentor.id))
 
     def __repr__(self):
@@ -191,6 +201,7 @@ class Course(db.Model):
     __tablename__ = 'courses'
     id = db.Column(db.Integer, primary_key=True)
     course_name = db.Column(db.String(128))
+    end_date = db.Column(db.DateTime)
     is_active = db.Column(db.Boolean)
 
     def __repr__(self):
