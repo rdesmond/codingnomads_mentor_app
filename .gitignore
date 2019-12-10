@@ -1,2 +1,4 @@
 # Don't track the content fo these folders
-__pycache__
+__pycache__/
+*.pyc
+.vscode/

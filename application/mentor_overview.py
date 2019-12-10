@@ -12,8 +12,7 @@ MentorOverview = Blueprint('mentor_overview', __name__)
 def assign_student_mentor():
 
     # Query to show students and all their assigned mentors
-    student_mentors_query =
-    """
+    student_mentors_query = """
     SELECT
       s.id AS student_id
      ,us.first_name AS student_first_name

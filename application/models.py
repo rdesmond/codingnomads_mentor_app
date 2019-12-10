@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import Column, DateTime, event, CheckConstraint
 from sqlalchemy.sql import func
 from sqlalchemy.ext.associationproxy import association_proxy
-from geoip import geolite2
+#from geoip import geolite2
 
 class User(db.Model):
     """
@@ -71,7 +71,8 @@ class User(db.Model):
                last_login = dict['lastLogin'],
                time_created = dict['timeCreated'],
                time_modified = dict['timeModified'],
-               timezone = geolite2.lookup(dict['lastIP']).timezone,
+               #timezone = geolite2.lookup(dict['lastIP']).timezone,
+               timezone = 'UTC',  # TODO: remove when geoip is working
                is_student = True if dict['student'] == 'true' else False,
                is_mentor = True if dict['mentor'] == 'true' else False,
         )
