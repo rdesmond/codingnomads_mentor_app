@@ -17,14 +17,15 @@ app.register_blueprint(MentorOverview, url_prefix='/mentor/overview')
 @app.route('/')
 @app.route('/index')
 def index():
-    user = {'username': 'Miguel'}
-    posts = [
-        {
-            'author': {'username': 'John Doe'},
-            'body': 'Welcome to your Mentor Portal!'
+    content = {
+        'username': 'Miguel',
+        'message': 'Welcome to your Mentor Portal!',
+        'mentors': [
+            {'username': 'John Doe'},
+            {'username': 'Roger Doe'}
+            ],
         }
-    ]
-    return render_template('index.html', title='Home', user=user, posts=posts)
+    return render_template('index.html', title='Home', **content)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

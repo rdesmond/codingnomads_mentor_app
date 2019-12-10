@@ -33,7 +33,7 @@ def log_support_student(student_id):
 
     support_log = SupportLog(
         mentor_id=mentor_id, student_id=student_id, support_type=support_type,
-         time_spent=time_spent, notes=notes, mentor_assesment=mentor_assesment)
+        time_spent=time_spent, notes=notes, mentor_assesment=mentor_assesment)
     db.session.add(support_log)
     db.session.commit()
     return "Success"
