@@ -37,10 +37,12 @@ def assign_student_mentor():
 
     # Drop down of all students and their courses
     students = Student.query.join(UserCourse).join(Course.id==UserCourse.course_id).join(User.id==Student.user_id)
+    students = [row.to_dict() for row in students]
 
 
     # Drop down of all mentors and the courses
     mentors = Mentor.query.join(UserCourse).join(Course.id==UserCourse.course_id),join(User.id==Mentor.user_id)
+    mentors = [row.to_dict for row in mentors]
 
     # Gets the given student_id from the database
     student = Student.query.filter_by(id==request.form.student_id.data).first()
