@@ -1,0 +1,21 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+flask = "*"
+flask-sqlalchemy = "*"
+flask-login = "*"
+flask-wtf = "*"
+requests = "*"
+pytz = "*"
+psycopg2 = "*"
+crontab = "*"
+python-geoip = "*"
+python-geoip-geolite2 = "*"
+
+[requires]
+python_version = "3.7"
