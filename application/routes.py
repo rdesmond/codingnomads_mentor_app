@@ -1,7 +1,8 @@
 from flask import current_app as app
 from flask import render_template, flash, redirect
 from application.forms import LoginForm
-
+from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy
 from application.student_overview import StudentOverview
 app.register_blueprint(StudentOverview, url_prefix='/student/overview')
 

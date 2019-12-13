@@ -5,6 +5,7 @@ from sqlalchemy import Column, DateTime, event, CheckConstraint
 from sqlalchemy.sql import func
 from sqlalchemy.ext.associationproxy import association_proxy
 from geoip import geolite2
+from flask_sqlalchemy import SQLAlchemy
 
 class User(db.Model):
     """
@@ -59,24 +60,24 @@ class User(db.Model):
         return check_password_hash(self.password_hash, password)
 
     @staticmethod
-    def from_dict(dict):
+    def from_json(json):
         return User(
-               id = dict['id'], 
-               username = dict['userName'],
-               email = dict['email'],
-               first_name = dict['firstName'],
-               last_name = dict['lastName'],
-               first_access = dict['firstAccess'],
-               last_access = dict['lastAccess'],
-               last_login = dict['lastLogin'],
-               time_created = dict['timeCreated'],
-               time_modified = dict['timeModified'],
-               timezone = geolite2.lookup(dict['lastIP']).timezone,
-               is_student = True if dict['student'] == 'true' else False,
-               is_mentor = True if dict['mentor'] == 'true' else False,
+               id = json['id'], 
+               username = json['userName'],
+               email = json['email'],
+               first_name = json['firstName'],
+               last_name = json['lastName'],
+               first_access = json['firstAccess'],
+               last_access = json['lastAccess'],
+               last_login = json['lastLogin'],
+               time_created = json['timeCreated'],
+               time_modified = json['timeModified'],
+               timezone = geolite2.lookup(json['lastIP']).timezone,
+               is_student = json['student'],
+               is_mentor = json['mentor'],
         )
     
-    def to_dict(self):
+    def to_json(self):
         return {
             'id': self.id,
             'username': self.username,
@@ -288,8 +289,3 @@ class UserCourse(db.Model):
     user = db.relationship('User', backref=db.backref('user_courses', passive_deletes='all'))
     course = db.relationship('Course', backref=db.backref('user_courses', passive_deletes='all'))
 
-# user_courses = db.Table('user_courses',
-#                  db.Column('user_id', db.ForeignKey('users.id')),
-#                  db.Column('course_id', db.ForeignKey('courses.id')),
-#                  db.Column('is_completed', db.Boolean, server_default=False)
-# )
