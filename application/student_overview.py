@@ -1,25 +1,23 @@
 from flask import Blueprint, jsonify, request
-
 from . import db
 from .models import User, Mentor, Student, Course, SupportLog, UserCourse
 
 StudentOverview = Blueprint('student_overview', __name__)
 
+
 # Returns students for a given mentor and some stats (time since last login, course completion percentage, time since last contact)
 @StudentOverview.route('/<mentor_id>', methods=['GET'])
 def get_student_overview(mentor_id):
-    student_overview = UserCourse.query.join(Student).filter(Student.mentor_id==mentor_id)
+    student_overview = UserCourse.query.join(Student).filter(Student.mentor_id == mentor_id)
 
     if student_overview is None:
         return 'not found', 404
     return jsonify(student_overview.to_dict()), 200
 
- 
 
 # Log support for a given student
 @StudentOverview.route('/<mentor_id>/support/<student_id>', methods=['POST'])
 def log_support(mentor_id, student_id):
-
     # dummy data
     data = {
         'mentor_id': '1',
@@ -36,6 +34,13 @@ def log_support(mentor_id, student_id):
     db.session.commit()
 
 
+# View Logs for a given student
+@StudentOverview.route('/logs/<mentor_id>/<student_id>', methods=['GET'])
+def view_support_log(mentor_id, student_id):
+    logs = SupportLog.query.filter(SupportLog.mentor_id == mentor_id).filter(SupportLog.student_id == student_id).all()
+    if logs is None:
+        return 'not found', 404
+    else:
+        formatted_logs = [log.to_dict() for log in logs]
 
-
-
+    return jsonify(formatted_logs), 200
