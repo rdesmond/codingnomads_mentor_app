@@ -2,18 +2,17 @@ from flask import Blueprint, jsonify, request
 
 from . import db
 from .models import User, Mentor, Student, Course, SupportLog, UserCourse
-from .models import Student as StudentModel
 
 from .utils import utc_to_local
 
-Student = Blueprint('student', __name__)
+StudentBlueprint = Blueprint('student', __name__)
 
 # Returns details about a given student including name ,goals, availability, local time, progress, notes and support log
-@Student.route('/<student_id>', methods=['GET'])
+@StudentBlueprint.route('/<student_id>', methods=['GET'])
 def get_student(student_id):
 
     # Get info from DB
-    student = StudentModel.query.filter(StudentModel.id==student_id).first()
+    student = Student.query.filter(Student.id==student_id).first()
 
     if student is None:
         return 'student not found', 404
@@ -21,7 +20,7 @@ def get_student(student_id):
 
 
 # Log support for a given student
-@Student.route('/support/<student_id>', methods=['POST'])
+@StudentBlueprint.route('/support/<student_id>', methods=['POST'])
 def log_support_student(student_id):
 
     # Create a row in the support log table

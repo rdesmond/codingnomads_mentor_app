@@ -1,16 +1,17 @@
 from flask import current_app as app
 from flask import render_template, flash, redirect
+from flask_login import login_user
 from application.forms import LoginForm
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
 from application.student_overview import StudentOverview
 app.register_blueprint(StudentOverview, url_prefix='/student/overview')
 
-from application.student import Student
-app.register_blueprint(Student, url_prefix='/student')
+from application.student import StudentBlueprint
+app.register_blueprint(StudentBlueprint, url_prefix='/student')
 
-from application.mentor import Mentor
-app.register_blueprint(Mentor, url_prefix='/mentor')
+from application.mentor import MentorBlueprint
+app.register_blueprint(MentorBlueprint, url_prefix='/mentor')
 
 from application.mentor_overview import MentorOverview
 app.register_blueprint(MentorOverview, url_prefix='/mentor/overview')
