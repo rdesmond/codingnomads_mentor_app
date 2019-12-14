@@ -11,6 +11,11 @@ app = Flask(__name__, instance_relative_config=False)
 login = LoginManager(app)
 login.login_view = 'login'
 
+@login.user_loader
+def load_user(user_id):
+    #return User.get(user_id)
+    return None
+
 def create_app():
     """Construct the core application."""
     app.config.from_object(DevelopmentConfig)
