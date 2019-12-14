@@ -14,7 +14,7 @@ login.login_view = 'login'
 @login.user_loader
 def load_user(user_id):
     #return User.get(user_id)
-    return None
+    return None  # TODO: change this for proper auth handling
 
 def create_app():
     """Construct the core application."""
