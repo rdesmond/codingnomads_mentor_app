@@ -1,23 +1,41 @@
 from flask import Blueprint, jsonify, request
+from sqlalchemy import text
 
 from . import db
 from .models import User, Mentor, Student, Course, SupportLog, UserCourse
 
-StudentOverview = Blueprint('student_overview', __name__)
+StudentOverviewBlueprint = Blueprint('student_overview', __name__)
 
 # Returns students for a given mentor and some stats (time since last login, course completion percentage, time since last contact)
-@StudentOverview.route('/<mentor_id>', methods=['GET'])
+@StudentOverviewBlueprint.route('/<mentor_id>', methods=['GET'])
 def get_student_overview(mentor_id):
-    student_overview = UserCourse.query.join(Student).filter(Student.mentor_id==mentor_id)
+    query = """
+SELECT
+  s.user_id
+ ,uc.course_id
+ ,c.course_name
+FROM
+  students AS s
+LEFT JOIN
+  user_courses AS uc
+ON
+  uc.user_id = s.user_id
+LEFT JOIN
+  courses AS c
+ON
+  c.id = uc.course_id
+"""
+    result_proxy = db.engine.execute(text(query)).fetchall()
+    student_overview = jsonify([dict(row) for row in result_proxy])
 
     if student_overview is None:
         return 'not found', 404
-    return jsonify(student_overview.to_dict()), 200
+    return student_overview, 200
 
  
 
 # Log support for a given student
-@StudentOverview.route('/<mentor_id>/support/<student_id>', methods=['POST'])
+@StudentOverviewBlueprint.route('/<mentor_id>/support/<student_id>', methods=['POST'])
 def log_support(mentor_id, student_id):
 
     # dummy data
@@ -31,9 +49,28 @@ def log_support(mentor_id, student_id):
         'mentor_assesment': '5'
     }
 
-    input = SupportLog.from_dict(data)
-    db.session.add(input)
+    # # Code for when a form is built on the front end
+    # mentor_id = request.form['mentor_id']
+    # support_type = request.form['support_type']
+    # time_spent = request.form['support_type']
+    # notes = request.form['notes']
+    # mentor_assesment = request.form['mentor_assesment']
+
+    mentor_id = mentor_id
+    student_id = student_id
+    support_type = 'test'
+    time_spent = 5
+    notes ='test'
+    mentor_assesment = 5
+
+    # Create a row in the support log table
+
+    support_log = SupportLog(
+        mentor_id=mentor_id, student_id=student_id, support_type=support_type,
+         time_spent=time_spent, notes=notes, mentor_assesment=mentor_assesment)
+    db.session.add(support_log)
     db.session.commit()
+    return "Success"
 
 
 

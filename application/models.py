@@ -5,9 +5,10 @@ from sqlalchemy import Column, DateTime, event, CheckConstraint
 from sqlalchemy.sql import func
 from sqlalchemy.ext.associationproxy import association_proxy
 from geoip import geolite2
+from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     """
     Data model for users (students and mentors)
     """
@@ -177,7 +178,7 @@ class Student(db.Model):
         return Student(
             id = dict['id'],
             user_id = dict['user_id'],
-            aims = dict['aims'],
+            goals = dict['goals'],
             preferred_learning = dict['preferred_learning'],
             status = dict['status'],
             start_date = dict['start_date'],
@@ -189,7 +190,7 @@ class Student(db.Model):
         return {
             'id': self.id,
             'user_id': self.user_id,
-            'aims': self.aims,
+            'goals': self.goals,
             'preferred_learning': self.preferred_learning,
             'status': self.status,
             'start_date': self.start_date,
@@ -282,8 +283,8 @@ class UserCourse(db.Model):
 
     __tablename__ = 'user_courses'
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-    course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
+    course_id = db.Column(db.Integer, db.ForeignKey(Course.id), primary_key=True)
     is_completed = db.Column(db.Boolean, server_default='False')
 
     user = db.relationship('User', backref=db.backref('user_courses', passive_deletes='all'))
