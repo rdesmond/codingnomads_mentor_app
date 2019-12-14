@@ -1,7 +1,7 @@
 from flask import current_app as app
-from flask import render_template, flash, redirect
+from flask import render_template, flash, redirect, request, url_for
 from flask_login import login_user
-from application.forms import LoginForm
+from application.forms import LoginForm, SupportForm
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
 from application.student_overview import StudentOverview
@@ -27,7 +27,8 @@ def index():
             {'username': 'Roger Doe'}
             ],
         }
-    return render_template('index.html', title='Home', **content)
+    form = SupportForm()
+    return render_template('index.html', title='Home', form=form, **content)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
