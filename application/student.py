@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 
 from . import db
 from .models import User, Mentor, Student, Course, SupportLog, UserCourse
+from .models import Student as StudentModel
 
 from .utils import utc_to_local
 
@@ -12,7 +13,7 @@ Student = Blueprint('student', __name__)
 def get_student(student_id):
 
     # Get info from DB
-    student = Student.query.filter(Student.id==student_id).first()
+    student = StudentModel.query.filter(StudentModel.id==student_id).first()
 
     if student is None:
         return 'student not found', 404

@@ -27,7 +27,6 @@ def get_mentor(mentor_id):
 
     if mentor is None:
         return 'mentor not found', 404
-
     return jsonify(dict(mentor.fetchone())), 200
 
 # Log support for a given student

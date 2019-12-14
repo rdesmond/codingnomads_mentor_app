@@ -189,7 +189,7 @@ class Student(db.Model):
         return {
             'id': self.id,
             'user_id': self.user_id,
-            'aims': self.aims,
+            'aims': self.goals,
             'preferred_learning': self.preferred_learning,
             'status': self.status,
             'start_date': self.start_date,
