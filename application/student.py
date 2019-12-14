@@ -20,7 +20,7 @@ def get_student(student_id):
 
 # Log support for a given student
 @StudentBlueprint.route('/support/<student_id>', methods=['POST'])
-def log_support_student(student_id):
+def log_support_student(student_id):  # TODO: input could be mentor_id from currently logged in user (+add below)
 
     form = SupportForm()
     if form.validate_on_submit():
@@ -40,6 +40,8 @@ def log_support_student(student_id):
             time_spent=time_spent, notes=notes, comprehension=comprehension)
         db.session.add(support_log)
         db.session.commit()
+    else:
+        flash('Missing data. Please fill all the fields')
     return redirect(url_for('index'))
 
 

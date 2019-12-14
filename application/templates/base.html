@@ -16,16 +16,20 @@
         <hr>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <div class="container">
-        <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
+        <div class="container-fluid">
+            <div class="alert alert-warning">
+                <ul>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% endwith %}
+            </div>
+
         {% block content %}{% endblock %}
 
+        <hr>
         <h1>Log Support</h1>
         <form action="{{url_for('student.log_support_student', student_id=form.student_id)}}" method="post" novalidate>
             {{ form.hidden_tag() }}
@@ -36,16 +40,6 @@
             <p>{{ form.notes.label }} {{ form.notes(size=128) }}</p>
             <p>{{ form.comprehension.label }} {{ form.comprehension() }}</p>
             <p>{{ form.submit() }}</p>
-
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <ul>
-                {% for message in messages %}
-                <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            {% endwith %}
         </form>
 
         </div>
