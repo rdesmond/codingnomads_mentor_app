@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+    <h1>Support Log for Student #{{ student_id }}</h1>
+    {% for log in logs %}
+    <div class="card">
+      <div class="card-header">
+        {{ log.created_at }}
+      </div>
+      <div class="card-body pb-5">
+        <h5 class="card-title">{{ log.support_type }} - {{ log.time_spent }}</h5>
+        <p class="card-text">{{ log.notes }}</p>
+          <div class="progress" style="height: 20px;">
+            <div class="progress-bar" role="progressbar" style="width: {{ log.comprehension/5*100 }}%;" aria-valuenow="{{ log.comprehension }}" aria-valuemin="0" aria-valuemax="5"></div>
+          </div>
+      </div>
+    </div>
+    {% endfor %}
+    </div>
+{% endblock %}

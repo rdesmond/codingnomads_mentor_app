@@ -260,6 +260,7 @@ class SupportLog(db.Model):
             mentor_id = dict['mentor_id'],
             student_id = dict['student_id'],
             time_spent = dict['time_spent'],
+            support_type = dict['support_type'],
             notes = dict['notes'],
             comprehension = dict['comprehension']
         )
@@ -273,7 +274,8 @@ class SupportLog(db.Model):
             'student_id': self.student_id,
             'time_spent': self.time_spent,
             'notes': self.notes,
-            'comprehension': self.comprehension
+            'comprehension': self.comprehension,
+            'support_type': self.support_type
         }
 
 # Association able between courses and users

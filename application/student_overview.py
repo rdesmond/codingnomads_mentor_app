@@ -1,6 +1,7 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template
 from . import db
 from .models import User, Mentor, Student, Course, SupportLog, UserCourse
+from .forms import SupportForm
 
 StudentOverview = Blueprint('student_overview', __name__)
 
@@ -8,6 +9,7 @@ StudentOverview = Blueprint('student_overview', __name__)
 # Returns students for a given mentor and some stats (time since last login, course completion percentage, time since last contact)
 @StudentOverview.route('/<mentor_id>', methods=['GET'])
 def get_student_overview(mentor_id):
+    # TODO: what were you trying to do here? currently not working. why the join?
     student_overview = UserCourse.query.join(Student).filter(Student.mentor_id == mentor_id)
 
     if student_overview is None:
@@ -43,4 +45,7 @@ def view_support_log(mentor_id, student_id):
     else:
         formatted_logs = [log.to_dict() for log in logs]
 
-    return jsonify(formatted_logs), 200
+    return render_template('log_list.html', logs=formatted_logs, student_id=student_id)  # TODO: feels weird to always pass this form
+    #return jsonify(formatted_logs), 200
+
+# TODO: how to write DRY flask routes and forms
