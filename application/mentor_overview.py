@@ -40,7 +40,7 @@ def assign_student_mentor():
 
 
     # Drop down of all mentors and the courses
-    mentors = Mentor.query.join(UserCourse).join(Course.id==UserCourse.course_id),join(User.id==Mentor.user_id)
+    mentors = Mentor.query.join(UserCourse).join(Course.id==UserCourse.course_id).join(User.id==Mentor.user_id)
     mentors = [row.to_dict for row in mentors]
 
     # Gets the given student_id from the database
