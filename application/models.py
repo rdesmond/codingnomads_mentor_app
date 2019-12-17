@@ -5,9 +5,10 @@ from sqlalchemy import Column, DateTime, event, CheckConstraint
 from sqlalchemy.sql import func
 from sqlalchemy.ext.associationproxy import association_proxy
 from geoip import geolite2
+from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     """
     Data model for users (students and mentors)
     """
@@ -60,24 +61,24 @@ class User(db.Model):
         return check_password_hash(self.password_hash, password)
 
     @staticmethod
-    def from_json(json):
+    def from_dict(dict):
         return User(
-               id = json['id'],
-               username = json['userName'],
-               email = json['email'],
-               first_name = json['firstName'],
-               last_name = json['lastName'],
-               first_access = json['firstAccess'],
-               last_access = json['lastAccess'],
-               last_login = json['lastLogin'],
-               time_created = json['timeCreated'],
-               time_modified = json['timeModified'],
-               timezone = geolite2.lookup(json['lastIP']).timezone,
-               is_student = json['student'],
-               is_mentor = json['mentor'],
+               id = dict['id'], 
+               username = dict['userName'],
+               email = dict['email'],
+               first_name = dict['firstName'],
+               last_name = dict['lastName'],
+               first_access = dict['firstAccess'],
+               last_access = dict['lastAccess'],
+               last_login = dict['lastLogin'],
+               time_created = dict['timeCreated'],
+               time_modified = dict['timeModified'],
+               timezone = geolite2.lookup(dict['lastIP']).timezone,
+               is_student = dict['student'],
+               is_mentor = dict['mentor'],
         )
-
-    def to_json(self):
+    
+    def to_dict(self):
         return {
             'id': self.id,
             'username': self.username,
@@ -177,7 +178,7 @@ class Student(db.Model):
         return Student(
             id = dict['id'],
             user_id = dict['user_id'],
-            aims = dict['aims'],
+            goals = dict['goals'],
             preferred_learning = dict['preferred_learning'],
             status = dict['status'],
             start_date = dict['start_date'],
@@ -202,7 +203,7 @@ class Course(db.Model):
     __tablename__ = 'courses'
     id = db.Column(db.Integer, primary_key=True)
     course_name = db.Column(db.String(128))
-    end_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime) # Maybe take out
     is_active = db.Column(db.Boolean)
 
     def __repr__(self):
@@ -284,8 +285,8 @@ class UserCourse(db.Model):
 
     __tablename__ = 'user_courses'
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-    course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
+    course_id = db.Column(db.Integer, db.ForeignKey(Course.id), primary_key=True)
     is_completed = db.Column(db.Boolean, server_default='False')
 
     user = db.relationship('User', backref=db.backref('user_courses', passive_deletes='all'))

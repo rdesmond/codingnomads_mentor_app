@@ -17,11 +17,11 @@ def get_mentor(mentor_id):
 
     if mentor is None:
         return 'mentor not found', 404
-    return jsonify(dict(mentor.to_dict())), 200
+    return jsonify(mentor.to_dict()), 200
 
 # Log support for a given student
 @MentorBlueprint.route('/<mentor_id>/<student_id>', methods=['POST'])
-def student_log_support(mentor_id, student_id):
+def student_log_support(mentor_id):
 
     # # Code for when a form is built on the front end
     # mentor_id = request.form['mentor_id']
@@ -31,7 +31,7 @@ def student_log_support(mentor_id, student_id):
     # mentor_assesment = request.form['mentor_assesment']
 
     mentor_id = mentor_id
-    student_id = student_id
+    student_id = 3
     support_type = 'test'
     time_spent = 5
     notes ='test'
