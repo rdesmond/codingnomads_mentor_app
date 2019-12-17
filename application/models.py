@@ -61,24 +61,24 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
 
     @staticmethod
-    def from_json(json):
+    def from_dict(dict):
         return User(
-               id = json['id'], 
-               username = json['userName'],
-               email = json['email'],
-               first_name = json['firstName'],
-               last_name = json['lastName'],
-               first_access = json['firstAccess'],
-               last_access = json['lastAccess'],
-               last_login = json['lastLogin'],
-               time_created = json['timeCreated'],
-               time_modified = json['timeModified'],
-               timezone = geolite2.lookup(json['lastIP']).timezone,
-               is_student = json['student'],
-               is_mentor = json['mentor'],
+               id = dict['id'], 
+               username = dict['userName'],
+               email = dict['email'],
+               first_name = dict['firstName'],
+               last_name = dict['lastName'],
+               first_access = dict['firstAccess'],
+               last_access = dict['lastAccess'],
+               last_login = dict['lastLogin'],
+               time_created = dict['timeCreated'],
+               time_modified = dict['timeModified'],
+               timezone = geolite2.lookup(dict['lastIP']).timezone,
+               is_student = dict['student'],
+               is_mentor = dict['mentor'],
         )
     
-    def to_json(self):
+    def to_dict(self):
         return {
             'id': self.id,
             'username': self.username,
@@ -240,7 +240,7 @@ class SupportLog(db.Model):
     support_type = db.Column(db.String(50), server_default='call')
     time_spent = db.Column(db.Integer)
     notes = db.Column(db.String(500))
-    mentor_assesment = db.Column(db.Integer) # Struggle factor from 1-5. Can use this for 
+    comprehension = db.Column(db.Integer) # Struggle factor from 1-5. Can use this for
 
     # Many to 1 relationship for support_logs and mentors
     mentor = db.relationship('Mentor', backref='support_log')
@@ -262,7 +262,7 @@ class SupportLog(db.Model):
             student_id = dict['student_id'],
             time_spent = dict['time_spent'],
             notes = dict['notes'],
-            mentor_assesment = dict['mentor_assesment']
+            comprehension = dict['comprehension']
         )
     
     def to_dict(self):
@@ -274,7 +274,8 @@ class SupportLog(db.Model):
             'student_id': self.student_id,
             'time_spent': self.time_spent,
             'notes': self.notes,
-            'mentor_assesment': self.mentor_assesment
+            'comprehension': self.comprehension,
+            'support_type': self.support_type
         }
 
 # Association able betyween courses and users

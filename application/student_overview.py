@@ -1,8 +1,7 @@
-from flask import Blueprint, jsonify, request
-from sqlalchemy import text
-
+from flask import Blueprint, jsonify, request, render_template
 from . import db
 from .models import User, Mentor, Student, Course, SupportLog, UserCourse
+from .forms import SupportForm
 
 StudentOverviewBlueprint = Blueprint('student_overview', __name__)
 
@@ -71,6 +70,20 @@ def log_support(mentor_id, student_id):
     db.session.add(support_log)
     db.session.commit()
     return "Success"
+
+# View Logs for a given student
+@StudentOverviewBlueprint.route('/logs/<mentor_id>/<student_id>', methods=['GET'])
+def view_support_log(mentor_id, student_id):
+    logs = SupportLog.query.filter(SupportLog.mentor_id == mentor_id).filter(SupportLog.student_id == student_id).all()
+    if logs is None:
+        return 'not found', 404
+    else:
+        formatted_logs = [log.to_dict() for log in logs]
+
+    return render_template('log_list.html', logs=formatted_logs, student_id=student_id)  # TODO: feels weird to always pass this form
+    #return jsonify(formatted_logs), 200
+
+# TODO: how to write DRY flask routes and forms
 
 
 
