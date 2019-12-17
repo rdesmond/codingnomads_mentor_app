@@ -203,7 +203,7 @@ class Course(db.Model):
     __tablename__ = 'courses'
     id = db.Column(db.Integer, primary_key=True)
     course_name = db.Column(db.String(128))
-    end_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime) # Maybe take out
     is_active = db.Column(db.Boolean)
 
     def __repr__(self):
