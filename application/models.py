@@ -1,6 +1,6 @@
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timedelta 
+from datetime import datetime, timedelta
 from sqlalchemy import Column, DateTime, event, CheckConstraint
 from sqlalchemy.sql import func
 from sqlalchemy.ext.associationproxy import association_proxy
@@ -43,7 +43,7 @@ class User(db.Model, UserMixin):
     mentor = db.relationship('Mentor', backref=db.backref('user', uselist=False))
 
     # 1-1 relationship between users and students
-    student = db.relationship('Student', backref=db.backref('user', uselist=False)) 
+    student = db.relationship('Student', backref=db.backref('user', uselist=False))
 
     # Many to many relationship between users and courses
     course = db.relationship('Course', secondary='user_courses', backref=db.backref('users', lazy='dynamic'))
@@ -52,8 +52,8 @@ class User(db.Model, UserMixin):
     # user_courses = db.relationship('Course', secondary='user_courses', backref=db.backref('users', lazy='dynamic'))
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)    
-    
+        return '<User {}>'.format(self.username)
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -118,8 +118,8 @@ class Mentor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     max_students = db.Column(db.Integer)
-    current_students = db.Column(db.Integer) 
-    completed_students = db.Column(db.Integer) 
+    current_students = db.Column(db.Integer)
+    completed_students = db.Column(db.Integer)
     rating = db.Column(db.Integer) # Need to think about how we calculate this
     is_admin = db.Column(db.Boolean)
 
@@ -127,7 +127,7 @@ class Mentor(db.Model):
     students = db.relationship('Student', backref='mentor')
 
     def __repr__(self):
-        return '<Mentor id: {}>'.format(self.id)    
+        return '<Mentor id: {}>'.format(self.id)
 
     @staticmethod
     def from_dict(dict):
@@ -139,7 +139,7 @@ class Mentor(db.Model):
             rating = dict['rating'],
             is_admin = dict['is_admin'] # Need to modify criteria for this
         )
-    
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -150,7 +150,7 @@ class Mentor(db.Model):
             'rating': self.rating,
             'is_admin': self.is_admin
         }
-  
+
 
 class Student(db.Model):
 
@@ -171,7 +171,7 @@ class Student(db.Model):
     mentor_id = db.Column(db.Integer, db.ForeignKey(Mentor.id))
 
     def __repr__(self):
-        return '<Student id: {}>'.format(self.id)    
+        return '<Student id: {}>'.format(self.id)
 
     @staticmethod
     def from_dict(dict):
@@ -185,19 +185,19 @@ class Student(db.Model):
             end_date = dict['end_date'],
             mentor_id = dict['mentor_id']
         )
-    
+
     def to_dict(self):
         return {
             'id': self.id,
             'user_id': self.user_id,
-            'goals': self.goals,
+            'aims': self.goals,
             'preferred_learning': self.preferred_learning,
             'status': self.status,
             'start_date': self.start_date,
             'end_date': self.end_date,
             'mentor_id': self.mentor_id
         }
-  
+
 class Course(db.Model):
 
     __tablename__ = 'courses'
@@ -207,7 +207,7 @@ class Course(db.Model):
     is_active = db.Column(db.Boolean)
 
     def __repr__(self):
-        return '<Course id: {}>'.format(self.id)    
+        return '<Course id: {}>'.format(self.id)
 
 
     @staticmethod
@@ -217,7 +217,7 @@ class Course(db.Model):
             course_name = dict['course_name'],
             is_active = dict['is_active']
         )
-    
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -249,7 +249,7 @@ class SupportLog(db.Model):
     student = db.relationship('Student', backref='support_log')
 
     def __repr__(self):
-        return '<SupportLog id: {}>'.format(self.id)    
+        return '<SupportLog id: {}>'.format(self.id)
 
 
     @staticmethod
@@ -261,10 +261,11 @@ class SupportLog(db.Model):
             mentor_id = dict['mentor_id'],
             student_id = dict['student_id'],
             time_spent = dict['time_spent'],
+            support_type = dict['support_type'],
             notes = dict['notes'],
             comprehension = dict['comprehension']
         )
-    
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -278,7 +279,7 @@ class SupportLog(db.Model):
             'support_type': self.support_type
         }
 
-# Association able betyween courses and users
+# Association able between courses and users
 
 class UserCourse(db.Model):
 
