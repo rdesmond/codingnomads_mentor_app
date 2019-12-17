@@ -1,14 +1,13 @@
-from flask import Blueprint, jsonify, request
-
+from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for
+from .utils import utc_to_local
 from . import db
 from .models import User, Mentor, Student, Course, SupportLog, UserCourse
+from .forms import SupportForm
 
-from .utils import utc_to_local
-
-Student = Blueprint('student', __name__)
+StudentBlueprint = Blueprint('student', __name__)
 
 # Returns details about a given student including name ,goals, availability, local time, progress, notes and support log
-@Student.route('/<student_id>', methods=['GET'])
+@StudentBlueprint.route('/<student_id>', methods=['GET'])
 def get_student(student_id):
 
     # Get info from DB
@@ -20,22 +19,29 @@ def get_student(student_id):
 
 
 # Log support for a given student
-@Student.route('/support/<student_id>', methods=['POST'])
-def log_support_student(student_id):
+@StudentBlueprint.route('/support/<student_id>', methods=['POST'])
+def log_support_student(student_id):  # TODO: input could be mentor_id from currently logged in user (+add below)
 
-    # Create a row in the support log table
-    mentor_id = request.form['mentor_id']
-    support_type = request.form['support_type']
-    time_spent = request.form['support_type']
-    notes = request.form['notes']
-    mentor_assesment = request.form['mentor_assesment']
+    form = SupportForm()
+    if form.validate_on_submit():
+        flash('Support Log submitted for student #{} by mentor #{}'.format(
+            form.mentor_id.data, form.student_id.data))
 
+        # Create a row in the support log table
+        mentor_id = request.form['mentor_id']  # TODO: this should come from the authenticated_user
+        student_id = request.form['student_id']
+        support_type = request.form['support_type']
+        time_spent = request.form['time_spent']
+        notes = request.form['notes']
+        comprehension = request.form['comprehension']
 
-    support_log = SupportLog(
-        mentor_id=mentor_id, student_id=student_id, support_type=support_type,
-        time_spent=time_spent, notes=notes, mentor_assesment=mentor_assesment)
-    db.session.add(support_log)
-    db.session.commit()
-    return "Success"
+        support_log = SupportLog(
+            mentor_id=mentor_id, student_id=student_id, support_type=support_type,
+            time_spent=time_spent, notes=notes, comprehension=comprehension)
+        db.session.add(support_log)
+        db.session.commit()
+    else:
+        flash('Missing data. Please fill all the fields')
+    return redirect(url_for('index'))
 
 

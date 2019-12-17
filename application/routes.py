@@ -1,22 +1,29 @@
 from flask import current_app as app
-from flask import render_template, flash, redirect
+from flask import render_template, flash, redirect, url_for
 from application.forms import LoginForm
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
-from application.student_overview import StudentOverview
-app.register_blueprint(StudentOverview, url_prefix='/student/overview')
 
-from application.student import Student
-app.register_blueprint(Student, url_prefix='/student')
+from application import login 
 
-from application.mentor import Mentor
-app.register_blueprint(Mentor, url_prefix='/mentor')
+from flask_login import current_user, login_user, logout_user, login_required
+from .models import User
 
-from application.mentor_overview import MentorOverview
-app.register_blueprint(MentorOverview, url_prefix='/mentor/overview')
+from application.student_overview import StudentOverviewBlueprint
+app.register_blueprint(StudentOverviewBlueprint, url_prefix='/student/overview')
+
+from application.student import StudentBlueprint
+app.register_blueprint(StudentBlueprint, url_prefix='/student')
+
+from application.mentor import MentorBlueprint
+app.register_blueprint(MentorBlueprint, url_prefix='/mentor')
+
+from application.mentor_overview import MentorOverviewBlueprint
+app.register_blueprint(MentorOverviewBlueprint, url_prefix='/mentor/overview')
 
 @app.route('/')
 @app.route('/index')
+@login_required
 def index():
     content = {
         'username': 'Miguel',
@@ -26,13 +33,23 @@ def index():
             {'username': 'Roger Doe'}
             ],
         }
-    return render_template('index.html', title='Home', **content)
+    form = SupportForm()
+    return render_template('index.html', title='Home', form=form, **content)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-        flash('Login requested for user {}, remember_me={}'.format(
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Login requested for user {}, remember_me={}'.format(
             form.username.data, form.remember_me.data))
-        return redirect(url_for('index'))
+            return redirect(url_for('index'))
     return render_template('login.html', title='Sign In', form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))

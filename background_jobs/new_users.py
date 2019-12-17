@@ -16,7 +16,7 @@ logging.info('1. Succesfully extracted max created_at from the DB')
 users = requests.get(f'base_url/api/users?updated={max_date}')
 
 # Gets all user_ids from the D
-current_useres = db.query(User.id).all()
+current_users = db.query(User.id).all()
 
 # Gets all courses in the DB
 courses = db.query(Course.id).all()
