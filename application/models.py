@@ -230,7 +230,7 @@ class SupportLog(db.Model):
     __tablename__ = 'support_log'
 
     # Adding a constraint for the rating column
-    __table_args__ = (CheckConstraint("mentor_assesment <= 5 AND mentor_assesment >= 1", name="check_mentor_assesment"),)
+    __table_args__ = (CheckConstraint("comprehension <= 5 AND comprehension >= 1", name="check_comprehension"),)
 
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
