@@ -11,12 +11,12 @@ MentorBlueprint = Blueprint('mentor', __name__)
 # Returns details about a given mentor including name, current students / spare capacity, availability, local time, assigned students, notes, support log
 @MentorBlueprint.route('/<mentor_id>', methods=['GET'])
 def get_mentor(mentor_id):
+
     # Get info from DB
     mentor = Mentor.query.filter(Mentor.id==mentor_id).first()
 
     if mentor is None:
         return 'mentor not found', 404
-
     return jsonify(mentor.to_dict()), 200
 
 # Log support for a given student

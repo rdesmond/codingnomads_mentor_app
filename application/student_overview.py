@@ -5,6 +5,7 @@ from .forms import SupportForm
 
 StudentOverviewBlueprint = Blueprint('student_overview', __name__)
 
+
 # Returns students for a given mentor and some stats (time since last login, course completion percentage, time since last contact)
 @StudentOverviewBlueprint.route('/<mentor_id>', methods=['GET'])
 def get_student_overview(mentor_id):
@@ -31,12 +32,10 @@ ON
         return 'not found', 404
     return student_overview, 200
 
- 
 
 # Log support for a given student
 @StudentOverviewBlueprint.route('/<mentor_id>/support/<student_id>', methods=['POST'])
 def log_support(mentor_id, student_id):
-
     # dummy data
     data = {
         'mentor_id': '1',
@@ -84,8 +83,3 @@ def view_support_log(mentor_id, student_id):
     #return jsonify(formatted_logs), 200
 
 # TODO: how to write DRY flask routes and forms
-
-
-
-
-
