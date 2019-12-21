@@ -26,7 +26,8 @@ def create_app():
 
         # Imports
         from . import routes
-        from. import models
+        from . import models
+        from . import admin
 
         # Create tables for our models
         db.create_all()
