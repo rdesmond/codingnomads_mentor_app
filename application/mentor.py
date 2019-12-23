@@ -28,20 +28,20 @@ def student_log_support(mentor_id):
     # support_type = request.form['support_type']
     # time_spent = request.form['support_type']
     # notes = request.form['notes']
-    # mentor_assesment = request.form['mentor_assesment']
+    # comprehension = request.form['comprehension']
 
     mentor_id = mentor_id
     student_id = 3
     support_type = 'test'
     time_spent = 5
-    notes ='test'
-    mentor_assesment = 5
+    notes = 'test'
+    comprehension = 5
 
     # Create a row in the support log table
 
     support_log = SupportLog(
         mentor_id=mentor_id, student_id=student_id, support_type=support_type,
-         time_spent=time_spent, notes=notes, mentor_assesment=mentor_assesment)
+         time_spent=time_spent, notes=notes, comprehension=comprehension)
     db.session.add(support_log)
     db.session.commit()
     return "Success"
