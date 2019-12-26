@@ -3,6 +3,7 @@ from .utils import utc_to_local
 from . import db
 from .models import User, Mentor, Student, Course, SupportLog, UserCourse
 from .forms import SupportForm
+from .data_services import get_student_info, log_student_support
 
 StudentBlueprint = Blueprint('student', __name__)
 
@@ -11,11 +12,11 @@ StudentBlueprint = Blueprint('student', __name__)
 def get_student(student_id):
 
     # Get info from DB
-    student = Student.query.filter(Student.id==student_id).first()
+    data = get_student_info(student_id)
 
-    if student is None:
+    if data is None:
         return 'student not found', 404
-    return jsonify(student.to_dict()), 200
+    return jsonify(data), 200
 
 
 # Log support for a given student
@@ -35,11 +36,13 @@ def log_support_student(student_id):  # TODO: input could be mentor_id from curr
         notes = request.form['notes']
         comprehension = request.form['comprehension']
 
-        support_log = SupportLog(
-            mentor_id=mentor_id, student_id=student_id, support_type=support_type,
-            time_spent=time_spent, notes=notes, comprehension=comprehension)
-        db.session.add(support_log)
-        db.session.commit()
+        log_student_support(mentor_id,
+            student_id,
+            support_type,
+            time_spent,
+            notes,
+            comprehension)
+            
     else:
         flash('Missing data. Please fill all the fields')
     return redirect(url_for('index'))
