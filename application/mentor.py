@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import select
 from sqlalchemy import text
@@ -18,7 +18,7 @@ def get_mentor(mentor_id):
     data = get_mentor_info(mentor_id)
 
     if data is None:
-        return 'mentor not found', 404
+        return abort(404, 'Mentor not found')
     return jsonify(data), 200
 
 

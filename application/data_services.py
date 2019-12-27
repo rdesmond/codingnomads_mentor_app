@@ -64,7 +64,7 @@ def get_student_support_logs(mentor_id, student_id):
 
 def get_student_overview(id):
 
-  data = []
+  data = None
 
   query = """
   SELECT

@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, render_template
+from flask import Blueprint, jsonify, request, render_template, abort
 from . import db
 from .models import User, Mentor, Student, Course, SupportLog, UserCourse
 from .forms import SupportForm
@@ -14,7 +14,7 @@ def student_overview(mentor_id):
     data = get_student_overview(mentor_id)
 
     if data is None:
-        return 'not found', 404
+        return abort(404, description='Mentor not found')
     return jsonify(data), 200
 
 
@@ -66,7 +66,7 @@ def view_support_log(mentor_id, student_id):
     data = get_student_support_logs(mentor_id, student_id)
 
     if data is None:
-        return 'not found', 404
+        return abort(404, description='Student or mentor not found')
 
     return render_template('log_list.html', logs=data, student_id=student_id)  # TODO: feels weird to always pass this form
     #return jsonify(formatted_logs), 200

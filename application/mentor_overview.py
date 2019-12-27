@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 import requests
@@ -42,6 +42,6 @@ def get_analytics():
   data = get_all_students()
 
   if not data:
-    return 'Not Found', 404
+    return abort(404, description='Students not found')
   
   return jsonify(data)

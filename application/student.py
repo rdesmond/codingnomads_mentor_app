@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for
+from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for, abort
 from .utils import utc_to_local
 from . import db
 from .models import User, Mentor, Student, Course, SupportLog, UserCourse
@@ -15,7 +15,7 @@ def get_student(student_id):
     data = get_student_info(student_id)
 
     if data is None:
-        return 'student not found', 404
+        return abort(404, description='Student not found')
     return jsonify(data), 200
 
 

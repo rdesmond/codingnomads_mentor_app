@@ -28,6 +28,7 @@ def create_app():
         from . import routes
         from . import models
         from . import admin
+        from . import errors
 
         # Create tables for our models
         db.create_all()
