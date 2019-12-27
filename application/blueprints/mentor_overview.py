@@ -3,9 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 import requests
 
-from . import db
-from .models import User, Mentor, Student, Course, SupportLog, UserCourse
-from .data_services import get_all_students, get_mentors_and_students, get_students_with_courses, get_mentors_with_courses, get_student_info, assign_students_to_mentor
+from application import db
+from application.models import User, Mentor, Student, Course, SupportLog, UserCourse
+from application.data_services import get_all_students, get_mentors_and_students, get_students_with_courses, get_mentors_with_courses, get_student_info, assign_students_to_mentor
 
 MentorOverviewBlueprint = Blueprint('mentor_overview', __name__)
 

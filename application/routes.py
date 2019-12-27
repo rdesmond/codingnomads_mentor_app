@@ -8,19 +8,19 @@ from application import login
 from flask_login import current_user, login_user, logout_user, login_required
 from .models import User
 
-from application.student_overview import StudentOverviewBlueprint
+from application.blueprints.student_overview import StudentOverviewBlueprint
 app.register_blueprint(StudentOverviewBlueprint, url_prefix='/student/overview')
 
-from application.student import StudentBlueprint
+from application.blueprints.student import StudentBlueprint
 app.register_blueprint(StudentBlueprint, url_prefix='/student')
 
-from application.mentor import MentorBlueprint
+from application.blueprints.mentor import MentorBlueprint
 app.register_blueprint(MentorBlueprint, url_prefix='/mentor')
 
-from application.mentor_overview import MentorOverviewBlueprint
+from application.blueprints.mentor_overview import MentorOverviewBlueprint
 app.register_blueprint(MentorOverviewBlueprint, url_prefix='/mentor/overview')
 
-from application.auth import AuthenticationBlueprint
+from application.blueprints.auth import AuthenticationBlueprint
 app.register_blueprint(AuthenticationBlueprint)
 
 

@@ -3,9 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import select
 from sqlalchemy import text
 
-from . import db
-from .models import User, Mentor, Student, Course, SupportLog, UserCourse
-from .data_services import get_mentor_info, log_student_support
+from application import db
+from application.models import User, Mentor, Student, Course, SupportLog, UserCourse
+from application.data_services import get_mentor_info, log_student_support
 
 MentorBlueprint = Blueprint('mentor', __name__)
 

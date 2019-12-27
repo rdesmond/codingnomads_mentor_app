@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request, render_template, abort
-from . import db
-from .models import User, Mentor, Student, Course, SupportLog, UserCourse
-from .forms import SupportForm
-from .data_services import get_student_overview, log_student_support, get_student_support_logs
+from application import db
+from application.models import User, Mentor, Student, Course, SupportLog, UserCourse
+from application.forms import SupportForm
+from application.data_services import get_student_overview, log_student_support, get_student_support_logs
 
 StudentOverviewBlueprint = Blueprint('student_overview', __name__)
 

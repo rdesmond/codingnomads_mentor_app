@@ -48,7 +48,6 @@ def log_student_support(
   return 'support successfully added'
 
 
-
 def get_student_support_logs(mentor_id, student_id):
 
   logs = SupportLog.query.filter(SupportLog.mentor_id==mentor_id).filter(SupportLog.student_id==student_id).all()
@@ -59,7 +58,6 @@ def get_student_support_logs(mentor_id, student_id):
     data = None
 
   return data
-
 
 
 def get_student_overview(id):
@@ -143,7 +141,6 @@ def get_mentors_and_students():
   data = [dict(row) for row in student_mentors_proxy]
 
   return data
-
 
 
 def get_students_with_courses():

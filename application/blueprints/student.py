@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for, abort
-from .utils import utc_to_local
-from . import db
-from .models import User, Mentor, Student, Course, SupportLog, UserCourse
-from .forms import SupportForm
-from .data_services import get_student_info, log_student_support
+from application.utils import utc_to_local
+from application import db
+from application.models import User, Mentor, Student, Course, SupportLog, UserCourse
+from application.forms import SupportForm
+from application.data_services import get_student_info, log_student_support
 
 StudentBlueprint = Blueprint('student', __name__)
 
