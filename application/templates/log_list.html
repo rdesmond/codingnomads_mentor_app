@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div>
-    <h1>Support Log for Student #{{ student_id }}</h1>
+    <div class="container">
+    <h1 class="text-center display-4">Support Log for Student #{{ student_id }}</h1>
     {% for log in logs %}
-    <div class="card">
-      <div class="card-header">
-        {{ log.created_at.strftime('%Y-%m-%d %H:%M') }}
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between pt-3">
+          <h5 class="card-title">{{ log.support_type.capitalize() }} - {{ log.time_spent }} min</h5>
+          <div>{{ log.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
       </div>
-      <div class="card-body pb-5">
-        <h5 class="card-title">{{ log.support_type.capitalize() }} - {{ log.time_spent }} min</h5>
-        <p class="card-text">{{ log.notes }}</p>
+      <div class="card-body d-flex justify-content-between">
+          <p class="card-text">{{ log.notes }}</p>
           <div>Comprehension:
               {% for point in range(log.comprehension) %}
                 <span class="fa fa-circle checked"></span>

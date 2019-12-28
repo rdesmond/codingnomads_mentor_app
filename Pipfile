@@ -16,6 +16,7 @@ psycopg2 = "*"
 crontab = "*"
 python-geoip = "*"
 python-geoip-geolite2 = "*"
+flask-admin = "*"
 
 [requires]
 python_version = "3.7"
