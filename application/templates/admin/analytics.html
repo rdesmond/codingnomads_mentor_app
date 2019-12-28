@@ -1,0 +1,11 @@
+{% extends 'admin/master.html' %}
+
+
+{% block body %}
+  <p>Here I'm going to display some data.</p>
+  {% for user in users %}
+      {{ user }}
+      {{user.value}}
+  {% endfor %}
+  
+{% endblock %}
