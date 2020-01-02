@@ -8,45 +8,43 @@
     </div>
 
     {% for mentor in mentors %}
-        <div class="row mb-5">
-            <div class="col">
-                <a href="mailto:{{ mentor.email }}"><i class="far fa-paper-plane fa-5x"></i></a>
+        <div class="row align-items-center mb-5 mentor-card">
+            <div class="col-auto mx-3">
+                <a class="row" href="https://codingnomads-chat.slack.com/team/{{ mentor.slack }}" target="_blank"><i class="fab fa-slack fa-3x"></i></a>
+                <a class="row" href="mailto:{{ mentor.email }}" target="_blank"><i class="far fa-envelope fa-3x"></i></a>
             </div>
-            <div class="col-6">
-                <p class="display-4">{{ mentor.first_name }} {{ mentor.last_name }} <span class="text-muted">({{ mentor.username }})</span></p>
+            <div class="col-7">
+                <p class="display-4">{{ mentor.first_name }} {{ mentor.last_name }} <a href="https://platform.codingnomads.co/learn/user/profile.php?id={{ mentor.learning_platform }}" target="_blank" class="text-muted">({{ mentor.username }})</a></p>
                 <div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: {{ (mentor.max_students - mentor.current_students) / mentor.max_students * 100|int }}%;" aria-valuenow="{{ (mentor.max_students - mentor.current_students) / mentor.max_students * 100|int }}" aria-valuemin="0" aria-valuemax="100">{{ (mentor.max_students - mentor.current_students) / mentor.max_students * 100|int }}%</div>
+                    <div class="progress-bar" role="progressbar" style="width: {{ (mentor.max_students - mentor.current_students) / mentor.max_students * 100|int }}%;" aria-valuenow="{{ (mentor.max_students - mentor.current_students) / mentor.max_students * 100|int }}" aria-valuemin="0" aria-valuemax="100">{{ mentor.current_students }} / {{ mentor.max_students }} students</div>
                 </div>
             </div>
             <div class="col">
                 <p class="time">
-                    <script>
-                        // adds information about current time of the mentor
-                        var element = document.currentScript.parentElement;
-                        var today = new Date();
-                        var timestring = today.toLocaleTimeString('en-US', { timeZone: '{{ mentor.time_zone }}', hour: '2-digit', minute: '2-digit' });
-                        element.innerHTML = timestring + ' ({{ mentor.time_zone }})';
-                    </script>
+                <script>
+                    // adds information about current time of the mentor
+                    var element = document.currentScript.parentElement;
+                    var today = new Date();
+                    var timestring = today.toLocaleTimeString('en-US', { timeZone: '{{ mentor.time_zone }}', hour: '2-digit', minute: '2-digit' });
+                    element.innerHTML = timestring + ' ({{ mentor.time_zone }})';
+                </script>
                 </p>
-                <p>{{ mentor.current_students }} / {{ mentor.max_students }}</p>
             </div>
             <div class="col">
                 <p>
-                    <script>
-                        var log_elem = document.currentScript.parentElement;
-                        var last_log = new Date('{{ mentor.last_support_log_created }}');
-                        var time_since = (today - last_log) / (1000 * 60 * 60 * 24);
-                        log_elem.innerHTML = String(time_since.toFixed(2)) + ' days';
-                    </script>
+                <script>
+                    var log_elem = document.currentScript.parentElement;
+                    var last_log = new Date('{{ mentor.last_support_log_created }}');
+                    var time_since = (today - last_log) / (1000 * 60 * 60 * 24);
+                    log_elem.innerHTML = String(time_since.toFixed(2)) + ' days';
+                </script>
                 </p>
-                <div>
-                    <div class="score-wrap">
-                        {% if mentor.rating %}
-                          {% for s in range(mentor.rating|int) %}
-                             <i class="fas fa-star"></i>
-                          {% endfor %}
-                        {% endif %}
-                    </div>
+                <div class="score-wrap">
+                    {% if mentor.rating %}
+                      {% for s in range(mentor.rating|int) %}
+                         <i class="fas fa-star"></i>
+                      {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>

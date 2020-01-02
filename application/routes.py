@@ -64,9 +64,9 @@ def show_mentor_list():
             "email": "gilad@gmail.com",
             "first_name": "Gilad",
             "last_name": "Gressel",
-            "learning_platform": "gilad",
+            "learning_platform": 70,
             "forum": "gilad",
-            "slack": "gilad",
+            "slack": "UGLT4QR9N",
             "time_zone": "America/Los_Angeles",
             "last_support_log_created": "2020-01-01 11:19:06.782213"
         },
@@ -82,9 +82,9 @@ def show_mentor_list():
             "email": "breuss.martin@gmail.com",
             "first_name": "Martin",
             "last_name": "Breuss",
-            "learning_platform": "martin",
+            "learning_platform": 25,
             "forum": "martin",
-            "slack": "Martin Breuss",
+            "slack": "UGL5A5X18",
             "time_zone": "Europe/Vienna",
             "last_support_log_created": "2019-12-14 15:19:06.782213"
         }
