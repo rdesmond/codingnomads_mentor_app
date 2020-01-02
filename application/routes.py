@@ -67,8 +67,8 @@ def show_mentor_list():
             "learning_platform": "gilad",
             "forum": "gilad",
             "slack": "gilad",
-            "time_zone": "Pacific/Auckland",
-            "last_support_log_created": "2019-12-14 15:19:06.782213"
+            "time_zone": "America/Los_Angeles",
+            "last_support_log_created": "2020-01-01 11:19:06.782213"
         },
         {
             "completed_students": 6,

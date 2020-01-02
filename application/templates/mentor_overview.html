@@ -31,7 +31,14 @@
                 <p>{{ mentor.current_students }} / {{ mentor.max_students }}</p>
             </div>
             <div class="col">
-                <p>{{ mentor.last_support_log_created }}</p>
+                <p>
+                    <script>
+                        var log_elem = document.currentScript.parentElement;
+                        var last_log = new Date('{{ mentor.last_support_log_created }}');
+                        var time_since = (today - last_log) / (1000 * 60 * 60 * 24);
+                        log_elem.innerHTML = String(time_since.toFixed(2)) + ' days';
+                    </script>
+                </p>
                 <div>
                     <div class="score-wrap">
                         {% if mentor.rating %}
