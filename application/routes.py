@@ -1,3 +1,4 @@
+import json
 from flask import current_app as app
 from flask import render_template, flash, redirect, request, url_for
 from flask_login import login_user
@@ -39,3 +40,55 @@ def index():
     form = SupportForm()
     return render_template('index.html', title='Home', form=form, **content)
 
+
+# TODO: change this to actual backend call
+@app.route('/mentors')
+def show_mentor_list():
+    form = SupportForm()
+    content = json.loads("""{
+    "current_user":{
+        "first_name": "Ryan",
+        "last_name": "Desmond",
+        "is_admin": true
+    },
+    "mentors": [
+        {
+            "completed_students": 5,
+            "current_students": 0,
+            "id": 3,
+            "is_admin": false,
+            "max_students": 3,
+            "rating": 5,
+            "user_id": 1,
+            "username": "gilad",
+            "email": "gilad@gmail.com",
+            "first_name": "Gilad",
+            "last_name": "Gressel",
+            "learning_platform": "gilad",
+            "forum": "gilad",
+            "slack": "gilad",
+            "time_zone": "Pacific/Auckland",
+            "last_support_log_created": "2019-12-14 15:19:06.782213"
+        },
+        {
+            "completed_students": 6,
+            "current_students": 1,
+            "id": 2,
+            "is_admin": true,
+            "max_students": 5,
+            "rating": 4,
+            "user_id": 2,
+            "username": "martin",
+            "email": "breuss.martin@gmail.com",
+            "first_name": "Martin",
+            "last_name": "Breuss",
+            "learning_platform": "martin",
+            "forum": "martin",
+            "slack": "Martin Breuss",
+            "time_zone": "Europe/Vienna",
+            "last_support_log_created": "2019-12-14 15:19:06.782213"
+        }
+    ]
+}
+""")
+    return render_template('mentor_overview.html', form=form, title='Mentors', **content)

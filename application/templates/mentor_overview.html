@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+    <div class="mb-4">
+        <p class="text-muted text-right">Welcome {{ current_user.first_name }} {{ current_user.last_name }}</p>
+        <h1 class="display-1 text-center">{{ title }}</h1>
+    </div>
+
+    {% for mentor in mentors %}
+        <div class="row mb-5">
+            <div class="col">
+                <a href="mailto:{{ mentor.email }}"><i class="far fa-paper-plane fa-5x"></i></a>
+            </div>
+            <div class="col-6">
+                <p class="display-4">{{ mentor.first_name }} {{ mentor.last_name }} <span class="text-muted">({{ mentor.username }})</span></p>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ (mentor.max_students - mentor.current_students) / mentor.max_students * 100|int }}%;" aria-valuenow="{{ (mentor.max_students - mentor.current_students) / mentor.max_students * 100|int }}" aria-valuemin="0" aria-valuemax="100">{{ (mentor.max_students - mentor.current_students) / mentor.max_students * 100|int }}%</div>
+                </div>
+            </div>
+            <div class="col">
+                <p class="time">
+                    <script>
+                        // adds information about current time of the mentor
+                        var element = document.currentScript.parentElement;
+                        var today = new Date();
+                        var timestring = today.toLocaleTimeString('en-US', { timeZone: '{{ mentor.time_zone }}', hour: '2-digit', minute: '2-digit' });
+                        element.innerHTML = timestring + ' ({{ mentor.time_zone }})';
+                    </script>
+                </p>
+                <p>{{ mentor.current_students }} / {{ mentor.max_students }}</p>
+            </div>
+            <div class="col">
+                <p>{{ mentor.last_support_log_created }}</p>
+                <div>
+                    <div class="score-wrap">
+                        {% if mentor.rating %}
+                          {% for s in range(mentor.rating|int) %}
+                             <i class="fas fa-star"></i>
+                          {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
