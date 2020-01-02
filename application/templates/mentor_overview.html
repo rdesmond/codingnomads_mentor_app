@@ -16,7 +16,10 @@
             <div class="col-7">
                 <p class="display-4">{{ mentor.first_name }} {{ mentor.last_name }} <a href="https://platform.codingnomads.co/learn/user/profile.php?id={{ mentor.learning_platform }}" target="_blank" class="text-muted">({{ mentor.username }})</a></p>
                 <div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: {{ (mentor.max_students - mentor.current_students) / mentor.max_students * 100|int }}%;" aria-valuenow="{{ (mentor.max_students - mentor.current_students) / mentor.max_students * 100|int }}" aria-valuemin="0" aria-valuemax="100">{{ mentor.current_students }} / {{ mentor.max_students }} students</div>
+                    {% if mentor.current_students == 0 %}
+                        <p class="ml-4">{{ mentor.current_students }} / {{ mentor.max_students }} students</p>
+                    {% endif %}
+                    <div class="progress-bar" role="progressbar" style="width: {{ mentor.current_students / mentor.max_students * 100|int }}%;" aria-valuenow="{{ (mentor.current_students / mentor.max_students) * 100|int }}" aria-valuemin="0" aria-valuemax="100">{{ mentor.current_students }} / {{ mentor.max_students }} students</div>
                 </div>
             </div>
             <div class="col">
@@ -36,7 +39,7 @@
                     var log_elem = document.currentScript.parentElement;
                     var last_log = new Date('{{ mentor.last_support_log_created }}');
                     var time_since = (today - last_log) / (1000 * 60 * 60 * 24);
-                    log_elem.innerHTML = String(time_since.toFixed(2)) + ' days';
+                    log_elem.innerHTML = String('<i class="fas fa-plus-circle mr-2"></i>' + time_since.toFixed(2)) + ' days';
                 </script>
                 </p>
                 <div class="score-wrap">

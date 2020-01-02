@@ -72,7 +72,7 @@ def show_mentor_list():
         },
         {
             "completed_students": 6,
-            "current_students": 1,
+            "current_students": 3,
             "id": 2,
             "is_admin": true,
             "max_students": 5,
