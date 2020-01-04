@@ -31,6 +31,11 @@
                     element.innerHTML = timestring + ' ({{ student.time_zone }})';
                 </script>
                 </p>
+                {% if student.status == "hot lead" %}
+                    <span class="badge badge-pill badge-danger">{{ student.status }}</span>
+                {% elif student.status %}
+                    <span class="badge badge-pill badge-primary">{{ student.status }}</span>
+                {% endif %}
             </div>
             <div class="col">
                 {% if student.mentor_id %}
