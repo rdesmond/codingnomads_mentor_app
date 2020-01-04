@@ -92,3 +92,70 @@ def show_mentor_list():
 }
 """)
     return render_template('mentor_overview.html', form=form, title='Mentors', **content)
+
+
+# TODO: change this to actual backend call
+@app.route('/students')
+def show_student_list():
+    form = SupportForm()
+    content = json.loads("""{
+    "current_user":{
+        "first_name": "Ryan",
+        "last_name": "Desmond",
+        "is_admin": true
+    },
+    "students": [
+        {
+            "aims": "wants to learn to frontend",
+            "id": 2,
+            "mentor_id": 3,
+            "mentor_name": "Gilad Gressel",
+            "preferred_learning": "discussions",
+            "start_date": "Fri, 13 Sep 2019 13:14:57 GMT",
+            "status": "alumni",
+            "user_id": 2,
+            "username": "carol",
+            "email": "carol@gmail.com",
+            "first_name": "Carol",
+            "last_name": "Denvers",
+            "learning_platform": "jseed",
+            "forum": "coral",
+            "slack": "apple",
+            "time_zone": "Europe/London",
+            "courses": [
+                {
+                    "id": 8,
+                    "name": "Python Software Development",
+                    "progress_percent": 90
+                }
+            ]
+        },
+        {
+            "aims": "get a job asap",
+            "id": 4,
+            "mentor_id": null,
+            "mentor_name": null,
+            "preferred_learning": "military study",
+            "start_date": "Fri, 13 Sep 2019 13:14:57 GMT",
+            "status": "hot lead",
+            "user_id": 7,
+            "username": "larry",
+            "email": "larry@gmail.com",
+            "first_name": "Larry",
+            "last_name": "Longbottom",
+            "learning_platform": "larry",
+            "forum": "llong",
+            "slack": "larrylong",
+            "time_zone": "Africa/Addis_Ababa",
+            "courses": [
+                {
+                    "id": 8,
+                    "name": "Python Software Development",
+                    "progress_percent": 0
+                }
+            ]
+        }
+    ]
+}
+""")
+    return render_template('student_overview.html', form=form, title='Students', **content)

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+    <div class="mb-4">
+        <p class="text-muted text-right">Welcome {{ current_user.first_name }} {{ current_user.last_name }}</p>
+        <h1 class="display-1 text-center">{{ title }}</h1>
+    </div>
+
+    {% for student in students %}
+        <div class="row align-items-center mb-5 mentor-card">
+            <div class="col-auto mx-3">
+                <a class="row" href="https://codingnomads-chat.slack.com/team/{{ student.slack }}" target="_blank"><i class="fab fa-slack fa-3x"></i></a>
+                <a class="row" href="mailto:{{ student.email }}" target="_blank"><i class="far fa-envelope fa-3x"></i></a>
+            </div>
+            <div class="col-7">
+                <p class="display-4">{{ student.first_name }} {{ student.last_name }} <a href="https://platform.codingnomads.co/learn/user/profile.php?id={{ student.learning_platform }}" target="_blank" class="text-muted">({{ student.username }})</a></p>
+                <div class="progress">
+                    {% for course in student.courses %}
+                        <div class="progress-bar" role="progressbar" style="width: {{ course.progress_percent|int }}%;" aria-valuenow="{{ course.progress_percent }}" aria-valuemin="0" aria-valuemax="100">{{ course.progress_percent }}%</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col">
+                <p class="time">
+                <script>
+                    // adds information about current time of the mentor
+                    var element = document.currentScript.parentElement;
+                    var today = new Date();
+                    var timestring = today.toLocaleTimeString('en-US', { timeZone: '{{ student.time_zone }}', hour: '2-digit', minute: '2-digit' });
+                    element.innerHTML = timestring + ' ({{ student.time_zone }})';
+                </script>
+                </p>
+            </div>
+            <div class="col">
+                {% if student.mentor_id %}
+                    <p><strong>Mentor:</strong> <a href="http://0.0.0.0:5000/mentor/{{ student.mentor_id }}">{{ student.mentor_name }}</a></p>
+                {% elif not student.mentor_id %}
+                    <label for="mentor-select">Assign Mentor:</label>
+                    <select name="mentor" id="mentor-select">
+                        <option value="0">Select...</option>
+                      <option value="1">Ryan</option>
+                      <option value="2">Martin</option>
+                      <option value="3">Gilad</option>
+                      <option value="4">Viji</option>
+                    </select>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
