@@ -155,3 +155,32 @@ def get_mentored_students(mentor_id):
     return render_template('mentor_students.html', form=form, title=content['mentor']['username'], **content)
     # return jsonify(data), 200
 
+
+@MentorBlueprint.route('/<mentor_id>/notes', methods=['GET'])
+def get_mentor_notes(mentor_id):
+    # TODO: change to proper backend calls
+    form = SupportForm()
+    content = dict(base_content, **json.loads("""{
+    "notes": [
+        {
+            "mentor_id": 3,
+            "student_id": 7,
+            "text": "this is an example note.",
+            "timestamp": "Fri, 23 Sep 2019 13:14:57 GMT"
+        },
+        {
+            "mentor_id": 3,
+            "student_id": 2,
+            "text": "another example note.",
+            "timestamp": "Thu, 22 Sep 2019 13:14:57 GMT"
+        },
+        {
+            "mentor_id": 7,
+            "student_id": 2,
+            "text": "note made by a different mentor",
+            "timestamp": "Thu, 27 Sep 2019 13:14:57 GMT"
+        }
+    ]
+}"""))
+    return render_template('mentor_notes.html', form=form, title=content['mentor']['username'], **content)
+
