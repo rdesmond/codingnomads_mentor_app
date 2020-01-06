@@ -93,7 +93,6 @@ def log_support_student(student_id):  # TODO: input could be mentor_id from curr
     return redirect(url_for('index'))
 
 
-
 @StudentBlueprint.route('/<student_id>/logs', methods=['GET'])
 def get_student_logs(student_id):
 
@@ -159,3 +158,66 @@ def get_student_logs(student_id):
 }
 """)
     return render_template('student_logs.html', form=form, title=content['student']['username'], **content)
+
+
+@StudentBlueprint.route('/<student_id>/progress', methods=['GET'])
+def get_student_progress(student_id):
+    # TODO: change to proper backend calls
+    form = SupportForm()
+    content = json.loads("""{
+    "current_user": {
+        "first_name": "Gilad",
+        "last_name": "Gressel",
+        "is_admin": false,
+        "user_id": 1
+    },
+    "student": {
+        "aims": "wants to learn to frontend",
+        "id": 2,
+        "mentor_id": 3,
+        "mentor_name": "Gilad Gressel",
+        "preferred_learning": "discussions",
+        "start_date": "Fri, 13 Sep 2019 13:14:57 GMT",
+        "status": "student",
+        "user_id": 2,
+        "username": "johnny",
+        "email": "johnny@gmail.com",
+        "first_name": "Johnny",
+        "last_name": "Appleseed",
+        "learning_platform": "jseed",
+        "forum": "johnny",
+        "slack": "apple",
+        "time_zone": "CEST",
+        "courses": [
+            {
+                "id": 8,
+                "name": "Python Software Development",
+                "progress_percent": 80
+            }
+        ],
+        "preferred_days": {
+            "Mon": true, "Tue": true, "Wed": true,
+            "Thu": true, "Fri": true, "Sat": false, "Sun": false},
+        "preferred_start_time": "08:00:00",
+        "preferred_end_time": "17:00:00"
+    },
+    "progress": [
+        {
+            "course_id": 8,
+            "course_name": "Python Software Development",
+            "progress_percent": 80,
+            "last_access": "timestamp here",
+            "last_page_accessed_id": 203,
+            "last_page_accessed_name": "Conditionals Overview",
+            "furthest_page_accessed_id": 274,
+            "furthest_page_accessed_name": "Intro to Exceptions",
+            "furthest_section_name": "Exceptions",
+            "furthest_section_current_resource": 2,
+            "furthest_section_total_resources": 7
+        }
+
+    ]
+}
+""")
+    return render_template('student_progress.html', form=form, title=content['student']['username'], **content)
+
