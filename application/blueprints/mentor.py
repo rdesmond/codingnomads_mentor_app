@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, request, abort, render_template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import select
 from sqlalchemy import text
@@ -6,6 +6,8 @@ from sqlalchemy import text
 from application import db
 from application.models import User, Mentor, Student, Course, SupportLog, UserCourse
 from application.data_services import get_mentor_info, log_student_support
+from application.forms import SupportForm
+import json
 
 MentorBlueprint = Blueprint('mentor', __name__)
 
@@ -19,7 +21,43 @@ def get_mentor(mentor_id):
 
     if data is None:
         return abort(404, 'Mentor not found')
-    return jsonify(data), 200
+
+    # TODO: change to proper backend calls
+    form = SupportForm()
+    content = json.loads("""{
+        "current_user": {
+            "first_name": "Gilad",
+            "last_name": "Gressel",
+            "is_admin": false,
+            "user_id": 1
+        },
+        "mentor": {
+            "completed_students": 5,
+            "current_students": 0,
+            "id": 3,
+            "is_admin": false,
+            "max_students": 3,
+            "rating": 5,
+            "user_id": 1,
+            "username": "gilad",
+            "email": "gilad@gmail.com",
+            "first_name": "Gilad",
+            "last_name": "Gressel",
+            "learning_platform": "gilad",
+            "forum": "gilad",
+            "slack": "UGLT4QR9N",
+            "time_zone": "America/Los_Angeles",
+            "preferred_days": {
+                "Mon": true, "Tue": false, "Wed": true,
+                "Thu": true, "Fri": true, "Sat": false, "Sun": false},
+            "preferred_start_time": "08:00",
+            "preferred_end_time": "17:00"
+        }
+    }
+    """)
+    return render_template('mentor_profile.html', form=form, title=content['mentor']['username'], **content)
+    # return jsonify(content), 200
+    # return jsonify(data), 200
 
 
 # Log support for a given student
