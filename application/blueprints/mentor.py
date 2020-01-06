@@ -178,3 +178,31 @@ def get_mentor_notes(mentor_id):
 }"""))
     return render_template('mentor_notes.html', form=form, title=content['mentor']['username'], **content)
 
+
+@MentorBlueprint.route('/<mentor_id>/logs', methods=['GET'])
+def get_mentor_logs(mentor_id):
+    # TODO: change to proper backend calls
+    form = SupportForm()
+    content = dict(base_content, **json.loads("""{
+    "support_logs": [
+        {
+            "mentor_id": 3,
+            "student_id": 7,
+            "notes": "this is an example note for a support log.",
+            "created_at": "Fri, 23 Sep 2019 13:14:57 GMT",
+            "support_type": "call",
+            "time_spent": 40,
+            "comprehension": 5
+        },
+        {
+            "mentor_id": 3,
+            "student_id": 2,
+            "notes": "call went well, we discussed exceptions.",
+            "created_at": "Fri, 23 Sep 2019 13:14:57 GMT",
+            "support_type": "call",
+            "time_spent": 30,
+            "comprehension": 5
+        }
+    ]
+}"""))
+    return render_template('mentor_logs.html', form=form, title=content['mentor']['username'], **content)
