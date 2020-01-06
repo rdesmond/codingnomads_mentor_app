@@ -173,12 +173,6 @@ def get_mentor_notes(mentor_id):
             "student_id": 2,
             "text": "another example note.",
             "timestamp": "Thu, 22 Sep 2019 13:14:57 GMT"
-        },
-        {
-            "mentor_id": 7,
-            "student_id": 2,
-            "text": "note made by a different mentor",
-            "timestamp": "Thu, 27 Sep 2019 13:14:57 GMT"
         }
     ]
 }"""))

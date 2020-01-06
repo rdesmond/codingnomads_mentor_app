@@ -6,13 +6,8 @@
         <div class="card mb-4">
             <div class="card-body">
             <div class="row">
-                <div class="col">{{ note.text }}</div>
-                <div class="col text-right text-muted">
-                    <p>{{ note.timestamp }}</p>
-                    {% if note.mentor_id != mentor.id %}
-                        <p class="small"><strong>Mentor:</strong> {{ note.mentor_id }}</p>
-                    {% endif %}
-                </div>
+                <p class="col">{{ note.text }}</p>
+                <p class="col text-right text-muted">{{ note.timestamp }}</p>
             </div>
             </div>
         </div>
