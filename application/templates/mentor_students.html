@@ -1,0 +1,47 @@
+{% extends 'mentor_profile.html' %}
+
+{% block students %}
+
+    {% for student in students %}
+        <div class="row align-items-center mb-5 student-card">
+            <div class="col-auto mx-3">
+                <a class="row" href="https://codingnomads-chat.slack.com/team/{{ student.slack }}" target="_blank"><i class="fab fa-slack fa-3x"></i></a>
+                <a class="row" href="mailto:{{ student.email }}" target="_blank"><i class="far fa-envelope fa-3x"></i></a>
+            </div>
+            <div class="col-7">
+                <p class="display-4">
+                    <a class="text-dark" href="http://0.0.0.0:5000/student/{{ student.id }}">{{ student.first_name }} {{ student.last_name }}</a>
+                    <a href="https://platform.codingnomads.co/learn/user/profile.php?id={{ student.learning_platform }}" target="_blank" class="text-muted">({{ student.username }})</a>
+                </p>
+                {% for course in student.courses %}
+                <a href="https://platform.codingnomads.co/learn/report/outline/user.php?id={{ student.user_id }}&course={{ course.id }}&mode=outline" target="_blank">
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: {{ course.progress_percent|int }}%;" aria-valuenow="{{ course.progress_percent }}" aria-valuemin="0" aria-valuemax="100">{{ course.progress_percent }}%</div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            <div class="col">
+                <p class="time">
+                <script>
+                    // adds information about current time of the mentor
+                    var element = document.currentScript.parentElement;
+                    var today = new Date();
+                    var timestring = today.toLocaleTimeString('en-US', { timeZone: '{{ student.time_zone }}', hour: '2-digit', minute: '2-digit' });
+                    element.innerHTML = timestring + ' <span class="text-muted small">({{ student.time_zone }})</span>';
+                </script>
+                </p>
+                <p><i class="fas fa-pencil-alt"></i> <a class="text-dark" href="">Notes</a></p>
+            </div>
+            <div class="col">
+                <p><i class="fas fa-headset"></i> {{ student.next_call }}</p>
+                <p><i class="fas fa-plus-circle" style="color: #007bff;"></i> <a href="">Log Support</a></p>
+            </div>
+        </div>
+    {% endfor %}
+    <script>
+        // reset link to get back to previous page
+        const backlink = document.getElementById('students-link');
+        backlink.href = 'http://0.0.0.0:5000/mentor/{{ mentor.id }}';
+    </script>
+{% endblock %}

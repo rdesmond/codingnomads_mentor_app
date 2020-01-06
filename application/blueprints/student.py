@@ -27,10 +27,10 @@ base_content = json.loads("""{
         "user_id": 2,
         "username": "johnny",
         "email": "johnny@gmail.com",
-        "first_name": "Johnny",
-        "last_name": "Appleseed",
-        "learning_platform": "jseed",
-        "forum": "johnny",
+        "first_name": "Carol",
+        "last_name": "Dunlop",
+        "learning_platform": "carol",
+        "forum": "carol",
         "slack": "apple",
         "time_zone": "Europe/London",
         "courses": [
@@ -43,8 +43,8 @@ base_content = json.loads("""{
         "preferred_days": {
             "Mon": true, "Tue": true, "Wed": true,
             "Thu": true, "Fri": true, "Sat": false, "Sun": false},
-        "preferred_start_time": "08:00:00",
-        "preferred_end_time": "17:00:00"
+        "preferred_start_time": "08:00",
+        "preferred_end_time": "12:00"
     }
 }
     """)

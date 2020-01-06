@@ -12,19 +12,7 @@ import json
 MentorBlueprint = Blueprint('mentor', __name__)
 
 
-# Returns details about a given mentor including name, current students / spare capacity, availability, local time, assigned students, notes, support log
-@MentorBlueprint.route('/<mentor_id>', methods=['GET'])
-def get_mentor(mentor_id):
-
-    # Get info from DB
-    data = get_mentor_info(mentor_id)
-
-    if data is None:
-        return abort(404, 'Mentor not found')
-
-    # TODO: change to proper backend calls
-    form = SupportForm()
-    content = json.loads("""{
+base_content = json.loads("""{
         "current_user": {
             "first_name": "Gilad",
             "last_name": "Gressel",
@@ -55,8 +43,21 @@ def get_mentor(mentor_id):
         }
     }
     """)
+
+# Returns details about a given mentor including name, current students / spare capacity, availability, local time, assigned students, notes, support log
+@MentorBlueprint.route('/<mentor_id>', methods=['GET'])
+def get_mentor(mentor_id):
+
+    # Get info from DB
+    data = get_mentor_info(mentor_id)
+
+    if data is None:
+        return abort(404, 'Mentor not found')
+
+    # TODO: change to proper backend calls
+    form = SupportForm()
+    content = base_content
     return render_template('mentor_profile.html', form=form, title=content['mentor']['username'], **content)
-    # return jsonify(content), 200
     # return jsonify(data), 200
 
 
@@ -90,4 +91,67 @@ def student_log_support(mentor_id):
     )
 
     return "Success"
+
+
+@MentorBlueprint.route('/<mentor_id>/students', methods=['GET'])
+def get_mentored_students(mentor_id):
+    # TODO: change to proper backend calls
+    form = SupportForm()
+    content = dict(base_content, **json.loads("""{
+    "students": [
+        {
+            "aims": "wants to learn to frontend",
+            "id": 2,
+            "mentor_id": 3,
+            "preferred_learning": "discussions",
+            "start_date": "Fri, 13 Sep 2019 13:14:57 GMT",
+            "status": "alumni",
+            "user_id": 2,
+            "username": "carol",
+            "email": "johnny@gmail.com",
+            "first_name": "Carol",
+            "last_name": "Dunlop",
+            "learning_platform": "carol",
+            "forum": "carol",
+            "slack": "apple",
+            "time_zone": "America/Los_Angeles",
+            "courses": [
+                {
+                    "id": 8,
+                    "name": "Python Software Development",
+                    "progress_percent": 100
+                }
+            ],
+            "next_call": "Thu, 22 Sep 2019 13:14:57 GMT"
+        },
+        {
+            "aims": "get a job asap",
+            "id": 4,
+            "mentor_id": 3,
+            "preferred_learning": "military study",
+            "start_date": "Fri, 13 Sep 2019 13:14:57 GMT",
+            "status": "student",
+            "user_id": 7,
+            "username": "larry",
+            "email": "larry@gmail.com",
+            "first_name": "Larry",
+            "last_name": "Longbottom",
+            "learning_platform": "larry",
+            "forum": "llong",
+            "slack": "larrylong",
+            "time_zone": "Europe/London",
+            "courses": [
+                {
+                    "id": 8,
+                    "name": "Python Software Development",
+                    "progress_percent": 10
+                }
+            ],
+            "next_call": "Fri, 23 Sep 2019 13:14:57 GMT"
+        }
+    ]
+}
+"""))
+    return render_template('mentor_students.html', form=form, title=content['mentor']['username'], **content)
+    # return jsonify(data), 200
 

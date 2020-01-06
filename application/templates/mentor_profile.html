@@ -53,17 +53,32 @@
     </div>
     <div>
         <div class="mb-4">
-            <h2 class="display-4"><a href="http://0.0.0.0:5000/mentor/{{ mentor.id }}/students">Assigned Students</a></h2>
+            <h2 class="display-5"><a id="students-link" class="text-muted" href="http://0.0.0.0:5000/mentor/{{ mentor.id }}/students">Assigned Students</a></h2>
             <hr>
         </div>
+
+        {% block students %}
+
+        {% endblock %}
+
         <div class="mb-4">
-            <h2 class="display-4"><a href="http://0.0.0.0:5000/mentor/{{ mentor.id }}/notes">Notes</a></h2>
+            <h2 class="display-5"><a id="notes-link" class="text-muted" href="http://0.0.0.0:5000/mentor/{{ mentor.id }}/notes">Notes</a></h2>
             <hr>
         </div>
+
+        {% block notes %}
+
+        {% endblock %}
+
         <div class="mb-4">
-            <h2 class="display-4"><a href="http://0.0.0.0:5000/mentor/{{ mentor.id }}/logs">Support Logs</a></h2>
+            <h2 class="display-5"><a id="logs-link" class="text-muted" href="http://0.0.0.0:5000/mentor/{{ mentor.id }}/logs">Support Logs</a></h2>
             <hr>
         </div>
+
+        {% block logs %}
+
+        {% endblock %}
+
     </div>
     </div>
 {% endblock %}
