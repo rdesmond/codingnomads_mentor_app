@@ -26,11 +26,17 @@
         </style>
     </head>
     <body>
-        <div>
-            Navigation:
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('auth.login') }}">Login</a>
-        </div>
+        <nav class="container-fluid pt-4">
+            <div class="row justify-content-between">
+                <a class="pl-4" href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('auth.login') }}">Login</a>
+                {% if current_user %}
+                    <p class="text-muted text-right pr-4">Welcome {{ current_user.first_name }} {{ current_user.last_name }}
+                        <a href="">(logout)</a>
+                    </p>
+                {% endif %}
+            </div>
+        </nav>
         <hr>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
