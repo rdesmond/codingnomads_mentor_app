@@ -9,19 +9,7 @@ from application.data_services import get_student_info, log_student_support
 
 StudentBlueprint = Blueprint('student', __name__)
 
-# Returns details about a given student including name ,goals, availability, local time, progress, notes and support log
-@StudentBlueprint.route('/<student_id>', methods=['GET'])
-def get_student(student_id):
-
-    # Get info from DB
-    data = get_student_info(student_id)
-
-    if data is None:
-        return abort(404, description='Student not found')
-
-    # TODO: change to proper backend calls
-    form = SupportForm()
-    content = json.loads("""{
+base_content = json.loads("""{
     "current_user": {
         "first_name": "Gilad",
         "last_name": "Gressel",
@@ -60,6 +48,21 @@ def get_student(student_id):
     }
 }
     """)
+
+
+# Returns details about a given student including name ,goals, availability, local time, progress, notes and support log
+@StudentBlueprint.route('/<student_id>', methods=['GET'])
+def get_student(student_id):
+
+    # Get info from DB
+    data = get_student_info(student_id)
+
+    if data is None:
+        return abort(404, description='Student not found')
+
+    # TODO: change to proper backend calls
+    form = SupportForm()
+    content = base_content
     return render_template('student_profile.html', form=form, title=content['student']['username'], **content)
     # return jsonify(data), 200
 
@@ -98,43 +101,7 @@ def get_student_logs(student_id):
 
     # TODO: change to proper backend calls
     form = SupportForm()
-    content = json.loads("""{
-    "current_user": {
-        "first_name": "Gilad",
-        "last_name": "Gressel",
-        "is_admin": false,
-        "user_id": 1
-    },
-    "student": {
-        "aims": "wants to learn to frontend",
-        "id": 2,
-        "mentor_id": 3,
-        "mentor_name": "Gilad Gressel",
-        "preferred_learning": "discussions",
-        "start_date": "Fri, 13 Sep 2019 13:14:57 GMT",
-        "status": "student",
-        "user_id": 2,
-        "username": "johnny",
-        "email": "johnny@gmail.com",
-        "first_name": "Johnny",
-        "last_name": "Appleseed",
-        "learning_platform": "jseed",
-        "forum": "johnny",
-        "slack": "apple",
-        "time_zone": "Europe/London",
-        "courses": [
-            {
-                "id": 8,
-                "name": "Python Software Development",
-                "progress_percent": 80
-            }
-        ],
-        "preferred_days": {
-            "Mon": true, "Tue": true, "Wed": true,
-            "Thu": true, "Fri": true, "Sat": false, "Sun": false},
-        "preferred_start_time": "08:00:00",
-        "preferred_end_time": "17:00:00"
-    },
+    content = dict(base_content, **json.loads("""{
     "support_logs": [
         {
             "mentor_id": 3,
@@ -156,7 +123,7 @@ def get_student_logs(student_id):
         }
     ]
 }
-""")
+"""))
     return render_template('student_logs.html', form=form, title=content['student']['username'], **content)
 
 
@@ -164,43 +131,7 @@ def get_student_logs(student_id):
 def get_student_progress(student_id):
     # TODO: change to proper backend calls
     form = SupportForm()
-    content = json.loads("""{
-    "current_user": {
-        "first_name": "Gilad",
-        "last_name": "Gressel",
-        "is_admin": false,
-        "user_id": 1
-    },
-    "student": {
-        "aims": "wants to learn to frontend",
-        "id": 2,
-        "mentor_id": 3,
-        "mentor_name": "Gilad Gressel",
-        "preferred_learning": "discussions",
-        "start_date": "Fri, 13 Sep 2019 13:14:57 GMT",
-        "status": "student",
-        "user_id": 2,
-        "username": "johnny",
-        "email": "johnny@gmail.com",
-        "first_name": "Johnny",
-        "last_name": "Appleseed",
-        "learning_platform": "jseed",
-        "forum": "johnny",
-        "slack": "apple",
-        "time_zone": "CEST",
-        "courses": [
-            {
-                "id": 8,
-                "name": "Python Software Development",
-                "progress_percent": 80
-            }
-        ],
-        "preferred_days": {
-            "Mon": true, "Tue": true, "Wed": true,
-            "Thu": true, "Fri": true, "Sat": false, "Sun": false},
-        "preferred_start_time": "08:00:00",
-        "preferred_end_time": "17:00:00"
-    },
+    content = dict(base_content, **json.loads("""{
     "progress": [
         {
             "course_id": 8,
@@ -218,7 +149,7 @@ def get_student_progress(student_id):
 
     ]
 }
-""")
+"""))
     return render_template('student_progress.html', form=form, title=content['student']['username'], **content)
 
 
@@ -226,43 +157,7 @@ def get_student_progress(student_id):
 def get_student_notes(student_id):
     # TODO: change to proper backend calls
     form = SupportForm()
-    content = json.loads("""{
-    "current_user": {
-        "first_name": "Gilad",
-        "last_name": "Gressel",
-        "is_admin": false,
-        "user_id": 1
-    },
-    "student": {
-        "aims": "wants to learn to frontend",
-        "id": 2,
-        "mentor_id": 3,
-        "mentor_name": "Gilad Gressel",
-        "preferred_learning": "discussions",
-        "start_date": "Fri, 13 Sep 2019 13:14:57 GMT",
-        "status": "student",
-        "user_id": 2,
-        "username": "johnny",
-        "email": "johnny@gmail.com",
-        "first_name": "Johnny",
-        "last_name": "Appleseed",
-        "learning_platform": "jseed",
-        "forum": "johnny",
-        "slack": "apple",
-        "time_zone": "CEST",
-        "courses": [
-            {
-                "id": 8,
-                "name": "Python Software Development",
-                "progress_percent": 80
-            }
-        ],
-        "preferred_days": {
-            "Mon": true, "Tue": true, "Wed": true,
-            "Thu": true, "Fri": true, "Sat": false, "Sun": false},
-        "preferred_start_time": "08:00:00",
-        "preferred_end_time": "17:00:00"
-    },
+    content = dict(base_content, **json.loads("""{
     "notes": [
         {
             "mentor_id": 3,
@@ -284,5 +179,5 @@ def get_student_notes(student_id):
         }
     ]
 }
-""")
+"""))
     return render_template('student_notes.html', form=form, title=content['student']['username'], **content)
