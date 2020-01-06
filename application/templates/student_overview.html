@@ -8,13 +8,16 @@
     </div>
 
     {% for student in students %}
-        <div class="row align-items-center mb-5 mentor-card">
+        <div class="row align-items-center mb-5 student-card">
             <div class="col-auto mx-3">
                 <a class="row" href="https://codingnomads-chat.slack.com/team/{{ student.slack }}" target="_blank"><i class="fab fa-slack fa-3x"></i></a>
                 <a class="row" href="mailto:{{ student.email }}" target="_blank"><i class="far fa-envelope fa-3x"></i></a>
             </div>
             <div class="col-7">
-                <p class="display-4">{{ student.first_name }} {{ student.last_name }} <a href="https://platform.codingnomads.co/learn/user/profile.php?id={{ student.learning_platform }}" target="_blank" class="text-muted">({{ student.username }})</a></p>
+                <p class="display-4">
+                    <a class="text-dark" href="http://0.0.0.0:5000/student/{{ student.id }}">{{ student.first_name }} {{ student.last_name }}</a>
+                    <a href="https://platform.codingnomads.co/learn/user/profile.php?id={{ student.learning_platform }}" target="_blank" class="text-muted">({{ student.username }})</a>
+                </p>
                 {% for course in student.courses %}
                 <a href="https://platform.codingnomads.co/learn/report/outline/user.php?id={{ student.user_id }}&course={{ course.id }}&mode=outline" target="_blank">
                     <div class="progress">
@@ -53,6 +56,7 @@
                 {% endif %}
             </div>
         </div>
+        </a>
     {% endfor %}
     </div>
 {% endblock %}
