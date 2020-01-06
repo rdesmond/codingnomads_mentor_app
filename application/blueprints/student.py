@@ -221,3 +221,68 @@ def get_student_progress(student_id):
 """)
     return render_template('student_progress.html', form=form, title=content['student']['username'], **content)
 
+
+@StudentBlueprint.route('/<student_id>/notes', methods=['GET'])
+def get_student_notes(student_id):
+    # TODO: change to proper backend calls
+    form = SupportForm()
+    content = json.loads("""{
+    "current_user": {
+        "first_name": "Gilad",
+        "last_name": "Gressel",
+        "is_admin": false,
+        "user_id": 1
+    },
+    "student": {
+        "aims": "wants to learn to frontend",
+        "id": 2,
+        "mentor_id": 3,
+        "mentor_name": "Gilad Gressel",
+        "preferred_learning": "discussions",
+        "start_date": "Fri, 13 Sep 2019 13:14:57 GMT",
+        "status": "student",
+        "user_id": 2,
+        "username": "johnny",
+        "email": "johnny@gmail.com",
+        "first_name": "Johnny",
+        "last_name": "Appleseed",
+        "learning_platform": "jseed",
+        "forum": "johnny",
+        "slack": "apple",
+        "time_zone": "CEST",
+        "courses": [
+            {
+                "id": 8,
+                "name": "Python Software Development",
+                "progress_percent": 80
+            }
+        ],
+        "preferred_days": {
+            "Mon": true, "Tue": true, "Wed": true,
+            "Thu": true, "Fri": true, "Sat": false, "Sun": false},
+        "preferred_start_time": "08:00:00",
+        "preferred_end_time": "17:00:00"
+    },
+    "notes": [
+        {
+            "mentor_id": 3,
+            "student_id": 7,
+            "text": "this is an example note.",
+            "timestamp": "Fri, 23 Sep 2019 13:14:57 GMT"
+        },
+        {
+            "mentor_id": 3,
+            "student_id": 7,
+            "text": "another example note for the same student.",
+            "timestamp": "Thu, 22 Sep 2019 13:14:57 GMT"
+        },
+        {
+            "mentor_id": 4,
+            "student_id": 7,
+            "text": "another example note for the same student but taken by a different mentor.",
+            "timestamp": "Thu, 22 Sep 2019 13:14:57 GMT"
+        }
+    ]
+}
+""")
+    return render_template('student_notes.html', form=form, title=content['student']['username'], **content)
