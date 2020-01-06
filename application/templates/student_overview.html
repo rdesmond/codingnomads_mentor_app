@@ -44,10 +44,9 @@
                     <label for="mentor-select">Assign Mentor:</label>
                     <select name="mentor" id="mentor-select">
                         <option value="0">Select...</option>
-                      <option value="1">Ryan</option>
-                      <option value="2">Martin</option>
-                      <option value="3">Gilad</option>
-                      <option value="4">Viji</option>
+                        {% for mentor in mentors %}
+                        <option value="{{ mentor.mentor_id }}">{{ mentor.name }}</option>
+                        {% endfor %}
                     </select>
                 {% endif %}
             </div>

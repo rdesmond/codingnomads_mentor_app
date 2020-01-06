@@ -117,7 +117,7 @@ def show_student_list():
             "username": "carol",
             "email": "carol@gmail.com",
             "first_name": "Carol",
-            "last_name": "Denvers",
+            "last_name": "Dunlop",
             "learning_platform": "jseed",
             "forum": "coral",
             "slack": "apple",
@@ -155,6 +155,11 @@ def show_student_list():
                 }
             ]
         }
+    ],
+    "mentors": [
+        { "mentor_id":  1, "name":  "Ryan"},
+        { "mentor_id":  2, "name":  "Martin"},
+        { "mentor_id":  3, "name":  "Gilad"}
     ]
 }
 """)
