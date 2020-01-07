@@ -16,8 +16,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Login requested for user {}, remember_me={}'.format(
-            form.username.data, form.remember_me.data))
+            flash('Login requested for user {}, remember_me={}'.format(form.username.data, form.remember_me.data))
             return redirect(url_for('index'))
         login_user(user)
     return render_template('login.html', title='Sign In', form=form)
@@ -39,7 +38,7 @@ def change_password():
 
     if form.validate_on_submit():
         if not user.check_password(form.current_password.data):
-            flask('Current Password is incorrect')
+            flash('Current Password is incorrect')
             return redirect(url_for('/change_password'))
         user.password_hash = user.set_password(form.new_password.data)
         db.session.commit()
