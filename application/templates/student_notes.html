@@ -1,0 +1,28 @@
+{% extends 'student_profile.html' %}
+
+{% block notes %}
+
+    {% for note in notes %}
+    <div class="card mb-4">
+        <div class="card-body">
+        <div class="row">
+            <div class="col">{{ note.text }}</div>
+            <div class="col text-right text-muted">
+                <p>{{ note.timestamp }}</p>
+                {% if note.mentor_id != student.mentor_id %}
+                    <p class="small"><strong>Mentor:</strong> {{ note.mentor_id }}</p>
+                {% endif %}
+            </div>
+        </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <script>
+        // reset link to get back to previous page
+        const backlink = document.getElementById('notes-link');
+        backlink.href = 'http://0.0.0.0:5000/student/{{ student.id }}';
+    </script>
+
+
+{% endblock %}

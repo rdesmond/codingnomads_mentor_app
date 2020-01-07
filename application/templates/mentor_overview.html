@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+    <div class="mb-4">
+        <h1 class="display-1 text-center">{{ title }}</h1>
+    </div>
+
+    {% for mentor in mentors %}
+        <div class="row align-items-center mb-5 mentor-card">
+            <div class="col-auto mx-3">
+                <a class="row" href="https://codingnomads-chat.slack.com/team/{{ mentor.slack }}" target="_blank"><i class="fab fa-slack fa-3x"></i></a>
+                <a class="row" href="mailto:{{ mentor.email }}" target="_blank"><i class="far fa-envelope fa-3x"></i></a>
+            </div>
+            <div class="col-7">
+                <p class="display-4"><a class="text-dark" href="http://0.0.0.0:5000/mentor/{{ mentor.id }}">{{ mentor.first_name }} {{ mentor.last_name }}</a> <a href="https://platform.codingnomads.co/learn/user/profile.php?id={{ mentor.user_id }}" target="_blank" class="text-muted">({{ mentor.username }})</a></p>
+                <div class="progress">
+                    {% if mentor.current_students == 0 %}
+                        <p class="ml-4">{{ mentor.current_students }} / {{ mentor.max_students }} students</p>
+                    {% endif %}
+                    <div class="progress-bar" role="progressbar" style="width: {{ mentor.current_students / mentor.max_students * 100|int }}%;" aria-valuenow="{{ (mentor.current_students / mentor.max_students) * 100|int }}" aria-valuemin="0" aria-valuemax="100">{{ mentor.current_students }} / {{ mentor.max_students }} students</div>
+                </div>
+            </div>
+            <div class="col">
+                <p class="time">
+                <script>
+                    // adds information about current time of the mentor
+                    var element = document.currentScript.parentElement;
+                    var today = new Date();
+                    var timestring = today.toLocaleTimeString('en-US', { timeZone: '{{ mentor.time_zone }}', hour: '2-digit', minute: '2-digit' });
+                    element.innerHTML = timestring + ' ({{ mentor.time_zone }})';
+                </script>
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                <script>
+                    var log_elem = document.currentScript.parentElement;
+                    var last_log = new Date('{{ mentor.last_support_log_created }}');
+                    var time_since = (today - last_log) / (1000 * 60 * 60 * 24);
+                    log_elem.innerHTML = String('<i class="fas fa-plus-circle mr-2"></i>' + time_since.toFixed(2)) + ' days';
+                </script>
+                </p>
+                <div class="score-wrap">
+                    {% if mentor.rating %}
+                      {% for s in range(mentor.rating|int) %}
+                         <i class="fas fa-star"></i>
+                      {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+
+    <script>
+        const nav = document.getElementById('topnav');
+        nav.classList.remove('bg-light');
+        nav.classList.remove('navbar-light');
+        nav.classList.add('navbar-dark');
+        nav.classList.add('bg-dark');
+    </script>
+
+{% endblock %}

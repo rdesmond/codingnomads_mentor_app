@@ -1,0 +1,32 @@
+{% extends 'student_profile.html' %}
+
+{% block logs %}
+
+    {% for log in support_logs %}
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between pt-3">
+          <h5 class="card-title">{{ log.support_type.capitalize() }} - {{ log.time_spent }} min</h5>
+          <div>{{ log.created_at }}</div>
+{#          <div>{{ log.created_at.strftime('%Y-%m-%d %H:%M') }}</div>#}
+      </div>
+      <div class="card-body d-flex justify-content-between">
+          <p class="card-text">{{ log.notes }}</p>
+          <div>Comprehension:
+              {% for point in range(log.comprehension) %}
+                <span class="fa fa-circle checked"></span>
+              {% endfor %}
+              {% for empty in range(5-log.comprehension) %}
+                <span class="fa fa-circle"></span>
+              {% endfor %}
+          </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <script>
+        // reset link to get back to previous page
+        const backlink = document.getElementById('logs-link');
+        backlink.href = 'http://0.0.0.0:5000/student/{{ student.id }}';
+    </script>
+
+{% endblock %}

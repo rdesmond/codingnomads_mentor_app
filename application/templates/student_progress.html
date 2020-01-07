@@ -1,0 +1,34 @@
+{% extends 'student_profile.html' %}
+
+{% block progress %}
+
+    {% for course in progress %}
+        <div class="container mb-4">
+        <h3 class="display-5 mb-4">{{ course.course_name }}</h3>
+            <a href="https://platform.codingnomads.co/learn/report/outline/user.php?id={{ student.user_id }}&course={{ course.course_id }}&mode=outline" target="_blank">
+                <div class="progress mb-3">
+                    <div class="progress-bar" role="progressbar" style="width: {{ course.progress_percent|int }}%;" aria-valuenow="{{ course.progress_percent }}" aria-valuemin="0" aria-valuemax="100">{{ course.progress_percent }}%</div>
+                </div>
+            </a>
+        <div class="row mb-3">
+            <div class="col">last accessed at:</div>
+            <div class="col">{{ course.last_access }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">last page accessed:</div>
+            <div class="col"><a href="https://platform.codingnomads.co/learn/mod/page/view.php?id={{ course.last_page_accessed_id }}" target="_blank">{{ course.last_page_accessed_name }}</a></div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">furthest course progress:</div>
+            <div class="col"><a href="https://platform.codingnomads.co/learn/mod/page/view.php?id={{ course.furthest_page_accessed_id }}" target="_blank">{{ course.furthest_page_accessed_name }}</a> <span class="text-muted">({{ course.furthest_section_name }} {{ course.furthest_section_current_resource }}/{{ course.furthest_section_total_resources }})</span></div>
+        </div>
+        </div>
+    {% endfor %}
+
+    <script>
+        // reset link to get back to previous page
+        const backlink = document.getElementById('progress-link');
+        backlink.href = 'http://0.0.0.0:5000/student/{{ student.id }}';
+    </script>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'mentor_profile.html' %}
+
+{% block notes %}
+
+    {% for note in notes %}
+        <div class="card mb-4">
+            <div class="card-body">
+            <div class="row">
+                <p class="col">{{ note.text }}</p>
+                <p class="col text-right text-muted">{{ note.timestamp }}</p>
+            </div>
+            </div>
+        </div>
+    {% endfor %}
+    <script>
+        // reset link to get back to previous page
+        const backlink = document.getElementById('notes-link');
+        backlink.href = 'http://0.0.0.0:5000/mentor/{{ mentor.id }}';
+    </script>
+{% endblock %}

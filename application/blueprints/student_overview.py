@@ -44,7 +44,7 @@ def log_support(mentor_id, student_id):
     support_type = 'test'
     time_spent = 5
     notes ='test'
-    mentor_assesment = 5
+    comprehension = 5
 
     # Create a row in the support log table
 
