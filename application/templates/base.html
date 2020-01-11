@@ -10,6 +10,9 @@
         <!-- Add icon library -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="https://kit.fontawesome.com/c3d3349a2c.js" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <!-- TODO: move this to CSS file -->
         <style>
             .fa-circle {
@@ -67,5 +70,36 @@
         {% block content %}{% endblock %}
 
         </div>
+
+    <footer class="container">
+        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModal">
+            Log Support
+        </button>
+    </footer>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="exampleModalLabel">Log Support</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="{{url_for('student.log_support_student', student_id=form.student_id)}}" method="post" novalidate>
+                {{ form.hidden_tag() }}
+                <p class="d-flex justify-content-between">{{ form.mentor_id.label(class_="text-muted") }} {{ form.mentor_id() }}</p>
+                <p class="d-flex justify-content-between">{{ form.student_id.label }} {{ form.student_id() }}</p>
+                <p class="d-flex justify-content-between">{{ form.support_type.label }} {{ form.support_type() }}</p>
+                <p class="d-flex justify-content-between">{{ form.time_spent.label }} {{ form.time_spent() }}</p>
+                <p class="d-flex justify-content-between">{{ form.notes.label }} {{ form.notes(size=128) }}</p>
+                <p class="d-flex justify-content-between">{{ form.comprehension.label }} {{ form.comprehension() }}</p>
+                <p class="d-flex justify-content-between float-right">{{ form.submit() }}</p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
     </body>
 </html>

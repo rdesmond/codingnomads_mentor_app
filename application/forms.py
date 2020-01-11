@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, TextAreaField
 from wtforms.validators import DataRequired, EqualTo
 
 
@@ -16,7 +16,7 @@ class SupportForm(FlaskForm):
     student_id = IntegerField('Student ID', validators=[DataRequired()])
     support_type = StringField('Support Type', validators=[DataRequired()])
     time_spent = IntegerField('Time Spent', validators=[DataRequired()])
-    notes = StringField('Notes', validators=[DataRequired()])
+    notes = TextAreaField('Notes', validators=[DataRequired()])
     comprehension = IntegerField('Comprehension', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
