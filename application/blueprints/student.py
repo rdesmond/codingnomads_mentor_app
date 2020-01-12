@@ -97,7 +97,6 @@ def get_student_logs(student_id):
     data = get_student_support_logs(student_id)
     if data is None:
         return abort(404, description='Student not found')
-    # return render_template('log_list.html', logs=data, student_id=student_id)
 
     # TODO: change to proper backend calls that include all the data (also from base_content!)
     form = SupportForm()

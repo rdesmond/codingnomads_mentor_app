@@ -28,7 +28,6 @@ def get_analytics():
     data = get_all_students()
     if not data:
         return abort(404, description='Students not found')
-
     return jsonify(data)
 
 
