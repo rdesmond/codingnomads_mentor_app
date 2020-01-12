@@ -87,7 +87,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <form action="{{url_for('student.log_support_student', student_id=form.student_id())}}" method="post" novalidate>
+            <form action="{{url_for('student.log_support_student')}}" method="post" novalidate>
                 {{ form.hidden_tag() }}
                 <p class="d-flex justify-content-between">{{ form.mentor_id.label(class_="text-muted") }} {{ form.mentor_id() }}</p>
                 <p class="d-flex justify-content-between">{{ form.student_id.label }} {{ form.student_id() }}</p>
