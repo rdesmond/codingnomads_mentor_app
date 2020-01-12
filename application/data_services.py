@@ -38,7 +38,7 @@ def log_student_support(mentor_id, student_id, support_type, time_spent, notes, 
     return 'Support log successfully added'
 
 
-def get_student_support_logs(mentor_id, student_id):
+def get_student_support_logs(student_id):
     """Get all support logs for a given student."""
     data = None
     #logs = SupportLog.query.filter(SupportLog.mentor_id == mentor_id).filter(SupportLog.student_id == student_id).all()

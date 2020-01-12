@@ -61,10 +61,10 @@ def get_student(student_id):
     return render_template('student_profile.html', form=form, title=content['student']['username'], **content)
 
 
-# Log support for a given student
 @StudentBlueprint.route('/support', methods=['POST'])
-def log_support_student():  # TODO: input could be mentor_id from currently logged in user (+add below)
+def log_support_student():
     """Submits a support log."""
+    # TODO: fill mentor_id from currently logged in user, and (if called from a student page) also student_id
     form = SupportForm()
     if form.validate_on_submit():
         flash('Support Log submitted for student #{} by mentor #{}'.format(
@@ -93,16 +93,13 @@ def log_support_student():  # TODO: input could be mentor_id from currently logg
 
 @StudentBlueprint.route('/<student_id>/logs', methods=['GET'])
 def get_student_logs(student_id):
-
-    # data = get_student_support_logs(mentor_id, student_id)
-    #
-    # if data is None:
-    #     return abort(404, description='Student or mentor not found')
-    #
+    """Fetches and displays the support logs for a given student."""
+    data = get_student_support_logs(student_id)
+    if data is None:
+        return abort(404, description='Student not found')
     # return render_template('log_list.html', logs=data, student_id=student_id)
 
-
-    # TODO: change to proper backend calls
+    # TODO: change to proper backend calls that include all the data (also from base_content!)
     form = SupportForm()
     content = dict(base_content, **json.loads("""{
     "support_logs": [
@@ -132,7 +129,8 @@ def get_student_logs(student_id):
 
 @StudentBlueprint.route('/<student_id>/progress', methods=['GET'])
 def get_student_progress(student_id):
-    # TODO: change to proper backend calls
+    """Fetches and displays course progress information for a given student."""
+    # TODO: change to proper backend calls that include all the data (also from base_content!)
     form = SupportForm()
     content = dict(base_content, **json.loads("""{
     "progress": [
@@ -158,7 +156,8 @@ def get_student_progress(student_id):
 
 @StudentBlueprint.route('/<student_id>/notes', methods=['GET'])
 def get_student_notes(student_id):
-    # TODO: change to proper backend calls
+    """Fetches and displays all mentor notes for a given student."""
+    # TODO: change to proper backend calls that include all the data (also from base_content!)
     form = SupportForm()
     content = dict(base_content, **json.loads("""{
     "notes": [
