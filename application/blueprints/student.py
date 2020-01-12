@@ -1,11 +1,8 @@
 import json
-
 from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for, abort
 from application.utils import utc_to_local
-from application import db
-from application.models import User, Mentor, Student, Course, SupportLog, UserCourse
 from application.forms import SupportForm
-from application.data_services import get_student_info, log_student_support
+from application.data_services import get_student_info, log_student_support, get_student_support_logs
 
 StudentBlueprint = Blueprint('student', __name__)
 
@@ -100,6 +97,14 @@ def log_support_student():  # TODO: input could be mentor_id from currently logg
 
 @StudentBlueprint.route('/<student_id>/logs', methods=['GET'])
 def get_student_logs(student_id):
+
+    # data = get_student_support_logs(mentor_id, student_id)
+    #
+    # if data is None:
+    #     return abort(404, description='Student or mentor not found')
+    #
+    # return render_template('log_list.html', logs=data, student_id=student_id)
+
 
     # TODO: change to proper backend calls
     form = SupportForm()

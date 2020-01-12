@@ -1,16 +1,10 @@
+import json
 from flask import Blueprint, jsonify, request, abort, render_template
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import select
-from sqlalchemy import text
-
-from application import db
-from application.models import User, Mentor, Student, Course, SupportLog, UserCourse
 from application.data_services import get_mentor_info, log_student_support
 from application.forms import SupportForm
-import json
+
 
 MentorBlueprint = Blueprint('mentor', __name__)
-
 
 base_content = json.loads("""{
         "current_user": {

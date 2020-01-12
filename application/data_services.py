@@ -61,6 +61,7 @@ def get_student_support_logs(mentor_id, student_id):
 
 
 def get_student_overview(id):
+    # TODO: what was this call about? seems to get info about the student (+some), maybe should be related to mentor?
 
   data = None
 
