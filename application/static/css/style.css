@@ -1,0 +1,41 @@
+.fa-circle {
+    color: lightgray;
+}
+
+.checked {
+    color: #007bff;
+}
+
+.mentor-card, .student-card {
+    border: lightgray 1px solid;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.logo-top {
+    height: 40px;
+}
+
+@media (max-width: 575.98px) {
+    /*Manage Display Headers for Mobile Devices*/
+    .display-1 {
+        font-size: 3rem;
+        font-weight: 300;
+        line-height: 1.0;
+    }
+    .display-2 {
+        font-size: 2.75rem;
+        font-weight: 300;
+        line-height: 1.0;
+    }
+    .display-3 {
+        font-size: 2.25rem;
+        font-weight: 300;
+        line-height: 1.0;
+    }
+    .display-4 {
+        font-size: 1.75rem;
+        font-weight: 300;
+        line-height: 1.0;
+    }
+}
