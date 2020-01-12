@@ -26,11 +26,16 @@
                 border-radius: 10px;
                 padding: 20px;
             }
+            .logo-top {
+                height: 40px;
+            }
         </style>
     </head>
     <body>
     <nav id="topnav" class="navbar navbar-expand-lg mb-5 navbar-light bg-light">
-      <a class="navbar-brand" href="#">Mentor Platform</a>
+      <a class="navbar-brand" href="{{ url_for('index') }}">
+          <img class="logo-top" src="{{ url_for('static', filename='logo_seethrough.png') }}" alt="CodingNomads Logo">
+      </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
