@@ -12,12 +12,12 @@ class LoginForm(FlaskForm):
 
 
 class SupportForm(FlaskForm):
-    mentor_id = IntegerField('Mentor ID', validators=[DataRequired()])
-    student_id = IntegerField('Student ID', validators=[DataRequired()])
-    support_type = StringField('Support Type', validators=[DataRequired()])
-    time_spent = IntegerField('Time Spent', validators=[DataRequired()])
-    notes = TextAreaField('Notes', validators=[DataRequired()])
-    comprehension = IntegerField('Comprehension', validators=[DataRequired()])
+    mentor_id = IntegerField('Mentor ID', validators=[DataRequired(message="Your mentor ID")])
+    student_id = IntegerField('Student ID', validators=[DataRequired(message="ID of the student you're logging support for")])
+    support_type = StringField('Support Type', validators=[DataRequired(message="How did you interact with the student")])
+    time_spent = IntegerField('Time Spent', validators=[DataRequired(message="Length of interaction. Needs to be a number")])
+    notes = TextAreaField('Notes', validators=[DataRequired(message="Quickly describe the interaction")])
+    comprehension = IntegerField('Comprehension', validators=[DataRequired(message="How well did the student understand (1-5)")])
     submit = SubmitField('Submit')
 
 

@@ -68,11 +68,13 @@ def get_student(student_id):
 
 
 # Log support for a given student
-@StudentBlueprint.route('/support/<student_id>', methods=['POST'])
-def log_support_student(student_id):  # TODO: input could be mentor_id from currently logged in user (+add below)
+@StudentBlueprint.route('/support', methods=['POST'])
+def log_support_student():  # TODO: input could be mentor_id from currently logged in user (+add below)
 
     form = SupportForm()
+
     if form.validate_on_submit():
+        print("Student ID: ", request.form['student_id'])
         flash('Support Log submitted for student #{} by mentor #{}'.format(
             form.mentor_id.data, form.student_id.data))
 
@@ -90,10 +92,10 @@ def log_support_student(student_id):  # TODO: input could be mentor_id from curr
             time_spent,
             notes,
             comprehension)
-            
+        return redirect(url_for('mentor', mentor_id=mentor_id))  # request.url   <- returns to current page
     else:
         flash('Missing data. Please fill all the fields')
-    return redirect(url_for('index'))
+    return redirect(url_for('show_mentor_list')) # request.url   <- returns to current page
 
 
 @StudentBlueprint.route('/<student_id>/logs', methods=['GET'])
