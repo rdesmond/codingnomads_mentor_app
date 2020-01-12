@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, EqualTo
 
 
@@ -14,10 +14,15 @@ class LoginForm(FlaskForm):
 class SupportForm(FlaskForm):
     mentor_id = IntegerField('Mentor ID', validators=[DataRequired(message="Your mentor ID")])
     student_id = IntegerField('Student ID', validators=[DataRequired(message="ID of the student you're logging support for")])
-    support_type = StringField('Support Type', validators=[DataRequired(message="How did you interact with the student")])
-    time_spent = IntegerField('Time Spent', validators=[DataRequired(message="Length of interaction. Needs to be a number")])
+    support_type = SelectField('Support Type',
+                               choices=[('call', 'call'), ('chat', 'chat'), ('orga', 'orga'), ('forum', 'forum')],
+                               validators=[DataRequired(message="How did you interact with the student")])
+    time_spent = IntegerField('Time Spent', validators=[DataRequired(message="Needs to be a number")])
     notes = TextAreaField('Notes', validators=[DataRequired(message="Quickly describe the interaction")])
-    comprehension = IntegerField('Comprehension', validators=[DataRequired(message="How well did the student understand (1-5)")])
+    comprehension = SelectField('Comprehension',
+                                choices=[(5, 'excellent'), (4, 'good'), (3, 'okay'), (2, 'somewhat'), (1, 'very little')],
+                                coerce=int,
+                                validators=[DataRequired(message="How well did the student understand (1-5)")])
     submit = SubmitField('Submit')
 
 
