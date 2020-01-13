@@ -1,11 +1,8 @@
 import json
-
 from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for, abort
 from application.utils import utc_to_local
-from application import db
-from application.models import User, Mentor, Student, Course, SupportLog, UserCourse
 from application.forms import SupportForm
-from application.data_services import get_student_info, log_student_support
+from application.data_services import get_student_info, log_student_support, get_student_support_logs
 
 StudentBlueprint = Blueprint('student', __name__)
 
@@ -50,27 +47,24 @@ base_content = json.loads("""{
     """)
 
 
-# Returns details about a given student including name ,goals, availability, local time, progress, notes and support log
 @StudentBlueprint.route('/<student_id>', methods=['GET'])
 def get_student(student_id):
-
+    """Returns basic details about a given student (e.g. name, goals, availability, local time, progress)."""
     # Get info from DB
     data = get_student_info(student_id)
-
     if data is None:
         return abort(404, description='Student not found')
 
-    # TODO: change to proper backend calls
+    # TODO: change to proper backend calls that include all the required JSON (either here or in data_services.py)
     form = SupportForm()
     content = base_content
     return render_template('student_profile.html', form=form, title=content['student']['username'], **content)
-    # return jsonify(data), 200
 
 
-# Log support for a given student
-@StudentBlueprint.route('/support/<student_id>', methods=['POST'])
-def log_support_student(student_id):  # TODO: input could be mentor_id from currently logged in user (+add below)
-
+@StudentBlueprint.route('/support', methods=['POST'])
+def log_support_student():
+    """Submits a support log."""
+    # TODO: fill mentor_id from currently logged in user, and (if called from a student page) also student_id
     form = SupportForm()
     if form.validate_on_submit():
         flash('Support Log submitted for student #{} by mentor #{}'.format(
@@ -90,16 +84,21 @@ def log_support_student(student_id):  # TODO: input could be mentor_id from curr
             time_spent,
             notes,
             comprehension)
-            
+        return redirect(url_for('mentor.get_mentor', mentor_id=mentor_id))  # request.url   <- returns to current page
     else:
         flash('Missing data. Please fill all the fields')
-    return redirect(url_for('index'))
+        return redirect(url_for('overview.show_mentor_list'))
+        # return redirect(url_for(request.url))  # request.url   <- returns to current page (if it works)
 
 
 @StudentBlueprint.route('/<student_id>/logs', methods=['GET'])
 def get_student_logs(student_id):
+    """Fetches and displays the support logs for a given student."""
+    data = get_student_support_logs(student_id)
+    if data is None:
+        return abort(404, description='Student not found')
 
-    # TODO: change to proper backend calls
+    # TODO: change to proper backend calls that include all the data (also from base_content!)
     form = SupportForm()
     content = dict(base_content, **json.loads("""{
     "support_logs": [
@@ -129,7 +128,8 @@ def get_student_logs(student_id):
 
 @StudentBlueprint.route('/<student_id>/progress', methods=['GET'])
 def get_student_progress(student_id):
-    # TODO: change to proper backend calls
+    """Fetches and displays course progress information for a given student."""
+    # TODO: change to proper backend calls that include all the data (also from base_content!)
     form = SupportForm()
     content = dict(base_content, **json.loads("""{
     "progress": [
@@ -155,7 +155,8 @@ def get_student_progress(student_id):
 
 @StudentBlueprint.route('/<student_id>/notes', methods=['GET'])
 def get_student_notes(student_id):
-    # TODO: change to proper backend calls
+    """Fetches and displays all mentor notes for a given student."""
+    # TODO: change to proper backend calls that include all the data (also from base_content!)
     form = SupportForm()
     content = dict(base_content, **json.loads("""{
     "notes": [

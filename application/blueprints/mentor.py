@@ -1,17 +1,12 @@
+import json
 from flask import Blueprint, jsonify, request, abort, render_template
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import select
-from sqlalchemy import text
-
-from application import db
-from application.models import User, Mentor, Student, Course, SupportLog, UserCourse
 from application.data_services import get_mentor_info, log_student_support
 from application.forms import SupportForm
-import json
+
 
 MentorBlueprint = Blueprint('mentor', __name__)
 
-
+# TODO: remove base_content once DB calls are set up properly
 base_content = json.loads("""{
         "current_user": {
             "first_name": "Gilad",
@@ -44,13 +39,12 @@ base_content = json.loads("""{
     }
     """)
 
-# Returns details about a given mentor including name, current students / spare capacity, availability, local time, assigned students, notes, support log
+
 @MentorBlueprint.route('/<mentor_id>', methods=['GET'])
 def get_mentor(mentor_id):
-
+    """Returns base details about a mentor (e.g. name, current students / spare capacity, availability, local time)."""
     # Get info from DB
     data = get_mentor_info(mentor_id)
-
     if data is None:
         return abort(404, 'Mentor not found')
 
@@ -61,40 +55,9 @@ def get_mentor(mentor_id):
     # return jsonify(data), 200
 
 
-# Log support for a given student
-@MentorBlueprint.route('/<mentor_id>/<student_id>', methods=['POST'])
-def student_log_support(mentor_id):
-
-    # # Code for when a form is built on the front end
-    # mentor_id = request.form['mentor_id']
-    # support_type = request.form['support_type']
-    # time_spent = request.form['support_type']
-    # notes = request.form['notes']
-    # comprehension = request.form['comprehension']
-
-    mentor_id = mentor_id
-    student_id = 3
-    support_type = 'test'
-    time_spent = 5
-    notes = 'test'
-    comprehension = 5
-
-    # Create a row in the support log table
-
-    log_student_support(
-        mentor_id=mentor_id,
-        student_id=student_id,
-        support_type=support_type,
-        time_spent=time_spent,
-        notes=notes,
-        comprehension=comprehension
-    )
-
-    return "Success"
-
-
 @MentorBlueprint.route('/<mentor_id>/students', methods=['GET'])
 def get_mentored_students(mentor_id):
+    """Get list of students currently assigned to given mentor."""
     # TODO: change to proper backend calls
     form = SupportForm()
     content = dict(base_content, **json.loads("""{
@@ -158,6 +121,7 @@ def get_mentored_students(mentor_id):
 
 @MentorBlueprint.route('/<mentor_id>/notes', methods=['GET'])
 def get_mentor_notes(mentor_id):
+    """Get all notes written by given mentor."""
     # TODO: change to proper backend calls
     form = SupportForm()
     content = dict(base_content, **json.loads("""{
@@ -181,6 +145,7 @@ def get_mentor_notes(mentor_id):
 
 @MentorBlueprint.route('/<mentor_id>/logs', methods=['GET'])
 def get_mentor_logs(mentor_id):
+    """Get all support logs written by given mentor."""
     # TODO: change to proper backend calls
     form = SupportForm()
     content = dict(base_content, **json.loads("""{

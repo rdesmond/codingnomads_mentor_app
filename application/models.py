@@ -1,21 +1,14 @@
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timedelta
-from sqlalchemy import Column, DateTime, event, CheckConstraint
-from sqlalchemy.sql import func
-from sqlalchemy.ext.associationproxy import association_proxy
+from datetime import datetime
+from sqlalchemy import CheckConstraint
 from geoip import geolite2
 from flask_login import UserMixin
-from flask_sqlalchemy import SQLAlchemy
+
 
 class User(db.Model, UserMixin):
-    """
-    Data model for users (students and mentors)
-    """
+    """Data model for users (students and mentors)"""
     __tablename__ = 'users'
-
-    # # Adding a constraint for the role column
-    # __table_args__ = (CheckConstraint("role::text = ANY (ARRAY['student'::character varying, 'mentor'::character varying]::text[])", name="check_roles"),)
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True, nullable=False)
@@ -38,16 +31,12 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.String(500))
     is_student = db.Column(db.Boolean)
     is_mentor = db.Column(db.Boolean)
-
     # 1-1 relationship between users and mentors
     mentor = db.relationship('Mentor', backref=db.backref('user', uselist=False))
-
     # 1-1 relationship between users and students
     student = db.relationship('Student', backref=db.backref('user', uselist=False))
-
     # Many to many relationship between users and courses
     course = db.relationship('Course', secondary='user_courses', backref=db.backref('users', lazy='dynamic'))
-
 
     # user_courses = db.relationship('Course', secondary='user_courses', backref=db.backref('users', lazy='dynamic'))
 
@@ -63,21 +52,31 @@ class User(db.Model, UserMixin):
     @staticmethod
     def from_dict(dict):
         return User(
-               id = dict['id'], 
-               username = dict['userName'],
-               email = dict['email'],
-               first_name = dict['firstName'],
-               last_name = dict['lastName'],
-               first_access = dict['firstAccess'],
-               last_access = dict['lastAccess'],
-               last_login = dict['lastLogin'],
-               time_created = dict['timeCreated'],
-               time_modified = dict['timeModified'],
-               timezone = geolite2.lookup(dict['lastIP']).timezone,
-               is_student = dict['student'],
-               is_mentor = dict['mentor'],
+            id=dict['id'],
+            username=dict['userName'],
+            email=dict['email'],
+            first_name=dict['firstName'],
+            last_name=dict['lastName'],
+            first_access=dict['firstAccess'],
+            last_access=dict['lastAccess'],
+            last_login=dict['lastLogin'],
+            time_created=dict['timeCreated'],
+            time_modified=dict['timeModified'],
+            created_at=dict['created_at'],
+            updated_at=dict['updated_at'],
+            telephone=dict['telephone'],
+            learning_platform=dict['learning_platform'],
+            forum=dict['forum'],
+            slack=dict['slack'],
+            timezone=geolite2.lookup(dict['lastIP']).timezone,
+            bio=dict['bio'],
+            is_student=dict['is_student'],
+            is_mentor=dict['is_mentor'],
+            mentor=dict['mentor'],
+            student=dict['student'],
+            course=dict['course']
         )
-    
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -90,7 +89,7 @@ class User(db.Model, UserMixin):
             'last_access': self.last_access,
             'last_login': self.last_login,
             'time_created': self.time_created,
-            'time_modified':self.time_modified,
+            'time_modified': self.time_modified,
             'created_at': self.created_at,
             'updated_at': self.updated_at,
             'telephone': self.telephone,
@@ -104,14 +103,10 @@ class User(db.Model, UserMixin):
             'is_mentor': self.is_mentor
         }
 
+
 class Mentor(db.Model):
-
-    """
-    Data model for mentors
-    """
-
+    """Data model for mentors"""
     __tablename__ = 'mentors'
-
     # Adding a constraint for the rating column
     __table_args__ = (CheckConstraint("rating <= 5 AND rating >= 1", name="check_ratings"),)
 
@@ -120,9 +115,8 @@ class Mentor(db.Model):
     max_students = db.Column(db.Integer)
     current_students = db.Column(db.Integer)
     completed_students = db.Column(db.Integer)
-    rating = db.Column(db.Integer) # Need to think about how we calculate this
+    rating = db.Column(db.Integer)  # Need to think about how we calculate this
     is_admin = db.Column(db.Boolean)
-
     # 1-Many relationship between mentors and students
     students = db.relationship('Student', backref='mentor')
 
@@ -132,12 +126,12 @@ class Mentor(db.Model):
     @staticmethod
     def from_dict(dict):
         return Mentor(
-            user_id = dict['id'],
-            max_students = dict['max_students'],
-            current_students = dict['current_students'],
-            completed_students = dict['completed_students'],
-            rating = dict['rating'],
-            is_admin = dict['is_admin'] # Need to modify criteria for this
+            user_id=dict['id'],
+            max_students=dict['max_students'],
+            current_students=dict['current_students'],
+            completed_students=dict['completed_students'],
+            rating=dict['rating'],
+            is_admin=dict['is_admin']  # Need to modify criteria for this
         )
 
     def to_dict(self):
@@ -153,16 +147,11 @@ class Mentor(db.Model):
 
 
 class Student(db.Model):
-
-    """
-    Data model for students
-    """
-
-
+    """Data model for students."""
     __tablename__ = 'students'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id =  db.Column(db.Integer, db.ForeignKey(User.id))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     goals = db.Column(db.String(250))
     preferred_learning = db.Column(db.String(128))
     status = db.Column(db.String(128))
@@ -176,14 +165,14 @@ class Student(db.Model):
     @staticmethod
     def from_dict(dict):
         return Student(
-            id = dict['id'],
-            user_id = dict['user_id'],
-            goals = dict['goals'],
-            preferred_learning = dict['preferred_learning'],
-            status = dict['status'],
-            start_date = dict['start_date'],
-            end_date = dict['end_date'],
-            mentor_id = dict['mentor_id']
+            id=dict['id'],
+            user_id=dict['user_id'],
+            goals=dict['goals'],
+            preferred_learning=dict['preferred_learning'],
+            status=dict['status'],
+            start_date=dict['start_date'],
+            end_date=dict['end_date'],
+            mentor_id=dict['mentor_id']
         )
 
     def to_dict(self):
@@ -198,24 +187,25 @@ class Student(db.Model):
             'mentor_id': self.mentor_id
         }
 
-class Course(db.Model):
 
+class Course(db.Model):
+    """Data model for courses."""
     __tablename__ = 'courses'
+
     id = db.Column(db.Integer, primary_key=True)
     course_name = db.Column(db.String(128))
-    end_date = db.Column(db.DateTime) # Maybe take out
+    end_date = db.Column(db.DateTime)  # Maybe take out
     is_active = db.Column(db.Boolean)
 
     def __repr__(self):
         return '<Course id: {}>'.format(self.id)
 
-
     @staticmethod
     def from_dict(dict):
         return Course(
-            id = dict['id'],
-            course_name = dict['course_name'],
-            is_active = dict['is_active']
+            id=dict['id'],
+            course_name=dict['course_name'],
+            is_active=dict['is_active']
         )
 
     def to_dict(self):
@@ -225,10 +215,10 @@ class Course(db.Model):
             'is_active': self.is_active,
         }
 
+
 class SupportLog(db.Model):
-
+    """A support log to keep track of mentor support given to a student."""
     __tablename__ = 'support_log'
-
     # Adding a constraint for the rating column
     __table_args__ = (CheckConstraint("comprehension <= 5 AND comprehension >= 1", name="check_comprehension"),)
 
@@ -240,30 +230,27 @@ class SupportLog(db.Model):
     support_type = db.Column(db.String(50), server_default='call')
     time_spent = db.Column(db.Integer)
     notes = db.Column(db.String(500))
-    comprehension = db.Column(db.Integer) # Struggle factor from 1-5. Can use this for
-
+    comprehension = db.Column(db.Integer)  # Struggle factor from 1-5
     # Many to 1 relationship for support_logs and mentors
     mentor = db.relationship('Mentor', backref='support_log')
-
     # Many to 1 relationship for support_logs and students
     student = db.relationship('Student', backref='support_log')
 
     def __repr__(self):
         return '<SupportLog id: {}>'.format(self.id)
 
-
     @staticmethod
     def from_dict(dict):
         return SupportLog(
-            id = dict['id'],
-            created_at = dict['created_at'],
-            updated_at = dict['updated_at'],
-            mentor_id = dict['mentor_id'],
-            student_id = dict['student_id'],
-            time_spent = dict['time_spent'],
-            support_type = dict['support_type'],
-            notes = dict['notes'],
-            comprehension = dict['comprehension']
+            id=dict['id'],
+            created_at=dict['created_at'],
+            updated_at=dict['updated_at'],
+            mentor_id=dict['mentor_id'],
+            student_id=dict['student_id'],
+            time_spent=dict['time_spent'],
+            support_type=dict['support_type'],
+            notes=dict['notes'],
+            comprehension=dict['comprehension']
         )
 
     def to_dict(self):
@@ -279,10 +266,9 @@ class SupportLog(db.Model):
             'support_type': self.support_type
         }
 
-# Association able between courses and users
 
 class UserCourse(db.Model):
-
+    """Association table between courses and users."""
     __tablename__ = 'user_courses'
 
     user_id = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
@@ -291,4 +277,3 @@ class UserCourse(db.Model):
 
     user = db.relationship('User', backref=db.backref('user_courses', passive_deletes='all'))
     course = db.relationship('Course', backref=db.backref('user_courses', passive_deletes='all'))
-
