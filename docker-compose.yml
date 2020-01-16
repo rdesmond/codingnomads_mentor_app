@@ -1,0 +1,31 @@
+version: '3.7'
+
+
+services:
+
+    mentor-portal:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        entrypoint: ['/usr/src/app/entrypoint.sh']
+        volumes:
+            - '.:/usr/src/app'
+        ports:
+            - 5001:5000
+        environment:
+            - FLASK_ENV=development
+            - APP_SETTINGS=application.config.DevelopmentConfig
+            - DATABASE_URL=postgresql://postgres:postgres@mentor-portal-db:5432/mentor_portal_dev
+            - DATABASE_TEST_URL=postgresql://postgres:postgres@mentor-portal-db:5432/mentor_portal_test
+        depends_on:
+            - mentor-portal-db
+
+    mentor-portal-db:
+        build:
+            context: ./application/db
+            dockerfile: Dockerfile
+        expose:
+            - 5432
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres

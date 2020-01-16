@@ -1,0 +1,2 @@
+CREATE DATABASE mentor_portal_dev;
+CREATE DATABASE mentor_portal_test;
