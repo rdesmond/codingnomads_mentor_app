@@ -42,3 +42,5 @@ def ping():
         'status': 'success!',
         'message': 'pong'
     }
+
+

@@ -98,7 +98,6 @@ class User(db.Model, UserMixin):
             'slack': self.slack,
             'timezone': self.timezone,
             'bio': self.bio,
-            'role': self.role,
             'is_student': self.is_student,
             'is_mentor': self.is_mentor
         }
