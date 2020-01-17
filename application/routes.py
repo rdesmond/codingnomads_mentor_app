@@ -34,3 +34,11 @@ def index():
         }
     support_form = SupportForm()
     return render_template('index.html', title='Home', form=support_form, **content)
+
+
+@app.route('/ping')
+def ping():
+    return {
+        'status': 'success!',
+        'message': 'pong'
+    }
