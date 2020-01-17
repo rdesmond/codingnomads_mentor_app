@@ -1,8 +1,22 @@
 {% extends 'admin/master.html' %}
 
 
+{% block brand %}
+    <img style="width: 50px;" class="pr-5" src="{{ url_for('static', filename='img/CNLogo_compass.svg') }}" alt="CodingNomads Logo">
+{#    <img style="height: 50px;" class="pr-5" src="{{ url_for('static', filename='img/codingnomads.png') }}" alt="CodingNomads Logo">#}
+{% endblock %}
+
 {% block body %}
 
-<h1>Welcome to Mentor App Admin Portal</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <img src="{{ url_for('static', filename='img/codingnomads.png') }}" alt="CodingNomads Logo">
+            </div>
+            <div class="col">
+                <h1>Welcome to the Mentor Portal Admin Page</h1>
+            </div>
+        </div>
+    </div>
 
 {% endblock body %}

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_flows "http://ns.adobe.com/Flows/1.0/">
+]>
+<svg version="1.1"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+	 x="0px" y="0px" width="445px" height="445px" viewBox="177.596 217.086 445 445"
+	 overflow="visible" enable-background="new 177.596 217.086 445 445" xml:space="preserve">
+<defs>
+</defs>
+<g>
+	<defs>
+		<polyline id="SVGID_4_" points="0,781 0,39 800,39 800,781 		"/>
+	</defs>
+	<clipPath id="SVGID_5_">
+		<use xlink:href="#SVGID_4_"  overflow="visible"/>
+	</clipPath>
+	<path clip-path="url(#SVGID_5_)" fill="#FBB03B" d="M400,659c-58.764,0-114.011-22.884-155.563-64.436
+		C202.884,553.011,180,497.764,180,439s22.884-114.011,64.437-155.563C285.989,241.884,341.236,219,400,219
+		c58.764,0,114.011,22.884,155.564,64.437C597.116,324.989,620,379.236,620,438s-22.884,115.011-64.436,156.564
+		C514.011,636.116,458.764,659,400,659"/>
+	<path clip-path="url(#SVGID_5_)" fill="#F9CC3D" d="M400,279c-88.366,0-160,71.634-160,160s71.634,160,160,160s160-71.634,160-160
+		S488.366,279,400,279"/>
+	<path clip-path="url(#SVGID_5_)" fill="#F4E660" d="M400,339c-55.228,0-100,44.771-100,100c0,55.228,44.772,100,100,100
+		c55.228,0,100-44.772,100-100C500,383.771,455.228,339,400,339"/>
+	<path clip-path="url(#SVGID_5_)" fill="#0071BC" d="M244.437,594.564C285.989,636.116,341.235,659,400,659
+		c58.765,0,114.011-22.884,155.564-64.436C597.115,553.011,620,496.764,620,438l-440,1C180,497.764,202.884,553.011,244.437,594.564
+		"/>
+	<polygon clip-path="url(#SVGID_5_)" fill="#ED1C24" points="433.102,221.539 362.175,426.811 439.738,438.616 	"/>
+	<polygon clip-path="url(#SVGID_5_)" points="366.898,656.461 437.824,451.19 360.262,439.384 	"/>
+	<path clip-path="url(#SVGID_5_)" fill="#FFFFFF" d="M440,439c0,22.091-17.909,40-40,40s-40-17.909-40-40s17.909-40,40-40
+		S440,416.909,440,439"/>
+</g>
+<g>
+	<defs>
+		<polyline id="SVGID_3_" points="101,742 101,0 901,0 901,742 		"/>
+	</defs>
+	<clipPath id="SVGID_6_">
+		<use xlink:href="#SVGID_3_"  overflow="visible"/>
+	</clipPath>
+</g>
+<g>
+	<defs>
+		<polyline id="SVGID_2_" points="101,742 101,0 901,0 901,742 		"/>
+	</defs>
+	<clipPath id="SVGID_7_">
+		<use xlink:href="#SVGID_2_"  overflow="visible"/>
+	</clipPath>
+</g>
+<g>
+	<defs>
+		<polyline id="SVGID_1_" points="101,742 101,0 901,0 901,742 		"/>
+	</defs>
+	<clipPath id="SVGID_8_">
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
+	</clipPath>
+</g>
+</svg>
