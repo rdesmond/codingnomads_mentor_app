@@ -15,6 +15,6 @@
     <script>
         // reset link to get back to previous page
         const backlink = document.getElementById('notes-link');
-        backlink.href = 'http://0.0.0.0:5000/mentor/{{ mentor.id }}';
+        backlink.href = "{{ url_for('mentor.get_mentor', mentor_id=mentor.id) }}";
     </script>
 {% endblock %}

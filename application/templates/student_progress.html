@@ -28,7 +28,7 @@
     <script>
         // reset link to get back to previous page
         const backlink = document.getElementById('progress-link');
-        backlink.href = 'http://0.0.0.0:5000/student/{{ student.id }}';
+        backlink.href = "{{ url_for('student.get_student', student_id=student.id) }}";
     </script>
 
 {% endblock %}

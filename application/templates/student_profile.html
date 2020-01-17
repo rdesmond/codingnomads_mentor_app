@@ -57,7 +57,7 @@
     </div>
     <div>
         <div class="mb-4">
-            <h2 class="display-5"><a id="progress-link" class="text-muted" href="http://0.0.0.0:5000/student/{{ student.id }}/progress">Progress</a></h2>
+            <h2 class="display-5"><a id="progress-link" class="text-muted" href="{{ url_for('student.get_student_progress', student_id=student.id) }}">Progress</a></h2>
             <hr>
         </div>
 
@@ -66,7 +66,7 @@
         {% endblock %}
 
         <div class="mb-4">
-            <h2 class="display-5"><a id="notes-link" class="text-muted" href="http://0.0.0.0:5000/student/{{ student.id }}/notes">Notes</a></h2>
+            <h2 class="display-5"><a id="notes-link" class="text-muted" href="{{ url_for('student.get_student_notes', student_id=student.id) }}">Notes</a></h2>
             <hr>
         </div>
 
@@ -75,7 +75,7 @@
         {% endblock %}
 
         <div class="mb-4">
-            <h2 class="display-5"><a id="logs-link" class="text-muted" href="http://0.0.0.0:5000/student/{{ student.id }}/logs">Support Logs</a></h2>
+            <h2 class="display-5"><a id="logs-link" class="text-muted" href="{{ url_for('student.get_student_logs', student_id=student.id) }}">Support Logs</a></h2>
             <hr>
         </div>
 
