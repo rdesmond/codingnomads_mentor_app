@@ -10,7 +10,7 @@
             </div>
             <div class="col-7">
                 <p class="display-4">
-                    <a class="text-dark" href="http://0.0.0.0:5000/student/{{ student.id }}">{{ student.first_name }} {{ student.last_name }}</a>
+                    <a class="text-dark" href="{{ url_for('student.get_student', student_id=student.id) }}">{{ student.first_name }} {{ student.last_name }}</a>
                     <a href="https://platform.codingnomads.co/learn/user/profile.php?id={{ student.learning_platform }}" target="_blank" class="text-muted">({{ student.username }})</a>
                 </p>
                 {% for course in student.courses %}
@@ -42,6 +42,6 @@
     <script>
         // reset link to get back to previous page
         const backlink = document.getElementById('students-link');
-        backlink.href = 'http://0.0.0.0:5000/mentor/{{ mentor.id }}';
+        backlink.href = "{{ url_for('mentor.get_mentor', mentor_id=mentor.id) }}";
     </script>
 {% endblock %}
