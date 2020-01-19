@@ -2,10 +2,9 @@
 
 
 {% block body %}
-  <p>Here I'm going to display some data.</p>
-  {% for user in users %}
-      {{ user }}
-      {{user.value}}
+  <h1>Mentorship Stats & Analytics</h1>
+  {% for mentor in data %}
+      {{ mentor }}
   {% endfor %}
   
 {% endblock %}

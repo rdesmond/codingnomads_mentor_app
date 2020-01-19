@@ -1,0 +1,10 @@
+{% extends 'admin/master.html' %}
+
+
+{% block body %}
+  <h1>Lead Overview Analytics</h1>
+  {% for lead in data %}
+      {{ lead }}
+  {% endfor %}
+
+{% endblock %}
