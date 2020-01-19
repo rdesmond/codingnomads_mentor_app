@@ -16,7 +16,7 @@ class UserView(ModelView):
     page_size = 50
     can_view_details = True
     column_searchable_list = ['first_name', 'last_name', 'email']
-    column_filters = ['is_student', 'is_mentor']
+    column_filters = ['is_student', 'is_mentor', 'is_admin']
     create_modal = True
     edit_modal = True
     column_exclude_list = ['time_modified', 'time_created',
@@ -56,7 +56,7 @@ class StudentView(ModelView):
 class MentorView(ModelView):
     page_size = 50
     column_searchable_list = ['current_students']
-    column_filters = ['current_students', 'is_admin']  # TODO: add column that shows current capacity of mentor
+    column_filters = ['current_students']  # TODO: add column that shows current capacity of mentor
     create_modal = True
     edit_modal = True
     form_choices = {

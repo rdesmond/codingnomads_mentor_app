@@ -3,13 +3,58 @@ from sqlalchemy import text
 from .models import User, Student, Course, SupportLog, Mentor
 
 
-def get_student_info(student_id):
+
+
+def get_student_info(user_id):
     """Fetches info about a student, given their ID."""
+
+    data = {}
+
+    expected_return = '''
+    "student": {
+        "aims": "wants to learn to frontend",
+        "id": 2,
+        "mentor_id": 3,
+        "mentor_name": "Gilad Gressel",
+        "preferred_learning": "discussions",
+        "start_date": "Fri, 13 Sep 2019 13:14:57 GMT",
+        "status": "student",
+        "user_id": 2,
+        "username": "johnny",
+        "email": "johnny@gmail.com",
+        "first_name": "Carol",
+        "last_name": "Dunlop",
+        "learning_platform": "carol",
+        "forum": "carol",
+        "slack": "apple",
+        "time_zone": "Europe/London",
+        "courses": [
+            {
+                "id": 8,
+                "name": "Python Software Development",
+                "progress_percent": 80
+            }
+        ],
+        "preferred_days": {
+            "Mon": true, "Tue": true, "Wed": true,
+            "Thu": true, "Fri": true, "Sat": false, "Sun": false},
+        "preferred_start_time": "08:00",
+        "preferred_end_time": "12:00"
+    }
+    '''
+
     # TODO: build out DB calls so it has all the necessary info (as described in the specs)
-    data = None
-    student = Student.query.filter(Student.id == student_id).first()
-    if student:
-        data = student.to_dict()
+
+    user = User.query.filter(id == user_id).first()
+    
+    if not user or user.is_student == False:
+        return None
+
+    data = user.to_dict()
+
+    student_info = Student.query.filter_by(user_id == user.id).first()
+
+    
     return data
 
 

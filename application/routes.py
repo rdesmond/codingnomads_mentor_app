@@ -1,5 +1,5 @@
 from flask import current_app as app
-from flask import render_template, flash, redirect, request, url_for
+from flask import render_template, flash, redirect, request, url_for, jsonify
 from application.forms import LoginForm, SupportForm
 from application import login
 from flask_login import current_user, login_user, logout_user, login_required
@@ -44,3 +44,10 @@ def ping():
     }
 
 
+@app.route('/users')
+def users():
+    users = []
+    users_list = User.query.all()
+    for user in users_list:
+        users.append(user.to_dict())
+    return jsonify(users)

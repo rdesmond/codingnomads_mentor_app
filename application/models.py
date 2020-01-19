@@ -29,12 +29,16 @@ class User(db.Model, UserMixin):
     slack = db.Column(db.String(128))
     timezone = db.Column(db.String(128))
     bio = db.Column(db.String(500))
-    is_student = db.Column(db.Boolean)
-    is_mentor = db.Column(db.Boolean)
+    is_student = db.Column(db.Boolean, nullable=False, default=False)
+    is_mentor = db.Column(db.Boolean, nullable=False, default=False)
+    is_admin = db.Column(db.Boolean, nullable=False, default=False)
+
     # 1-1 relationship between users and mentors
-    mentor = db.relationship('Mentor', backref=db.backref('user', uselist=False))
+    mentor = db.relationship('Mentor', uselist=False, back_populates='user')
+
     # 1-1 relationship between users and students
-    student = db.relationship('Student', backref=db.backref('user', uselist=False))
+    student = db.relationship('Student', uselist=False, back_populates='user')
+
     # Many to many relationship between users and courses
     course = db.relationship('Course', secondary='user_courses', backref=db.backref('users', lazy='dynamic'))
 
@@ -99,7 +103,8 @@ class User(db.Model, UserMixin):
             'timezone': self.timezone,
             'bio': self.bio,
             'is_student': self.is_student,
-            'is_mentor': self.is_mentor
+            'is_mentor': self.is_mentor,
+            'is_admin': self.is_admin,
         }
 
 
@@ -110,12 +115,16 @@ class Mentor(db.Model):
     __table_args__ = (CheckConstraint("rating <= 5 AND rating >= 1", name="check_ratings"),)
 
     id = db.Column(db.Integer, primary_key=True)
+
+    # user mentor relationship
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    user = db.relationship('User', back_populates='mentor')
+
+
     max_students = db.Column(db.Integer)
     current_students = db.Column(db.Integer)
     completed_students = db.Column(db.Integer)
     rating = db.Column(db.Integer)  # Need to think about how we calculate this
-    is_admin = db.Column(db.Boolean)
     # 1-Many relationship between mentors and students
     students = db.relationship('Student', backref='mentor')
 
@@ -130,7 +139,6 @@ class Mentor(db.Model):
             current_students=dict['current_students'],
             completed_students=dict['completed_students'],
             rating=dict['rating'],
-            is_admin=dict['is_admin']  # Need to modify criteria for this
         )
 
     def to_dict(self):
@@ -141,7 +149,6 @@ class Mentor(db.Model):
             'current_students': self.current_students,
             'completed_students': self.completed_students,
             'rating': self.rating,
-            'is_admin': self.is_admin
         }
 
 
@@ -150,12 +157,18 @@ class Student(db.Model):
     __tablename__ = 'students'
 
     id = db.Column(db.Integer, primary_key=True)
+
+    # user student relationship
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    user = db.relationship("User", back_populates='student')
+
     goals = db.Column(db.String(250))
     preferred_learning = db.Column(db.String(128))
     status = db.Column(db.String(128))
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
+
+    # mentor relationship
     mentor_id = db.Column(db.Integer, db.ForeignKey(Mentor.id))
 
     def __repr__(self):
