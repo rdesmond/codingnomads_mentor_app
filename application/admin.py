@@ -99,11 +99,88 @@ class AnalyticsView(BaseView):
     # TODO: write the backend calls that gather and display analytics data we want
     @expose('/')
     def index(self):
-        users = [
-            {'user1': 'Joe'},
-            {'user2': 'Billy'}
-            ]
-        return self.render('admin/analytics.html', users=users)
+        """ REQUIREMENTS:
+        - How much time did one mentor spend on support in a given time frame?
+        - How much of that time went to which type of support?
+        - How much of that time went to which student?
+        - What is the feedback that a mentor receives from their students?
+        - The student Overview page shows a note of how much time of mentorship a student has received per week
+        """
+        example_json = [
+            {
+                "mentor_id": 1,
+                "mentor_firstname": "Gilad",
+                "mentor_lastname": "Gressel",
+                "support_type_times_total": {
+                    "call": 100,
+                    "chat": 100,
+                    "talk": 100,
+                    "email": 50,
+                    "total": 350
+                },
+                "mentor_rating_total": 4.7,
+                "student_support_times": [
+                    {
+                        "student_id": 2,
+                        "student_firstname": "Johnny",
+                        "student_lastname": "Appleseed",
+                        "support_type_times": {
+                            "call": 50,
+                            "chat": 50,
+                            "talk": 50,
+                            "email": 0,
+                            "total": 150
+                        },
+                        "mentor_rating": 4
+                    },
+                    {
+                        "student_id": 3,
+                        "student_firstname": "Carol",
+                        "student_lastname": "Dweck",
+                        "support_type_times": {
+                            "call": 50,
+                            "chat": 50,
+                            "talk": 50,
+                            "email": 50,
+                            "total": 200
+                        },
+                        "mentor_rating": 5
+                    }
+                ]
+            }
+        ]
+        return self.render('admin/analytics.html', data=example_json)
+
+
+class LeadView(BaseView):
+    # TODO: write the backend calls that gather and display analytics data we want
+    @expose('/')
+    def index(self):
+        """ REQUIREMENTS:
+        - When has a student last logged in?
+        - What resources have they completed?
+        - When did they decide to purchase (if so)?
+        - What frequency is their interaction with the learning platform?
+        - Did they recently stop interacting? Where? When?
+        """
+        leads_json = [
+            {
+                "last_access": "2020-01-19",
+                "completed_resources": [
+                    "Python Intro",
+                    "Python Outro"
+                ],
+                "purchase_info": {
+                    "purchased": True,
+                    "timestamp": "2019-12-31",
+                    "resource": "Python Outro"
+                },
+                "interactions": [
+
+                ]
+            }
+        ]
+        return self.render('admin/leads.html', data=leads_json)
 
 
 admin.add_view(UserView(User, db.session, endpoint='users'))
@@ -111,3 +188,4 @@ admin.add_view(StudentView(Student, db.session, endpoint='students'))
 admin.add_view(MentorView(Mentor, db.session, endpoint='mentors'))
 admin.add_view(SupportLogView(SupportLog, db.session, endpoint='logs'))
 admin.add_view(AnalyticsView(name='Analytics', endpoint='analytics'))
+admin.add_view(LeadView(name='Leads', endpoint='leads'))
