@@ -4,30 +4,43 @@ from .models import User, Student, Course, SupportLog, Mentor
 
 
 
+def get_user(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    return user
 
-def get_student_info(user_id):
+
+
+def get_student_info(student_id):
     """Fetches info about a student, given their ID."""
 
     data = {}
 
-    expected_return = '''
-    "student": {
-        "aims": "wants to learn to frontend",
-        "id": 2,
-        "mentor_id": 3,
-        "mentor_name": "Gilad Gressel",
-        "preferred_learning": "discussions",
-        "start_date": "Fri, 13 Sep 2019 13:14:57 GMT",
-        "status": "student",
-        "user_id": 2,
-        "username": "johnny",
-        "email": "johnny@gmail.com",
-        "first_name": "Carol",
-        "last_name": "Dunlop",
-        "learning_platform": "carol",
-        "forum": "carol",
-        "slack": "apple",
-        "time_zone": "Europe/London",
+    student = Student.query.filter_by(id=student_id).first()
+    
+    if not student or student.user.is_student == False:
+        return None
+
+    user = User.query.filter_by(id=student.user_id).first()
+
+    mentor = Mentor.query.filter_by(id=student.mentor_id).first()
+
+    data = {
+        "aims": user.student.goals,
+        "id": user.student.id,
+        "mentor_id": user.student.mentor_id,
+        "mentor_name": f'{mentor.user.first_name} {mentor.user.last_name}',
+        "preferred_learning": user.student.preferred_learning,
+        "start_date": user.student.start_date,
+        "status": user.student.status,
+        "user_id": user.id,
+        "username": user.username,
+        "email": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "learning_platform": user.learning_platform,
+        "forum": user.forum,
+        "slack": user.slack,
+        "time_zone": user.timezone,
         "courses": [
             {
                 "id": 8,
@@ -36,23 +49,11 @@ def get_student_info(user_id):
             }
         ],
         "preferred_days": {
-            "Mon": true, "Tue": true, "Wed": true,
-            "Thu": true, "Fri": true, "Sat": false, "Sun": false},
+            "Mon": True, "Tue": False, "Wed": True,
+            "Thu": True, "Fri": True, "Sat": True, "Sun": True},
         "preferred_start_time": "08:00",
         "preferred_end_time": "12:00"
     }
-    '''
-
-    # TODO: build out DB calls so it has all the necessary info (as described in the specs)
-
-    user = User.query.filter(id == user_id).first()
-    
-    if not user or user.is_student == False:
-        return None
-
-    data = user.to_dict()
-
-    student_info = Student.query.filter_by(user_id == user.id).first()
 
     
     return data

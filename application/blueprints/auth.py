@@ -15,10 +15,12 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
+        print(user)
         if user is None or not user.check_password(form.password.data):
             flash('Login requested for user {}, remember_me={}'.format(form.username.data, form.remember_me.data))
-            return redirect(url_for('index'))
+            return redirect(url_for('login'))
         login_user(user)
+        return redirect(url_for('index'))
     return render_template('login.html', title='Sign In', form=form)
 
 

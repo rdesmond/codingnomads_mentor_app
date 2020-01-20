@@ -1,5 +1,6 @@
 import json
 from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for, abort
+from flask_login import current_user
 from application.utils import utc_to_local
 from application.forms import SupportForm
 from application.data_services import get_student_info, log_student_support, get_student_support_logs
@@ -51,14 +52,25 @@ base_content = json.loads("""{
 def get_student(student_id):
     """Returns basic details about a given student (e.g. name, goals, availability, local time, progress)."""
     # Get info from DB
-    data = get_student_info(student_id)
-    if data is None:
+
+    student_data = get_student_info(student_id)
+
+    if student_data is None:
         return abort(404, description='Student not found')
 
-    # TODO: change to proper backend calls that include all the required JSON (either here or in data_services.py)
+    content = {
+        "current_user": {
+            "first_name": "Gilad",
+            "last_name": "Gressel",
+            "is_admin": False,
+            "user_id": 1
+        },
+        'student': student_data
+    }
+
     form = SupportForm()
-    content = base_content
-    return render_template('student_profile.html', form=form, title=content['student']['username'], **content)
+
+    return render_template('student_profile.html', form=form, title="content['student']['username']", **content)
 
 
 @StudentBlueprint.route('/support', methods=['POST'])

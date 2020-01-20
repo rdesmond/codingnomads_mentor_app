@@ -14,8 +14,30 @@ def recreate_db():
 
 @cli.command('seed_db')
 def seed_db():
-    db.session.add(User(username='jonny', email='jonny@test.com'))
-    db.session.add(User(username='kristen', email='kristen@test.com', is_student=True))
+    user1 = User(username='jonny', email='jonny@test.com',first_name='Jonny', last_name='Doe', is_mentor=True)
+    user2 = User(username='kristen', email='kristen@test.com',first_name='Kristen', last_name='Anderson', is_student=True)
+    admin = User(username='admin', email='admin@test.com', is_admin=True)
+
+    db.session.add(user1)
+    db.session.add(user2)
+    db.session.add(admin)
+    db.session.commit()
+
+    user1.set_password('password')
+    user2.set_password('password')
+    admin.set_password('password')
+
+    db.session.commit()
+
+
+    student = Student(user_id=user2.id)
+    db.session.add(student)
+    
+    mentor = Mentor(user_id=user1.id)
+    db.session.add(mentor)
+    db.session.commit()
+
+    mentor.students.append(student)
     db.session.commit()
 
 if __name__ == "__main__":

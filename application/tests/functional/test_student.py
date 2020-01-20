@@ -4,7 +4,6 @@ import application.data_services
 def test_get_student(test_app, add_user, monkeypatch):
     def mock_get_student_info(student_id):
         data = {
-        "student": {
             "aims": "wants to learn to frontend",
             "id": 2,
             "mentor_id": 3,
@@ -33,12 +32,11 @@ def test_get_student(test_app, add_user, monkeypatch):
                 "Thu": True, "Fri": True, "Sat": True, "Sun": True},
             "preferred_start_time": "08:00",
             "preferred_end_time": "12:00"
-            }
         }
         return data
 
     monkeypatch.setattr(application.blueprints.student, "get_student_info", mock_get_student_info)
-    # assert user.username == 'jonny'
+
     client = test_app.test_client()
     resp = client.get('/student/1')
     assert resp.status_code == 200

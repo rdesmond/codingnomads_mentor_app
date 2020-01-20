@@ -44,10 +44,3 @@ def ping():
     }
 
 
-@app.route('/users')
-def users():
-    users = []
-    users_list = User.query.all()
-    for user in users_list:
-        users.append(user.to_dict())
-    return jsonify(users)

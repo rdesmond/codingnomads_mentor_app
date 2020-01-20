@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
 
+
 # from .config import ProductionConfig, DevelopmentConfig
 
 db = SQLAlchemy()
@@ -27,6 +28,7 @@ def create_app():
         from . import models
         from . import admin
         from . import errors
+        from application.models import User
 
         # Create tables for our models
         db.create_all()
@@ -38,7 +40,10 @@ def create_app():
 
         # User Loader
         @login.user_loader
-        def load_user(user_id):
-            return db.user.get(id = user_id)
+        def user_loader(user_id):
+            user = User.query.filter_by(id=user_id).first()
+            if user:
+                return user
+            return None
 
         return app

@@ -100,3 +100,21 @@ def add_mentor():
 
         return mentor
     return _add_mentor
+
+
+@pytest.fixture(scope='function')
+def login():
+    def _login(client, username, password):
+        print(username, password)
+        return client.post('/login', data=dict(
+            username=username,
+            password=password,
+        ), follow_redirects=True)
+    return _login
+
+
+@pytest.fixture(scope='function')
+def logout():
+    def _logout(client):
+        return client.get('/logout', follow_redirects=True)
+    return _logout
