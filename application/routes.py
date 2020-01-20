@@ -15,6 +15,9 @@ app.register_blueprint(MentorBlueprint, url_prefix='/mentor')
 from application.blueprints.overview import OverviewBlueprint
 app.register_blueprint(OverviewBlueprint, url_prefix='/overview')
 
+from application.blueprints.api import ApiBlueprint
+app.register_blueprint(ApiBlueprint, url_prefix='/api')
+
 from application.blueprints.auth import AuthenticationBlueprint
 app.register_blueprint(AuthenticationBlueprint)
 
