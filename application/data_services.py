@@ -1,6 +1,6 @@
 from . import db
 from sqlalchemy import text
-from .models import User, Student, Course, SupportLog, Mentor
+from .models import User, Student, Course, SupportLog, Mentor, UserPreferences
 
 
 
@@ -49,7 +49,7 @@ def get_student_info(student_id):
             }
         ],
         "preferred_days": {
-            "Mon": True, "Tue": False, "Wed": True,
+            "Mon": user.preferences.monday, "Tue": False, "Wed": True,
             "Thu": True, "Fri": True, "Sat": True, "Sun": True},
         "preferred_start_time": "08:00",
         "preferred_end_time": "12:00"
