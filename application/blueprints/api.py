@@ -1,5 +1,5 @@
 from flask import Blueprint, request, flash, redirect, url_for
-from flask_login import current_user
+from flask_login import current_user, login_required
 from application.forms import SupportForm
 from application.data_services import log_student_support
 
@@ -8,6 +8,7 @@ ApiBlueprint = Blueprint('api', __name__)
 
 
 @ApiBlueprint.route('/support', methods=['POST'])
+@login_required
 def log_support():
     """Submits a support log."""
     # TODO: fill mentor_id from currently logged in user, and (if called from a student page) also student_id
@@ -17,7 +18,7 @@ def log_support():
             form.mentor_id.data, form.student_id.data))
 
         # Create a row in the support log table
-        mentor_id = request.form['mentor_id']  # TODO: this should come from the authenticated_user
+        mentor_id = current_user.id  # TODO: this should be the mentor_id, but we'll need to fetch from the other table
         student_id = request.form['student_id']
         support_type = request.form['support_type']
         time_spent = request.form['time_spent']
@@ -33,5 +34,6 @@ def log_support():
         return redirect(url_for('mentor.get_mentor', mentor_id=mentor_id))  # request.url   <- returns to current page
     else:
         flash('Missing data. Please fill all the fields')
+        # TODO: return to page it was issued from instead
         return redirect(url_for('overview.show_mentor_list'))
         # return redirect(url_for(request.url))  # request.url   <- returns to current page (if it works)

@@ -1,13 +1,17 @@
 import json
 from flask import Blueprint, jsonify, request, abort, render_template
+from flask_login import current_user, login_required
 from application.forms import SupportForm
-from application.data_services import get_all_students, get_mentors_and_students, get_students_with_courses, get_mentors_with_courses, get_student_info, assign_students_to_mentor
+from application.data_services import get_all_students, get_mentors_and_students, get_students_with_courses
+from application.data_services import get_mentors_with_courses, assign_students_to_mentor
 
 
 OverviewBlueprint = Blueprint('overview', __name__)
 
+
 # Assign a student and a mentor. Update the students table
 @OverviewBlueprint.route('/assign', methods=['POST', 'GET'])
+@login_required
 def assign_student_mentor():
     # Query to show students and all their assigned mentors
     student_mentor_data = jsonify(get_mentors_and_students())
@@ -24,6 +28,7 @@ def assign_student_mentor():
 
 # Gets stats for mentored and non-mentored students
 @OverviewBlueprint.route('/analytics', methods=['GET'])
+@login_required
 def get_analytics():
     data = get_all_students()
     if not data:
@@ -33,14 +38,10 @@ def get_analytics():
 
 # TODO: change this to actual backend call
 @OverviewBlueprint.route('/mentors', methods=['GET'])
+@login_required
 def show_mentor_list():
     form = SupportForm()
     content = json.loads("""{
-    "current_user":{
-        "first_name": "Ryan",
-        "last_name": "Desmond",
-        "is_admin": true
-    },
     "mentors": [
         {
             "completed_students": 5,
@@ -81,19 +82,16 @@ def show_mentor_list():
     ]
 }
 """)
+    content['current_user'] = current_user
     return render_template('mentor_overview.html', form=form, title='Mentors', **content)
 
 
 # TODO: change this to actual backend call
 @OverviewBlueprint.route('/students', methods=['GET'])
+@login_required
 def show_student_list():
     form = SupportForm()
     content = json.loads("""{
-    "current_user":{
-        "first_name": "Ryan",
-        "last_name": "Desmond",
-        "is_admin": true
-    },
     "students": [
         {
             "aims": "wants to learn to frontend",
@@ -153,4 +151,5 @@ def show_student_list():
     ]
 }
 """)
+    content['current_user'] = current_user
     return render_template('student_overview.html', form=form, title='Students', **content)

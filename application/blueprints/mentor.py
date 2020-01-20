@@ -1,5 +1,6 @@
 import json
 from flask import Blueprint, jsonify, request, abort, render_template
+from flask_login import current_user, login_required
 from application.data_services import get_mentor_info, log_student_support
 from application.forms import SupportForm
 
@@ -8,12 +9,6 @@ MentorBlueprint = Blueprint('mentor', __name__)
 
 # TODO: remove base_content once DB calls are set up properly
 base_content = json.loads("""{
-        "current_user": {
-            "first_name": "Gilad",
-            "last_name": "Gressel",
-            "is_admin": false,
-            "user_id": 1
-        },
         "mentor": {
             "completed_students": 5,
             "current_students": 0,
@@ -38,9 +33,11 @@ base_content = json.loads("""{
         }
     }
     """)
+base_content['current_user'] = current_user
 
 
 @MentorBlueprint.route('/<mentor_id>', methods=['GET'])
+@login_required
 def get_mentor(mentor_id):
     """Returns base details about a mentor (e.g. name, current students / spare capacity, availability, local time)."""
     # Get info from DB
@@ -56,6 +53,7 @@ def get_mentor(mentor_id):
 
 
 @MentorBlueprint.route('/<mentor_id>/students', methods=['GET'])
+@login_required
 def get_mentored_students(mentor_id):
     """Get list of students currently assigned to given mentor."""
     # TODO: change to proper backend calls
@@ -120,6 +118,7 @@ def get_mentored_students(mentor_id):
 
 
 @MentorBlueprint.route('/<mentor_id>/notes', methods=['GET'])
+@login_required
 def get_mentor_notes(mentor_id):
     """Get all notes written by given mentor."""
     # TODO: change to proper backend calls
@@ -144,6 +143,7 @@ def get_mentor_notes(mentor_id):
 
 
 @MentorBlueprint.route('/<mentor_id>/logs', methods=['GET'])
+@login_required
 def get_mentor_logs(mentor_id):
     """Get all support logs written by given mentor."""
     # TODO: change to proper backend calls

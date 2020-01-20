@@ -1,19 +1,14 @@
 import json
-from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for, abort
+from flask import Blueprint, render_template, abort
 from flask_login import current_user, login_required
-from application.utils import utc_to_local
 from application.forms import SupportForm
-from application.data_services import get_student_info, log_student_support, get_student_support_logs
+from application.data_services import get_student_info, get_student_support_logs
+
 
 StudentBlueprint = Blueprint('student', __name__)
 
+
 base_content = json.loads("""{
-    "current_user": {
-        "first_name": "Gilad",
-        "last_name": "Gressel",
-        "is_admin": false,
-        "user_id": 1
-    },
     "student": {
         "aims": "wants to learn to frontend",
         "id": 2,
@@ -46,6 +41,7 @@ base_content = json.loads("""{
     }
 }
     """)
+base_content['current_user'] = current_user
 
 
 @StudentBlueprint.route('/<student_id>', methods=['GET'])
@@ -53,23 +49,19 @@ base_content = json.loads("""{
 def get_student(student_id):
     """Returns basic details about a given student (e.g. name, goals, availability, local time, progress)."""
     # Get info from DB
-
     student_data = get_student_info(student_id)
-
     if student_data is None:
         return abort(404, description='Student not found')
-
     content = {
         "current_user": current_user,
         'student': student_data
     }
-
     form = SupportForm()
-
     return render_template('student_profile.html', form=form, title="content['student']['username']", **content)
 
 
 @StudentBlueprint.route('/<student_id>/logs', methods=['GET'])
+@login_required
 def get_student_logs(student_id):
     """Fetches and displays the support logs for a given student."""
     data = get_student_support_logs(student_id)
@@ -105,6 +97,7 @@ def get_student_logs(student_id):
 
 
 @StudentBlueprint.route('/<student_id>/progress', methods=['GET'])
+@login_required
 def get_student_progress(student_id):
     """Fetches and displays course progress information for a given student."""
     # TODO: change to proper backend calls that include all the data (also from base_content!)
@@ -132,6 +125,7 @@ def get_student_progress(student_id):
 
 
 @StudentBlueprint.route('/<student_id>/notes', methods=['GET'])
+@login_required
 def get_student_notes(student_id):
     """Fetches and displays all mentor notes for a given student."""
     # TODO: change to proper backend calls that include all the data (also from base_content!)
