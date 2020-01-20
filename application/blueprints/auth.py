@@ -12,32 +12,34 @@ AuthenticationBlueprint = Blueprint('auth', __name__)
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+    login_form = LoginForm()
+    if login_form.validate_on_submit():
+        user = User.query.filter_by(username=login_form.username.data).first()
         print(user)
-        if user is None or not user.check_password(form.password.data):
-            flash('Login requested for user {}, remember_me={}'.format(form.username.data, form.remember_me.data))
+        if user is None or not user.check_password(login_form.password.data):
+            flash('Login requested for user {}, remember_me={}'.format(login_form.username.data,
+                                                                       login_form.remember_me.data))
             return redirect(url_for('login'))
         login_user(user)
-        return redirect(url_for('index'))
-    return render_template('login.html', title='Sign In', form=form)
-
+        if current_user.is_admin:
+            return redirect(url_for('overview.show_mentor_list'))
+        elif current_user.is_mentor:
+            # TODO: make a call to get the mentor ID of the currently logged in mentor and replace the dummy '1' here
+            return redirect(url_for('mentor.get_mentor', mentor_id=1))  # current_user.mentor_id
+    return render_template('login.html', title='Sign In', login_form=login_form)
 
 
 @AuthenticationBlueprint.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('auth.login'))
 
 
 @AuthenticationBlueprint.route('/change_password', methods=['GET', 'POST'])
 @login_required
 def change_password():
-    
     form = ChangePasswordForm()
     user = current_user
-
     if form.validate_on_submit():
         if not user.check_password(form.current_password.data):
             flash('Current Password is incorrect')

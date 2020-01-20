@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Hi, {{ username }}!</h1>
-    <p>{{ message }}</p>
-    <div>
-    {% for mentor in mentors %}
-        <p>{{ mentor.username }}</p>
-    {% endfor %}
+    <div class="container">
+        <h1>Hi, {{ username }}!</h1>
+        <p>{{ message }}</p>
+        <div>
+        {% for mentor in mentors %}
+            <p>{{ mentor.username }}</p>
+        {% endfor %}
+        </div>
     </div>
 {% endblock %}
