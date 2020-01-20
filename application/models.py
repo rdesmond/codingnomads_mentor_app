@@ -33,6 +33,8 @@ class User(db.Model, UserMixin):
     is_mentor = db.Column(db.Boolean, nullable=False, default=False)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
 
+    preferences = db.relationship("UserPreferences", uselist=False, back_populates='user')
+
     # 1-1 relationship between users and mentors
     mentor = db.relationship('Mentor', uselist=False, back_populates='user')
 
@@ -289,3 +291,23 @@ class UserCourse(db.Model):
 
     user = db.relationship('User', backref=db.backref('user_courses', passive_deletes='all'))
     course = db.relationship('Course', backref=db.backref('user_courses', passive_deletes='all'))
+
+
+class UserPreferences(db.Model):
+    """User avaialability preferences"""
+    __tablename__ = 'user_preferences'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    user = db.relationship('User', back_populates='preferences')
+
+    monday = db.Column(db.Boolean, default=False)
+    tuesday = db.Column(db.Boolean, default=False)
+    wednesday = db.Column(db.Boolean, default=False)
+    thursday = db.Column(db.Boolean, default=False)
+    friday = db.Column(db.Boolean, default=False)
+    saturday = db.Column(db.Boolean, default=False)
+    sunday = db.Column(db.Boolean, default=False)
+    start_hour = db.Column(db.Integer)
+    end_hour = db.Column(db.Integer)
