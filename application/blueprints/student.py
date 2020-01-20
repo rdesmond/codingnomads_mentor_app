@@ -1,6 +1,6 @@
 import json
 from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for, abort
-from flask_login import current_user
+from flask_login import current_user, login_required
 from application.utils import utc_to_local
 from application.forms import SupportForm
 from application.data_services import get_student_info, log_student_support, get_student_support_logs
@@ -49,6 +49,7 @@ base_content = json.loads("""{
 
 
 @StudentBlueprint.route('/<student_id>', methods=['GET'])
+@login_required
 def get_student(student_id):
     """Returns basic details about a given student (e.g. name, goals, availability, local time, progress)."""
     # Get info from DB
@@ -59,12 +60,7 @@ def get_student(student_id):
         return abort(404, description='Student not found')
 
     content = {
-        "current_user": {
-            "first_name": "Gilad",
-            "last_name": "Gressel",
-            "is_admin": False,
-            "user_id": 1
-        },
+        "current_user": current_user,
         'student': student_data
     }
 

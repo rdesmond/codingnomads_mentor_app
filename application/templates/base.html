@@ -40,9 +40,11 @@
             <a class="nav-link" href="{{ url_for('auth.logout') }}">(logout)</a>
           </li>
         </ul>
-          <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#supportModal">
-            Log Support
-        </button>
+          {% if current_user.is_authenticated %}
+            <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#supportModal">
+                Log Support
+            </button>
+          {% endif %}
       </div>
     </nav>
 
@@ -63,6 +65,7 @@
 
         </div>
 
+    {% if current_user.is_authenticated %}
     <footer class="container-fluid pb-4">
         <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#supportModal">
             Log Support
@@ -94,5 +97,6 @@
         </div>
       </div>
     </div>
+    {% endif %}
     </body>
 </html>
