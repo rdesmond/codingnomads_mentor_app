@@ -11,21 +11,22 @@ ApiBlueprint = Blueprint('api', __name__)
 @login_required
 def log_support():
     """Submits a support log."""
-    # TODO: fill mentor_id from currently logged in user, and (if called from a student page) also student_id
+    # TODO: (if called from a student page) automatically fill in student_id
     form = SupportForm()
     if form.validate_on_submit():
         flash('Support Log submitted for student #{} by mentor #{}'.format(
-            form.mentor_id.data, form.student_id.data))
+            current_user.mentor.id, form.student_id.data))
 
         # Create a row in the support log table
-        mentor_id = current_user.id  # TODO: this should be the mentor_id, but we'll need to fetch from the other table
+        mentor_id = current_user.mentor.id
         student_id = request.form['student_id']
         support_type = request.form['support_type']
         time_spent = request.form['time_spent']
         notes = request.form['notes']
         comprehension = request.form['comprehension']
 
-        log_student_support(mentor_id,
+        log_student_support(
+            mentor_id,
             student_id,
             support_type,
             time_spent,

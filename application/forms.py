@@ -11,7 +11,7 @@ class LoginForm(FlaskForm):
 
 
 class SupportForm(FlaskForm):
-    mentor_id = IntegerField('Mentor ID', validators=[DataRequired(message="Your mentor ID")])
+    # mentor_id = IntegerField('Mentor ID', validators=[DataRequired(message="Your mentor ID")])
     student_id = IntegerField('Student ID', validators=[DataRequired(message="ID of the student you're logging support for")])
     support_type = SelectField('Support Type',
                                choices=[('call', 'call'), ('chat', 'chat'), ('orga', 'orga'), ('forum', 'forum')],

@@ -24,8 +24,7 @@ def login():
         if current_user.is_admin:
             return redirect(url_for('overview.show_mentor_list'))
         elif current_user.is_mentor:
-            # TODO: make a call to get the mentor ID of the currently logged in mentor and replace the dummy '1' here
-            return redirect(url_for('mentor.get_mentor', mentor_id=1))  # current_user.mentor_id
+            return redirect(url_for('mentor.get_mentor', mentor_id=current_user.mentor.id))
     return render_template('login.html', title='Sign In', login_form=login_form)
 
 
