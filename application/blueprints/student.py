@@ -64,35 +64,23 @@ def get_student(student_id):
 @login_required
 def get_student_logs(student_id):
     """Fetches and displays the support logs for a given student."""
-    data = get_student_support_logs(student_id)
-    if data is None:
+
+
+    student = get_student_info(student_id)
+
+    if student is None:
         return abort(404, description='Student not found')
 
-    # TODO: change to proper backend calls that include all the data (also from base_content!)
+    support_logs = get_student_support_logs(student_id)
     form = SupportForm()
-    content = dict(base_content, **json.loads("""{
-    "support_logs": [
-        {
-            "mentor_id": 3,
-            "student_id": 7,
-            "notes": "this is an example note for a support log.",
-            "created_at": "Fri, 23 Sep 2019 13:14:57 GMT",
-            "support_type": "call",
-            "time_spent": 40,
-            "comprehension": 5
-        },
-        {
-            "mentor_id": 3,
-            "student_id": 7,
-            "notes": "call went well, we discussed exceptions.",
-            "created_at": "Fri, 23 Sep 2019 13:14:57 GMT",
-            "support_type": "call",
-            "time_spent": 30,
-            "comprehension": 5
-        }
-    ]
-}
-"""))
+
+
+    content = {
+        'current_user': current_user,
+        'student': student,
+        'support_logs': support_logs
+    }
+
     return render_template('student_logs.html', form=form, title=content['student']['username'], **content)
 
 

@@ -113,22 +113,25 @@ class User(db.Model, UserMixin):
 class Mentor(db.Model):
     """Data model for mentors"""
     __tablename__ = 'mentors'
+
     # Adding a constraint for the rating column
     __table_args__ = (CheckConstraint("rating <= 5 AND rating >= 1", name="check_ratings"),)
 
     id = db.Column(db.Integer, primary_key=True)
-
-    # user mentor relationship
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
-    user = db.relationship('User', back_populates='mentor')
-
-
     max_students = db.Column(db.Integer)
     current_students = db.Column(db.Integer)
     completed_students = db.Column(db.Integer)
     rating = db.Column(db.Integer)  # Need to think about how we calculate this
+
     # 1-Many relationship between mentors and students
-    students = db.relationship('Student', backref='mentor')
+    students = db.relationship('Student', back_populates='mentor')
+
+    # support logs
+    support_logs = db.relationship('SupportLog', back_populates='mentor')
+
+    # user mentor relationship
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    user = db.relationship('User', back_populates='mentor')
 
     def __repr__(self):
         return '<Mentor id: {}>'.format(self.id)
@@ -159,11 +162,6 @@ class Student(db.Model):
     __tablename__ = 'students'
 
     id = db.Column(db.Integer, primary_key=True)
-
-    # user student relationship
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
-    user = db.relationship("User", back_populates='student')
-
     goals = db.Column(db.String(250))
     preferred_learning = db.Column(db.String(128))
     status = db.Column(db.String(128))
@@ -172,6 +170,14 @@ class Student(db.Model):
 
     # mentor relationship
     mentor_id = db.Column(db.Integer, db.ForeignKey(Mentor.id))
+    mentor = db.relationship('Mentor', back_populates='students')
+
+    # user student relationship
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    user = db.relationship("User", back_populates='student')
+
+    # student support logs
+    support_logs = db.relationship("SupportLog", back_populates='student')
 
     def __repr__(self):
         return '<Student id: {}>'.format(self.id)
@@ -239,16 +245,21 @@ class SupportLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    mentor_id = db.Column(db.Integer, db.ForeignKey(Mentor.id))
-    student_id = db.Column(db.Integer, db.ForeignKey(Student.id))
     support_type = db.Column(db.String(50), server_default='call')
     time_spent = db.Column(db.Integer)
     notes = db.Column(db.String(500))
     comprehension = db.Column(db.Integer)  # Struggle factor from 1-5
+
+
     # Many to 1 relationship for support_logs and mentors
-    mentor = db.relationship('Mentor', backref='support_log')
+    mentor_id = db.Column(db.Integer, db.ForeignKey(Mentor.id))
+    mentor = db.relationship('Mentor', back_populates='support_logs')
+
+
     # Many to 1 relationship for support_logs and students
-    student = db.relationship('Student', backref='support_log')
+    student_id = db.Column(db.Integer, db.ForeignKey(Student.id))
+    student = db.relationship('Student', back_populates='support_logs')
+
 
     def __repr__(self):
         return '<SupportLog id: {}>'.format(self.id)
@@ -256,9 +267,6 @@ class SupportLog(db.Model):
     @staticmethod
     def from_dict(dict):
         return SupportLog(
-            id=dict['id'],
-            created_at=dict['created_at'],
-            updated_at=dict['updated_at'],
             mentor_id=dict['mentor_id'],
             student_id=dict['student_id'],
             time_spent=dict['time_spent'],
@@ -299,7 +307,7 @@ class UserPreferences(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), unique=True)
     user = db.relationship('User', back_populates='preferences')
 
     monday = db.Column(db.Boolean, default=False)
@@ -311,3 +319,16 @@ class UserPreferences(db.Model):
     sunday = db.Column(db.Boolean, default=False)
     start_hour = db.Column(db.Integer)
     end_hour = db.Column(db.Integer)
+
+    def to_dict(self):
+        return {
+            'monday': self.monday,
+            'tuesday': self.tuesday,
+            'wednesday': self.wednesday,
+            'thursday': self.thursday,
+            'friday': self.friday,
+            'saturday': self.saturday,
+            'sunday': self.sunday,
+            'start_hour': self.start_hour,
+            'end_hour': self.end_hour,
+        }

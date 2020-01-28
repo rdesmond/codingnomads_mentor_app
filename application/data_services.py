@@ -9,30 +9,27 @@ def get_user(user_id):
     return user
 
 
-
-def get_student_info(student_id):
+def get_student_info(user_id):
     """Fetches info about a student, given their ID."""
 
     data = {}
 
-    student = Student.query.filter_by(id=student_id).first()
-    
-    if not student or student.user.is_student == False:
+    user = User.query.filter_by(id=user_id).first()
+    if not user or user.is_student == False:
         return None
 
-    user = User.query.filter_by(id=student.user_id).first()
-
-    mentor = Mentor.query.filter_by(id=student.mentor_id).first()
+    preferences = UserPreferences.query.filter_by(user_id=user.id).first()
+    mentor = Mentor.query.filter_by(id=user.student.mentor_id).first()
 
     data = {
         "aims": user.student.goals,
-        "id": user.student.id,
+        "id": user.id,
         "mentor_id": user.student.mentor_id,
-        "mentor_name": f'{mentor.user.first_name} {mentor.user.last_name}',
+        "mentor_name": f'{mentor.user.first_name} {mentor.user.last_name}' if mentor else None,
         "preferred_learning": user.student.preferred_learning,
         "start_date": user.student.start_date,
         "status": user.student.status,
-        "user_id": user.id,
+        "student_id": user.student.id,
         "username": user.username,
         "email": user.email,
         "first_name": user.first_name,
@@ -41,83 +38,111 @@ def get_student_info(student_id):
         "forum": user.forum,
         "slack": user.slack,
         "time_zone": user.timezone,
-        "courses": [
-            {
-                "id": 8,
-                "name": "Python Software Development",
-                "progress_percent": 80
-            }
-        ],
+        "courses": [course.to_dict() for course in user.user_courses],
         "preferred_days": {
-            "Mon": user.preferences.monday, "Tue": False, "Wed": True,
-            "Thu": True, "Fri": True, "Sat": True, "Sun": True},
-        "preferred_start_time": "08:00",
-        "preferred_end_time": "12:00"
+                "Mon": preferences.monday if preferences else None, 
+                "Tue": preferences.tuesday if preferences else None, 
+                "Wed": preferences.wednesday if preferences else None,
+                "Thu": preferences.thursday if preferences else None,
+                "Fri": preferences.friday if preferences else None,
+                "Sat": preferences.saturday if preferences else None,
+                "Sun": preferences.sunday if preferences else None,
+            },
+        "preferred_start_time": preferences.start_hour if preferences else None,
+        "preferred_end_time": preferences.end_hour if preferences else None,
     }
-
     
     return data
 
 
-def get_mentor_info(mentor_id):
+
+def get_mentor_info(user_id):
     """Fetches info about a mentor, given their ID."""
-    # TODO: build out DB calls so it has all the necessary info (as described in the specs)
-    data = None
-    mentor = Mentor.query.filter(Mentor.id == mentor_id).first()
-    if mentor:
-        data = mentor.to_dict()
+
+    user = User.query.filter_by(id=user_id).first()
+    
+    if not user or user.is_mentor == False:
+        return None
+
+    preferences = UserPreferences.query.filter_by(user_id=user.id).first()
+
+
+    data = {
+            "completed_students": user.mentor.completed_students,
+            "current_students": user.mentor.current_students,
+            "id": user.id,
+            "is_admin": user.is_admin,
+            "max_students": user.mentor.max_students,
+            "rating": user.mentor.rating,
+            "mentor_id": user.mentor.id,
+            "username": user.username,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "learning_platform": user.learning_platform,
+            "forum": user.forum,
+            "slack": user.slack,
+            "time_zone": user.timezone,
+            "preferred_days": {
+                "Mon": preferences.monday if preferences else None, 
+                "Tue": preferences.tuesday if preferences else None, 
+                "Wed": preferences.wednesday if preferences else None,
+                "Thu": preferences.thursday if preferences else None,
+                "Fri": preferences.friday if preferences else None,
+                "Sat": preferences.saturday if preferences else None,
+                "Sun": preferences.sunday if preferences else None,
+            },
+            "preferred_start_time": preferences.start_hour if preferences else None,
+            "preferred_end_time": preferences.end_hour if preferences else None,
+        }
+
+
     return data
 
 
-def log_student_support(mentor_id, student_id, support_type, time_spent, notes, comprehension):
-    """Create a support log for a student."""
-    support_log = SupportLog(
-        mentor_id=mentor_id,
-        student_id=student_id,
-        support_type=support_type,
-        time_spent=time_spent,
-        notes=notes,
-        comprehension=comprehension
-    )
+def log_student_support(log: dict) -> str:
+    """Create a support log for a student.
+    """
+    support_log = SupportLog.from_dict(log)
+
     db.session.add(support_log)
     db.session.commit()
     return 'Support log successfully added'
 
 
-def get_student_support_logs(student_id):
+def get_student_support_logs(user_id):
     """Get all support logs for a given student."""
     data = None
-    #logs = SupportLog.query.filter(SupportLog.mentor_id == mentor_id).filter(SupportLog.student_id == student_id).all()
-    # Note: IMO it's important to see all support logs for a student, even if done by a different mentor
-    logs = SupportLog.query.filter(SupportLog.student_id == student_id).all()
+    user = User.query.filter_by(id=user_id).first()
+    logs = user.student.support_logs
     if logs:
         data = [log.to_dict() for log in logs]
     return data
 
 
-def get_student_overview(id):
-    # TODO: what was this call about? seems to get info about the student (+some), maybe should be related to mentor?
-    data = None
-    query = """
-    SELECT
-        s.user_id,
-        uc.course_id,
-        c.course_name
-    FROM
-        students AS s
-    LEFT JOIN
-        user_courses AS uc
-    ON
-        uc.user_id = s.user_id
-    LEFT JOIN
-        courses AS c
-    ON
-        c.id = uc.course_id;
-    """
-    result_proxy = db.engine.execute(query).fetchall()
-    if result_proxy:
-        data = [dict(row) for row in result_proxy]
-    return data
+# def get_student_overview(id):
+#     # TODO: what was this call about? seems to get info about the student (+some), maybe should be related to mentor?
+#     data = None
+#     query = """
+#     SELECT
+#         s.user_id,
+#         uc.course_id,
+#         c.course_name
+#     FROM
+#         students AS s
+#     LEFT JOIN
+#         user_courses AS uc
+#     ON
+#         uc.user_id = s.user_id
+#     LEFT JOIN
+#         courses AS c
+#     ON
+#         c.id = uc.course_id;
+#     """
+#     result_proxy = db.engine.execute(query).fetchall()
+#     if result_proxy:
+#         data = [dict(row) for row in result_proxy]
+#     return data
 
 
 def get_all_students():
@@ -134,7 +159,7 @@ def assign_students_to_mentor(student_id, mentor_id):
     student = Student.query.filter_by(id=student_id).first()
     student.mentor_id = mentor_id
     db.session.commit()
-    return "Success"
+    return f'student id:{student.id} successfully assigned to mentor id:{student.mentor_id}'
 
 
 def get_mentors_and_students():

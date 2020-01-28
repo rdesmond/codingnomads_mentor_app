@@ -71,11 +71,8 @@ def test_add_student_to_mentor(test_app, test_database, add_user, add_student, a
     test_database.session.query(Mentor).delete()
     test_database.session.query(User).delete()
     
-    user1 = add_user('jonny', is_mentor=True)
-    user2 = add_user('kristen', is_student=True)
-
-    mentor = add_mentor(user1.id)
-    student = add_student(user2.id)
+    mentor = add_mentor('jonny')
+    student = add_student('kristen')
 
     mentor.students.append(student)
 

@@ -71,12 +71,5 @@ def test_add_multiple_students(test_app, test_database, add_user):
     assert len(students) == 2
 
 
-def test_user_student_relationship(test_app, test_database, add_user, add_student):
-    test_database.session.query(Student).delete()
-    test_database.session.query(User).delete()
-    user = add_user(username='jonny', is_student=True)
-    student = add_student(user.id)
 
-    assert user.id == user.student.user_id
-    assert student.user.username == 'jonny'
     

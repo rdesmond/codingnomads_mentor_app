@@ -1,5 +1,5 @@
 from application import create_app, db
-from application.models import User, Student, Mentor, UserPreferences
+from application.models import User, Student, Mentor, UserPreferences, SupportLog, Course
 from flask.cli import FlaskGroup
 
 app = create_app()
@@ -37,13 +37,6 @@ def seed_db():
     db.session.add(preferences2)
     db.session.add(preferences3)
 
-    db.session.commit()
-
-    print(preferences1)
-    print(preferences1.user)
-    print (user1.preferences)
-
-
     student = Student(user_id=user2.id)
     db.session.add(student)
     
@@ -52,6 +45,16 @@ def seed_db():
     db.session.commit()
 
     mentor.students.append(student)
+    db.session.commit()
+
+    support_log = SupportLog(
+        mentor_id = mentor.id,
+        student_id = student.id,
+        time_spent = 20,
+        notes = 'This is a note',
+        comprehension = 2
+    )
+    db.session.add(support_log)
     db.session.commit()
 
 if __name__ == "__main__":

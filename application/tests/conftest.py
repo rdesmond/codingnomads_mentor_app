@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime
 
 from application import create_app, db
-from application.models import User, Student, Mentor
+from application.models import User, Student, Mentor, SupportLog
 
 
 @pytest.fixture(scope='module')
@@ -58,23 +58,27 @@ def add_user():
         )
         db.session.add(user)
         db.session.commit()
+        
         return user
     return _add_user
 
 
 @pytest.fixture(scope='function')
 def add_student():
-    def _add_student(user_id, goals=None, preferred_learning=None, status=None,
-                    start_date=None, end_date=None, mentor_id=None):
+    def _add_student(username, email='No email provided'):
+
+        user = User(
+            username=username,
+            email=email,
+            is_student=True
+
+        )
+
+        db.session.add(user)
+        db.session.commit()
     
         student = Student(
-            user_id = user_id,
-            goals = goals,
-            preferred_learning = preferred_learning,
-            status = status,
-            start_date = start_date,
-            end_date = end_date,
-            mentor_id = mentor_id,
+            user_id = user.id,
         )
 
         db.session.add(student)
@@ -85,21 +89,45 @@ def add_student():
 
 @pytest.fixture(scope='function')
 def add_mentor():
-    def _add_mentor(user_id, max_students=None, current_students=None,
-                    completed_students=None, rating=None):
+    def _add_mentor(username, email='no email provided'):
+
+        user = User(
+            username=username,
+            email=email,
+            is_mentor=True
+        )
+        db.session.add(user)
+        db.session.commit()
         
         mentor = Mentor(
-            user_id = user_id,
-            max_students = max_students,
-            current_students = current_students,
-            completed_students = completed_students,
-            rating = rating
+            user_id = user.id
         )
         db.session.add(mentor)
         db.session.commit()
 
         return mentor
     return _add_mentor
+
+
+@pytest.fixture(scope='function')
+def add_support_log():
+    def _add_support_log(mentor_id, student_id, support_type='call',
+                        time_spent=0, notes=None, comprehension=1):
+        support_log = SupportLog(
+            mentor_id = mentor_id,
+            student_id = student_id,
+            support_type = support_type,
+            time_spent = time_spent,
+            notes = notes,
+            comprehension = comprehension
+        )
+        
+        db.session.add(support_log)
+        db.session.commit()
+
+        return support_log
+    return _add_support_log
+
 
 
 @pytest.fixture(scope='function')
