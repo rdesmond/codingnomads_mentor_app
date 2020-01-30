@@ -100,6 +100,25 @@ def get_mentor_info(user_id):
     return data
 
 
+
+def get_mentor_info_with_students(user_id):
+
+    user = User.query.filter_by(id=user_id).first()
+
+    if not user or user.is_mentor == False:
+        return None
+
+    student_ids = [student.user.id for student in user.mentor.students]
+
+    data = {
+        'mentor': get_mentor_info(user_id),
+        'students': [get_student_info(id) for id in student_ids],
+    }
+
+    return data
+
+
+
 def log_student_support(log: dict) -> str:
     """Create a support log for a student.
     """

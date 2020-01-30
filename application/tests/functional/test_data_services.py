@@ -144,4 +144,19 @@ def test_assign_students_to_mentor(test_app, test_database, add_student, add_men
     assert mentor.students[0].user.username == 'kristen'
 
 
+def test_get_mentor_info_with_students(test_app, test_database, add_student, add_mentor):
 
+    _wipe_database(test_database)
+
+    mentor = add_mentor('jonny')
+    student1 = add_student('kristen')
+    student2 = add_student('billy')
+
+    mentor.students.append(student1)
+    mentor.students.append(student2)
+
+    data = get_mentor_info_with_students(mentor.user.id)
+
+    assert data
+    assert len(data['students']) == 2
+    assert data['students'][0]['username'] == 'kristen'

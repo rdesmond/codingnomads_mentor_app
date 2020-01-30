@@ -1,7 +1,7 @@
 import json
 from flask import Blueprint, jsonify, request, abort, render_template
 from flask_login import current_user, login_required
-from application.data_services import get_mentor_info, log_student_support
+from application.data_services import get_mentor_info, log_student_support, get_mentor_info_with_students
 from application.forms import SupportForm
 
 
@@ -36,85 +36,44 @@ base_content = json.loads("""{
 base_content['current_user'] = current_user
 
 
-@MentorBlueprint.route('/<mentor_id>', methods=['GET'])
+@MentorBlueprint.route('/<user_id>', methods=['GET'])
 @login_required
-def get_mentor(mentor_id):
+def get_mentor(user_id):
     """Returns base details about a mentor (e.g. name, current students / spare capacity, availability, local time)."""
     # Get info from DB
-    data = get_mentor_info(mentor_id)
+
+    data = get_mentor_info(user_id)
+
     if data is None:
         return abort(404, 'Mentor not found')
 
-    # TODO: change to proper backend calls
+    content = {
+        "current_user": current_user,
+        "mentor": data
+    }
     form = SupportForm()
-    content = base_content
     return render_template('mentor_profile.html', form=form, title=content['mentor']['username'], **content)
-    # return jsonify(data), 200
 
 
-@MentorBlueprint.route('/<mentor_id>/students', methods=['GET'])
+@MentorBlueprint.route('/<user_id>/students', methods=['GET'])
 @login_required
-def get_mentored_students(mentor_id):
+def get_mentored_students(user_id):
     """Get list of students currently assigned to given mentor."""
-    # TODO: change to proper backend calls
+    # TODO: handel next_call object in the student info
+
+    data = get_mentor_info_with_students(user_id)
+
+    if data is None:
+        return abort(404, 'Mentor not found')
+
+    content = {
+        "current_user": current_user,
+        "mentor": data,
+    }
+
     form = SupportForm()
-    content = dict(base_content, **json.loads("""{
-    "students": [
-        {
-            "aims": "wants to learn to frontend",
-            "id": 2,
-            "mentor_id": 3,
-            "preferred_learning": "discussions",
-            "start_date": "Fri, 13 Sep 2019 13:14:57 GMT",
-            "status": "alumni",
-            "user_id": 2,
-            "username": "carol",
-            "email": "johnny@gmail.com",
-            "first_name": "Carol",
-            "last_name": "Dunlop",
-            "learning_platform": "carol",
-            "forum": "carol",
-            "slack": "apple",
-            "time_zone": "America/Los_Angeles",
-            "courses": [
-                {
-                    "id": 8,
-                    "name": "Python Software Development",
-                    "progress_percent": 100
-                }
-            ],
-            "next_call": "Thu, 22 Sep 2019 13:14:57 GMT"
-        },
-        {
-            "aims": "get a job asap",
-            "id": 4,
-            "mentor_id": 3,
-            "preferred_learning": "military study",
-            "start_date": "Fri, 13 Sep 2019 13:14:57 GMT",
-            "status": "student",
-            "user_id": 7,
-            "username": "larry",
-            "email": "larry@gmail.com",
-            "first_name": "Larry",
-            "last_name": "Longbottom",
-            "learning_platform": "larry",
-            "forum": "llong",
-            "slack": "larrylong",
-            "time_zone": "Europe/London",
-            "courses": [
-                {
-                    "id": 8,
-                    "name": "Python Software Development",
-                    "progress_percent": 10
-                }
-            ],
-            "next_call": "Fri, 23 Sep 2019 13:14:57 GMT"
-        }
-    ]
-}
-"""))
     return render_template('mentor_students.html', form=form, title=content['mentor']['username'], **content)
-    # return jsonify(data), 200
+
 
 
 @MentorBlueprint.route('/<mentor_id>/notes', methods=['GET'])
