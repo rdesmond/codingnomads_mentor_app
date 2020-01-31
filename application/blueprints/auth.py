@@ -19,7 +19,7 @@ def login():
         if user is None or not user.check_password(login_form.password.data):
             flash('Login requested for user {}, remember_me={}'.format(login_form.username.data,
                                                                        login_form.remember_me.data))
-            return redirect(url_for('login'))
+            return redirect(url_for('auth.login'))
         login_user(user)
         if current_user.is_admin:
             return redirect(url_for('overview.show_mentor_list'))
