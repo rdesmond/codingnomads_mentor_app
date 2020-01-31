@@ -19,13 +19,14 @@ def get_student_info(user_id):
         return None
 
     preferences = UserPreferences.query.filter_by(user_id=user.id).first()
-    mentor = Mentor.query.filter_by(id=user.student.mentor_id).first()
+
+    mentor = User.query.filter_by(id=user.current_mentor).first()
 
     data = {
         "aims": user.student.goals,
         "id": user.id,
-        "mentor_id": user.student.mentor_id,
-        "mentor_name": f'{mentor.user.first_name} {mentor.user.last_name}' if mentor else None,
+        "mentor_id": mentor.id if mentor else None,
+        "mentor_name": f'{mentor.first_name} {mentor.last_name}' if mentor else None,
         "preferred_learning": user.student.preferred_learning,
         "start_date": user.student.start_date,
         "status": user.student.status,
@@ -108,7 +109,9 @@ def get_mentor_info_with_students(user_id):
     if not user or user.is_mentor == False:
         return None
 
-    student_ids = [student.user.id for student in user.mentor.students]
+    
+
+    student_ids = [student.id for student in user.students]
 
     data = {
         'mentor': get_mentor_info(user_id),
@@ -133,7 +136,7 @@ def get_student_support_logs(user_id):
     """Get all support logs for a given student."""
     data = None
     user = User.query.filter_by(id=user_id).first()
-    logs = user.student.support_logs
+    logs = SupportLog.query.filter_by(student_id=user.id).all()
     if logs:
         data = [log.to_dict() for log in logs]
     return data
@@ -148,12 +151,13 @@ def get_all_students():
     return data
 
 
-def assign_students_to_mentor(student_id, mentor_id):
+def assign_students_to_mentor(mentor_id, student_id):
     """Assigns a student to a mentor by adding the mentor_id for a given student to their DB entry."""
-    student = Student.query.filter_by(id=student_id).first()
-    student.mentor_id = mentor_id
+    mentor = User.query.filter_by(id=mentor_id).first()
+    student = User.query.filter_by(id=student_id).first()
+    mentor.students.append(student)
     db.session.commit()
-    return f'student id:{student.id} successfully assigned to mentor id:{student.mentor_id}'
+    return f'student id:{student.id} successfully assigned to mentor id:{mentor.id}'
 
 
 def get_mentors_and_students():

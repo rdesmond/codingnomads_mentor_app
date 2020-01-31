@@ -6,9 +6,15 @@ from geoip import geolite2
 from flask_login import UserMixin
 
 
+mentor_student_assignments = db.Table('mentor_student_assignments',
+    db.Column('mentor_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('student_id', db.Integer, db.ForeignKey('user.id')),
+    )
+
+
 class User(db.Model, UserMixin):
     """Data model for users (students and mentors)"""
-    __tablename__ = 'users'
+    __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True, nullable=False)
@@ -32,7 +38,9 @@ class User(db.Model, UserMixin):
     is_student = db.Column(db.Boolean, nullable=False, default=False)
     is_mentor = db.Column(db.Boolean, nullable=False, default=False)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
+    current_mentor = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    # 1-1 relationship between user and user preferences
     preferences = db.relationship("UserPreferences", uselist=False, back_populates='user')
 
     # 1-1 relationship between users and mentors
@@ -44,7 +52,16 @@ class User(db.Model, UserMixin):
     # Many to many relationship between users and courses
     course = db.relationship('Course', secondary='user_courses', backref=db.backref('users', lazy='dynamic'))
 
-    # user_courses = db.relationship('Course', secondary='user_courses', backref=db.backref('users', lazy='dynamic'))
+
+
+    students = db.relationship(
+        'User', secondary=mentor_student_assignments,
+        primaryjoin=(mentor_student_assignments.c.mentor_id == id),
+        secondaryjoin=(mentor_student_assignments.c.student_id == id),
+        backref = db.backref('mentors', lazy='dynamic'),
+        lazy = 'dynamic')
+
+
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -54,6 +71,7 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
 
     @staticmethod
     def from_dict(dict):
@@ -107,6 +125,7 @@ class User(db.Model, UserMixin):
             'is_student': self.is_student,
             'is_mentor': self.is_mentor,
             'is_admin': self.is_admin,
+            'current_mentor': self.current_mentor,
         }
 
 
@@ -123,12 +142,7 @@ class Mentor(db.Model):
     completed_students = db.Column(db.Integer)
     rating = db.Column(db.Integer)  # Need to think about how we calculate this
 
-    # 1-Many relationship between mentors and students
-    students = db.relationship('Student', back_populates='mentor')
-
-    # support logs
-    support_logs = db.relationship('SupportLog', back_populates='mentor')
-
+    
     # user mentor relationship
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     user = db.relationship('User', back_populates='mentor')
@@ -168,16 +182,11 @@ class Student(db.Model):
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
 
-    # mentor relationship
-    mentor_id = db.Column(db.Integer, db.ForeignKey(Mentor.id))
-    mentor = db.relationship('Mentor', back_populates='students')
 
     # user student relationship
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     user = db.relationship("User", back_populates='student')
 
-    # student support logs
-    support_logs = db.relationship("SupportLog", back_populates='student')
 
     def __repr__(self):
         return '<Student id: {}>'.format(self.id)
@@ -192,7 +201,6 @@ class Student(db.Model):
             status=dict['status'],
             start_date=dict['start_date'],
             end_date=dict['end_date'],
-            mentor_id=dict['mentor_id']
         )
 
     def to_dict(self):
@@ -204,7 +212,6 @@ class Student(db.Model):
             'status': self.status,
             'start_date': self.start_date,
             'end_date': self.end_date,
-            'mentor_id': self.mentor_id
         }
 
 
@@ -250,15 +257,8 @@ class SupportLog(db.Model):
     notes = db.Column(db.String(500))
     comprehension = db.Column(db.Integer)  # Struggle factor from 1-5
 
-
-    # Many to 1 relationship for support_logs and mentors
-    mentor_id = db.Column(db.Integer, db.ForeignKey(Mentor.id))
-    mentor = db.relationship('Mentor', back_populates='support_logs')
-
-
-    # Many to 1 relationship for support_logs and students
-    student_id = db.Column(db.Integer, db.ForeignKey(Student.id))
-    student = db.relationship('Student', back_populates='support_logs')
+    mentor_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    student_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
 
     def __repr__(self):

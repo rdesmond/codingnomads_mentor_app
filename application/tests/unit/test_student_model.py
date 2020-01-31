@@ -14,7 +14,6 @@ def test_add_student(test_app, test_database, add_user):
             status = 'active',
             start_date = None,
             end_date = None,
-            mentor_id = None
         )
 
     test_database.session.add(student)
@@ -42,7 +41,6 @@ def test_add_multiple_students(test_app, test_database, add_user):
             status = 'active',
             start_date = None,
             end_date = None,
-            mentor_id = None
         )
 
     test_database.session.add(student1)
@@ -55,7 +53,6 @@ def test_add_multiple_students(test_app, test_database, add_user):
             status = 'active',
             start_date = None,
             end_date = None,
-            mentor_id = None
         )
 
     test_database.session.add(student2)

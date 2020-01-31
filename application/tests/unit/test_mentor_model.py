@@ -13,7 +13,6 @@ def test_add_mentor(test_app, test_database, add_user):
         current_students = 1,
         completed_students = 0,
         rating = 2,
-        students = [],
     )
 
     test_database.session.add(mentor)
@@ -39,7 +38,6 @@ def test_add_multiple_mentors(test_app, test_database, add_user):
         current_students = 1,
         completed_students = 0,
         rating = 2,
-        students = [],
     )
 
     mentor2 = Mentor(
@@ -48,7 +46,6 @@ def test_add_multiple_mentors(test_app, test_database, add_user):
         current_students = 1,
         completed_students = 0,
         rating = 2,
-        students = [],
     )
 
     test_database.session.add(mentor1)
@@ -76,7 +73,11 @@ def test_add_student_to_mentor(test_app, test_database, add_user, add_student, a
 
     mentor.students.append(student)
 
-    assert mentor.user.username == 'jonny'
-    assert student.user.username == 'kristen'
-    assert len(mentor.students) == 1
-    assert mentor.students[0].user.username == 'kristen'
+    students = mentor.students.all()
+
+
+
+    assert mentor.username == 'jonny'
+    assert student.username == 'kristen'
+    assert len(students) == 1
+    assert students[0].username == 'kristen'

@@ -16,7 +16,7 @@ def test_app():
         db.drop_all
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='function')
 def test_database():
     db.create_all()
     yield db
@@ -83,7 +83,7 @@ def add_student():
 
         db.session.add(student)
         db.session.commit()
-        return student
+        return user
     return _add_student
 
 
@@ -105,7 +105,7 @@ def add_mentor():
         db.session.add(mentor)
         db.session.commit()
 
-        return mentor
+        return user
     return _add_mentor
 
 

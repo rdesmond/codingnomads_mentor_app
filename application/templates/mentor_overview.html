@@ -13,7 +13,7 @@
                 <a class="row" href="mailto:{{ mentor.email }}" target="_blank"><i class="far fa-envelope fa-3x"></i></a>
             </div>
             <div class="col-7">
-                <p class="display-4"><a class="text-dark" href="{{ url_for('mentor.get_mentor', mentor_id=mentor.id ) }}">{{ mentor.first_name }} {{ mentor.last_name }}</a> <a href="https://platform.codingnomads.co/learn/user/profile.php?id={{ mentor.user_id }}" target="_blank" class="text-muted">({{ mentor.username }})</a></p>
+                <p class="display-4"><a class="text-dark" href="{{ url_for('mentor.get_mentor', user_id=mentor.id ) }}">{{ mentor.first_name }} {{ mentor.last_name }}</a> <a href="https://platform.codingnomads.co/learn/user/profile.php?id={{ mentor.user_id }}" target="_blank" class="text-muted">({{ mentor.username }})</a></p>
                 <div class="progress">
                     {% if mentor.current_students == 0 %}
                         <p class="ml-4">{{ mentor.current_students }} / {{ mentor.max_students }} students</p>
