@@ -1,6 +1,6 @@
 from . import db
 from sqlalchemy import text
-from .models import User, Student, Course, SupportLog, Mentor, UserPreferences
+from .models import User, Student, Course, SupportLog, Mentor, UserPreferences, StudentNote
 
 
 
@@ -139,31 +139,6 @@ def get_student_support_logs(user_id):
     return data
 
 
-# def get_student_overview(id):
-#     # TODO: what was this call about? seems to get info about the student (+some), maybe should be related to mentor?
-#     data = None
-#     query = """
-#     SELECT
-#         s.user_id,
-#         uc.course_id,
-#         c.course_name
-#     FROM
-#         students AS s
-#     LEFT JOIN
-#         user_courses AS uc
-#     ON
-#         uc.user_id = s.user_id
-#     LEFT JOIN
-#         courses AS c
-#     ON
-#         c.id = uc.course_id;
-#     """
-#     result_proxy = db.engine.execute(query).fetchall()
-#     if result_proxy:
-#         data = [dict(row) for row in result_proxy]
-#     return data
-
-
 def get_all_students():
     """Fetch all students from the database."""
     data = []
@@ -264,3 +239,15 @@ def get_mentors_with_courses():
     mentors_proxy = db.engine.execute(text(mentors_query)).fetchall()
     data = [dict(row) for row in mentors_proxy]
     return data
+
+
+def add_student_note(note: dict) -> str:
+
+    note = StudentNote.from_dict(note)
+
+    db.session.add(note)
+    db.session.commit()
+
+    return 'note successfully created'
+
+

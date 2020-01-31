@@ -302,6 +302,7 @@ class UserCourse(db.Model):
 
 
 class UserPreferences(db.Model):
+
     """User avaialability preferences"""
     __tablename__ = 'user_preferences'
 
@@ -331,4 +332,34 @@ class UserPreferences(db.Model):
             'sunday': self.sunday,
             'start_hour': self.start_hour,
             'end_hour': self.end_hour,
+        }
+
+
+class StudentNote(db.Model):
+    """model for mentors notes on students"""
+    __tablename__ = 'student_notes'
+
+    id = db.Column(db.Integer, primary_key=True)
+    mentor_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    student_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    note = db.Column(db.String(128))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+    @staticmethod
+    def from_dict(dict):
+        return StudentNote(
+            mentor_id=dict['mentor_id'],
+            student_id=dict['student_id'],
+            note=dict['note'],
+        )
+
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'mentor_id': self.mentor_id,
+            'student_id': self.student_id,
+            'note': self.note,
+            'created_at': self.created_at
         }

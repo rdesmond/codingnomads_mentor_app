@@ -1,5 +1,5 @@
 from application.data_services import *
-from application.models import User, Student, Mentor, UserPreferences
+from application.models import User, Student, Mentor, UserPreferences, StudentNote
 
 
 def _wipe_database(test_database):
@@ -160,3 +160,26 @@ def test_get_mentor_info_with_students(test_app, test_database, add_student, add
     assert data
     assert len(data['students']) == 2
     assert data['students'][0]['username'] == 'kristen'
+
+
+def test_add_note(test_app, test_database, add_mentor, add_student):
+
+    _wipe_database(test_database)
+
+    mentor = add_mentor('jonny')
+    student = add_student('kristen')
+
+    note = {
+        'mentor_id': mentor.user.id,
+        'student_id': student.user.id,
+        'note': 'this is a test note'
+    }
+
+    result = add_student_note(note)
+
+    data = (StudentNote.query.filter_by(mentor_id = mentor.user.id).first()).to_dict()
+    
+    assert result == 'note successfully created'
+    assert data['mentor_id'] == mentor.user.id
+    assert data['student_id'] == student.user.id
+    assert data['note'] == "this is a test note"
