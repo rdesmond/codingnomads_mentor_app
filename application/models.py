@@ -137,9 +137,9 @@ class Mentor(db.Model):
     __table_args__ = (CheckConstraint("rating <= 5 AND rating >= 1", name="check_ratings"),)
 
     id = db.Column(db.Integer, primary_key=True)
-    max_students = db.Column(db.Integer)
-    current_students = db.Column(db.Integer)
-    completed_students = db.Column(db.Integer)
+    max_students = db.Column(db.Integer, default=1)
+    current_students = db.Column(db.Integer, default=0)
+    completed_students = db.Column(db.Integer, default=0)
     rating = db.Column(db.Integer)  # Need to think about how we calculate this
 
     
@@ -318,8 +318,8 @@ class UserPreferences(db.Model):
     friday = db.Column(db.Boolean, default=False)
     saturday = db.Column(db.Boolean, default=False)
     sunday = db.Column(db.Boolean, default=False)
-    start_hour = db.Column(db.Integer)
-    end_hour = db.Column(db.Integer)
+    start_hour = db.Column(db.Integer, default=8)
+    end_hour = db.Column(db.Integer, default=15)
 
     def to_dict(self):
         return {

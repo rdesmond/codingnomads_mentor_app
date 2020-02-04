@@ -1,21 +1,10 @@
 from application.data_services import *
-from application.models import User, Student, Mentor, UserPreferences, StudentNote, mentor_student_assignments
-
-
-def _wipe_database(test_database):
-
-    test_database.session.query(UserPreferences).delete()
-    test_database.session.query(SupportLog).delete()
-    # test_database.session.query(mentor_student_assignments).delete()
-    test_database.session.query(Student).delete()
-    test_database.session.query(Mentor).delete()
-    test_database.session.query(User).delete()
+from application.models import User, Student, Mentor, UserPreferences, StudentNote, mentor_student_assignments, StudentNote
 
 
 
 def test_get_user(test_app, test_database, add_user):
-    
-    _wipe_database(test_database)
+
 
     user = add_user('testing_user')
     data = get_user(user.id)
@@ -27,14 +16,8 @@ def test_get_user(test_app, test_database, add_user):
 
 def test_get_student_info(test_app, test_database, add_user, add_student):
 
-    _wipe_database(test_database)
 
     student = add_student('kristen')
-    test_database.session.add(UserPreferences(user_id=student.id))
-
-    # student = add_student(user.id)
-    
-    test_database.session.commit()
 
     data = get_student_info(student.id)
 
@@ -47,7 +30,6 @@ def test_get_student_info(test_app, test_database, add_user, add_student):
 
 def test_get_student_support_logs(test_app, test_database, add_user, add_student, add_mentor, add_support_log):
 
-    _wipe_database(test_database)
 
 
     mentor = add_mentor('jonny')
@@ -63,10 +45,7 @@ def test_get_student_support_logs(test_app, test_database, add_user, add_student
     assert data[0]['support_type'] == 'call'
 
 
-
 def test_get_mentor_info(test_app, test_database, add_user, add_mentor):
-
-    _wipe_database(test_database)
 
     mentor = add_mentor('jonny')
 
@@ -79,8 +58,7 @@ def test_get_mentor_info(test_app, test_database, add_user, add_mentor):
 
 def test_log_student_support(test_app, test_database, add_user, add_mentor, add_student):
 
-    _wipe_database(test_database)
-
+   
     student = add_student('kristen')
     mentor = add_mentor('jonny')
 
@@ -103,7 +81,6 @@ def test_log_student_support(test_app, test_database, add_user, add_mentor, add_
 
 def test_get_student_support_logs(test_app, test_database, add_student, add_mentor, add_support_log):
 
-    _wipe_database(test_database)
 
     mentor = add_mentor('jonny')
     student = add_student('kristen')
@@ -120,7 +97,6 @@ def test_get_student_support_logs(test_app, test_database, add_student, add_ment
 
 def test_get_all_students(test_app, test_database, add_student):
 
-    _wipe_database(test_database)
 
     add_student('jonny')
     add_student('kristen')
@@ -132,7 +108,6 @@ def test_get_all_students(test_app, test_database, add_student):
 
 def test_assign_students_to_mentor(test_app, test_database, add_student, add_mentor):
 
-    _wipe_database(test_database)
 
     mentor = add_mentor('jonny')
     student = add_student('kristen')
@@ -145,8 +120,6 @@ def test_assign_students_to_mentor(test_app, test_database, add_student, add_men
 
 
 def test_get_mentor_info_with_students(test_app, test_database, add_student, add_mentor):
-
-    _wipe_database(test_database)
 
     mentor = add_mentor('jonny')
     student1 = add_student('kristen')
@@ -165,8 +138,7 @@ def test_get_mentor_info_with_students(test_app, test_database, add_student, add
 
 def test_add_note(test_app, test_database, add_mentor, add_student):
 
-    _wipe_database(test_database)
-
+  
     mentor = add_mentor('jonny')
     student = add_student('kristen')
 
@@ -184,3 +156,66 @@ def test_add_note(test_app, test_database, add_mentor, add_student):
     assert data['mentor_id'] == mentor.id
     assert data['student_id'] == student.id
     assert data['note'] == "this is a test note"
+
+def test_get_student_notes_by_mentor(test_app, test_database, add_mentor, add_student):
+    
+    mentor = add_mentor('jonny')
+    student = add_student('kristen')
+
+    note1 = StudentNote.from_dict({
+        'mentor_id': mentor.id,
+        'student_id': student.id,
+        'note': 'this is a test note'
+    })
+
+    note2 = StudentNote.from_dict({
+        'mentor_id': mentor.id,
+        'student_id': student.id,
+        'note': 'this is a test note #2'
+    })
+
+    test_database.session.add(note1)
+    test_database.session.add(note2)
+    test_database.session.commit()
+
+    data = get_student_notes_by_mentor(mentor.id)
+
+    assert len(data) == 2
+    assert data[0]['note'] == 'this is a test note'
+    assert data[0]['mentor_id'] == 1
+
+
+def test_get_all_student_info(test_app, test_database, add_student):
+
+    student1 = add_student('jonny')
+    student2 = add_student('kristen')
+
+    data = get_all_student_info()
+
+    assert len(data) == 2
+    assert data[0]['username'] == 'jonny'
+
+
+def test_get_all_mentor_info(test_app, test_database, add_mentor):
+
+    mentor1 = add_mentor('jonny')
+    mentor2 = add_mentor('kristen')
+
+    data = get_all_mentor_info()
+
+    assert len(data) == 2
+    assert data[0]['username'] == 'jonny'
+
+
+def test_get_support_logs_by_mentor(test_app, test_database, add_mentor, add_student, add_support_log):
+
+    mentor = add_mentor('jonny')
+    student = add_student('kristen')
+    
+    add_support_log(mentor.id, student.id)
+    add_support_log(mentor.id, student.id)
+
+    data = get_support_logs_by_mentor(mentor.id)
+
+    assert len(data) == 2
+    assert data[0]['student_id'] == student.id

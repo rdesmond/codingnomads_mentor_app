@@ -2,7 +2,7 @@
 
 {% block students %}
 
-    {% for student in students %}
+    {% for student in mentor.students %}
         <div class="row align-items-center mb-5 student-card">
             <div class="col-auto mx-3">
                 <a class="row" href="https://codingnomads-chat.slack.com/team/{{ student.slack }}" target="_blank"><i class="fab fa-slack fa-3x"></i></a>
@@ -42,6 +42,6 @@
     <script>
         // reset link to get back to previous page
         const backlink = document.getElementById('students-link');
-        backlink.href = "{{ url_for('mentor.get_mentor', mentor_id=mentor.id) }}";
+        backlink.href = "{{ url_for('mentor.get_mentor', user_id=mentor.id) }}";
     </script>
 {% endblock %}

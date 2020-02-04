@@ -44,12 +44,12 @@ def seed_db():
     db.session.add(mentor)
     db.session.commit()
 
-    mentor.students.append(student)
+    user1.students.append(user2)
     db.session.commit()
 
     support_log = SupportLog(
-        mentor_id = mentor.id,
-        student_id = student.id,
+        mentor_id = user1.id,
+        student_id = user2.id,
         time_spent = 20,
         notes = 'This is a note',
         comprehension = 2

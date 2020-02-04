@@ -15,24 +15,21 @@ def log_support():
     form = SupportForm()
     if form.validate_on_submit():
         flash('Support Log submitted for student #{} by mentor #{}'.format(
-            current_user.mentor.id, form.student_id.data))
+            current_user.id, form.student_id.data))
 
-        # Create a row in the support log table
-        mentor_id = current_user.mentor.id
-        student_id = request.form['student_id']
-        support_type = request.form['support_type']
-        time_spent = request.form['time_spent']
-        notes = request.form['notes']
-        comprehension = request.form['comprehension']
+        log = {
+            'mentor_id': current_user.id,
+            'student_id': request.form['student_id'],
+            'support_type': request.form['support_type'],
+            'time_spent': request.form['time_spent'],
+            'notes': request.form['notes'],
+            'comprehension': request.form['comprehension'],
+        }
 
-        log_student_support(
-            mentor_id,
-            student_id,
-            support_type,
-            time_spent,
-            notes,
-            comprehension)
-        return redirect(url_for('mentor.get_mentor', mentor_id=mentor_id))  # request.url   <- returns to current page
+        log_student_support(log)
+
+
+        return redirect(url_for('mentor.get_mentor', user_id=current_user.id))  # request.url   <- returns to current page
     else:
         flash('Missing data. Please fill all the fields')
         # TODO: return to page it was issued from instead

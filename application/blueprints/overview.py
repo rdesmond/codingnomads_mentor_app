@@ -41,48 +41,20 @@ def get_analytics():
 @login_required
 def show_mentor_list():
     form = SupportForm()
-    content = json.loads("""{
-    "mentors": [
-        {
-            "completed_students": 5,
-            "current_students": 0,
-            "id": 3,
-            "is_admin": false,
-            "max_students": 3,
-            "rating": 5,
-            "user_id": 1,
-            "username": "gilad",
-            "email": "gilad@gmail.com",
-            "first_name": "Gilad",
-            "last_name": "Gressel",
-            "learning_platform": 70,
-            "forum": "gilad",
-            "slack": "UGLT4QR9N",
-            "time_zone": "America/Los_Angeles",
-            "last_support_log_created": "2020-01-01 11:19:06.782213"
-        },
-        {
-            "completed_students": 6,
-            "current_students": 3,
-            "id": 2,
-            "is_admin": true,
-            "max_students": 5,
-            "rating": 4,
-            "user_id": 2,
-            "username": "martin",
-            "email": "breuss.martin@gmail.com",
-            "first_name": "Martin",
-            "last_name": "Breuss",
-            "learning_platform": 25,
-            "forum": "martin",
-            "slack": "UGL5A5X18",
-            "time_zone": "Europe/Vienna",
-            "last_support_log_created": "2019-12-14 15:19:06.782213"
-        }
-    ]
-}
-""")
-    content['current_user'] = current_user
+
+    mentors = get_all_mentor_info()
+
+    # TODO replace hard coded value with real query
+    for mentor in mentors:
+        mentor['last_support_log_created'] = "2020-01-01 11:19:06.782213"
+
+
+
+    content = {
+        'mentors': mentors,
+        'current_user': current_user
+    }
+
     return render_template('mentor_overview.html', form=form, title='Mentors', **content)
 
 
@@ -90,66 +62,25 @@ def show_mentor_list():
 @OverviewBlueprint.route('/students', methods=['GET'])
 @login_required
 def show_student_list():
+
+
+    mentors_list = []
+    mentors = get_all_mentors_info()
+    for mentor in mentors:
+        mentors_list.append({
+            "mentor_id": mentor['id'],
+            "name": mentor['first_name']
+        })
+
+    
+
+    students = get_all_student_info()
+    content = {
+        'current_user': current_user,
+        'students': students,
+        'mentors': mentors_list,
+    }
+
+
     form = SupportForm()
-    content = json.loads("""{
-    "students": [
-        {
-            "aims": "wants to learn to frontend",
-            "id": 2,
-            "mentor_id": 3,
-            "mentor_name": "Gilad Gressel",
-            "preferred_learning": "discussions",
-            "start_date": "Fri, 13 Sep 2019 13:14:57 GMT",
-            "status": "alumni",
-            "user_id": 2,
-            "username": "carol",
-            "email": "carol@gmail.com",
-            "first_name": "Carol",
-            "last_name": "Dunlop",
-            "learning_platform": "jseed",
-            "forum": "coral",
-            "slack": "apple",
-            "time_zone": "Europe/London",
-            "courses": [
-                {
-                    "id": 8,
-                    "name": "Python Software Development",
-                    "progress_percent": 90
-                }
-            ]
-        },
-        {
-            "aims": "get a job asap",
-            "id": 4,
-            "mentor_id": null,
-            "mentor_name": null,
-            "preferred_learning": "military study",
-            "start_date": "Fri, 13 Sep 2019 13:14:57 GMT",
-            "status": "hot lead",
-            "user_id": 7,
-            "username": "larry",
-            "email": "larry@gmail.com",
-            "first_name": "Larry",
-            "last_name": "Longbottom",
-            "learning_platform": "larry",
-            "forum": "llong",
-            "slack": "larrylong",
-            "time_zone": "Africa/Addis_Ababa",
-            "courses": [
-                {
-                    "id": 8,
-                    "name": "Python Software Development",
-                    "progress_percent": 0
-                }
-            ]
-        }
-    ],
-    "mentors": [
-        { "mentor_id":  1, "name":  "Ryan"},
-        { "mentor_id":  2, "name":  "Martin"},
-        { "mentor_id":  3, "name":  "Gilad"}
-    ]
-}
-""")
-    content['current_user'] = current_user
     return render_template('student_overview.html', form=form, title='Students', **content)

@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime
 
 from application import create_app, db
-from application.models import User, Student, Mentor, SupportLog
+from application.models import User, Student, Mentor, SupportLog, UserPreferences
 
 
 @pytest.fixture(scope='module')
@@ -76,6 +76,9 @@ def add_student():
 
         db.session.add(user)
         db.session.commit()
+
+        db.session.add(UserPreferences(user_id=user.id))
+        db.session.commit()
     
         student = Student(
             user_id = user.id,
@@ -97,6 +100,9 @@ def add_mentor():
             is_mentor=True
         )
         db.session.add(user)
+        db.session.commit()
+
+        db.session.add(UserPreferences(user_id=user.id))
         db.session.commit()
         
         mentor = Mentor(

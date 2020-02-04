@@ -2,7 +2,7 @@
 
 {% block logs %}
 
-    {% for log in support_logs %}
+    {% for log in mentor.support_logs %}
     <div class="card mb-4">
       <div class="card-header d-flex justify-content-between pt-3">
           <h5 class="card-title">{{ log.support_type.capitalize() }} - {{ log.time_spent }} min</h5>
@@ -25,6 +25,6 @@
     <script>
         // reset link to get back to previous page
         const backlink = document.getElementById('logs-link');
-        backlink.href = "{{ url_for('mentor.get_mentor', mentor_id=mentor.id) }}";
+        backlink.href = "{{ url_for('mentor.get_mentor', user_id=mentor.id) }}";
     </script>
 {% endblock %}
