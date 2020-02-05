@@ -15,7 +15,7 @@ def log_support():
     form = SupportForm()
     if form.validate_on_submit():
         flash('Support Log submitted for student #{} by mentor #{}'.format(
-            current_user.id, form.student_id.data))
+            form.student_id.data, current_user.id))
 
         log = {
             'mentor_id': current_user.id,
