@@ -219,3 +219,32 @@ def test_get_support_logs_by_mentor(test_app, test_database, add_mentor, add_stu
 
     assert len(data) == 2
     assert data[0]['student_id'] == student.id
+
+def test_get_student_notes_by_student(test_app, test_database, add_mentor, add_student):
+
+    mentor = add_mentor('jonny')
+    student = add_student('kristen')
+
+    note1 = StudentNote.from_dict({
+        'mentor_id': mentor.id,
+        'student_id': student.id,
+        'note': 'this is a test note'
+    })
+
+    note2 = StudentNote.from_dict({
+        'mentor_id': mentor.id,
+        'student_id': student.id,
+        'note': 'this is a test note #2'
+    })
+
+    test_database.session.add(note1)
+    test_database.session.add(note2)
+
+    test_database.session.commit()
+
+    data = get_student_notes_by_student(student.id)
+
+    assert len(data) == 2
+    assert data[0]['student_id'] == student.id
+
+    

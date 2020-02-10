@@ -10,11 +10,11 @@
             </div>
             <div class="col-7">
                 <p class="display-4">
-                    <a class="text-dark" href="{{ url_for('student.get_student', student_id=student.id) }}">{{ student.first_name }} {{ student.last_name }}</a>
+                    <a class="text-dark" href="{{ url_for('student.get_student', user_id=student.id) }}">{{ student.first_name }} {{ student.last_name }}</a>
                     <a href="https://platform.codingnomads.co/learn/user/profile.php?id={{ student.learning_platform }}" target="_blank" class="text-muted">({{ student.username }})</a>
                 </p>
                 {% for course in student.courses %}
-                <a href="https://platform.codingnomads.co/learn/report/outline/user.php?id={{ student.user_id }}&course={{ course.id }}&mode=outline" target="_blank">
+                <a href="https://platform.codingnomads.co/learn/report/outline/user.php?id={{ student.id }}&course={{ course.id }}&mode=outline" target="_blank">
                     <div class="progress">
                         <div class="progress-bar" role="progressbar" style="width: {{ course.progress_percent|int }}%;" aria-valuenow="{{ course.progress_percent }}" aria-valuemin="0" aria-valuemax="100">{{ course.progress_percent }}%</div>
                     </div>

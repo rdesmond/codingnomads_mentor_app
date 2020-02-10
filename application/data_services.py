@@ -9,6 +9,17 @@ def get_user(user_id):
     return user
 
 
+def get_all_students():
+    """Fetch all students from the database."""
+
+    data = []
+    students = Student.query.all()
+    for student in students:
+        data.append(student.to_dict())
+        
+    return data
+
+
 def build_mentor_object(user_object):
     return {
             "completed_students": user_object.mentor.completed_students,
@@ -38,7 +49,6 @@ def build_mentor_object(user_object):
             "preferred_start_time": user_object.preferences.start_hour,
             "preferred_end_time": user_object.preferences.end_hour,
         }
-
 
 
 def build_student_object(user_object, mentor_user_object):
@@ -148,14 +158,7 @@ def get_mentor_info_with_students(user_id):
     return data
 
 
-def log_student_support(log: dict) -> str:
-    """Create a support log for a student."""
 
-    support_log = SupportLog.from_dict(log)
-    db.session.add(support_log)
-    db.session.commit()
-
-    return 'Support log successfully added'
 
 
 
@@ -166,17 +169,6 @@ def get_student_support_logs(user_id):
     logs = SupportLog.query.filter_by(student_id=user_id).all()
     if logs:
         data = [log.to_dict() for log in logs]
-    return data
-
-
-def get_all_students():
-    """Fetch all students from the database."""
-
-    data = []
-    students = Student.query.all()
-    for student in students:
-        data.append(student.to_dict())
-        
     return data
 
 
@@ -295,6 +287,28 @@ def get_student_notes_by_mentor(user_id):
         data = [note.to_dict() for note in notes]
 
     return data
+
+
+def get_student_notes_by_student(user_id):
+
+    data = []
+
+    notes = StudentNote.query.filter_by(student_id=user_id).all()
+    if notes:
+        data = [note.to_dict() for note in notes]
+
+    return data
+
+
+
+def log_student_support(log: dict) -> str:
+    """Create a support log for a student."""
+
+    support_log = SupportLog.from_dict(log)
+    db.session.add(support_log)
+    db.session.commit()
+
+    return 'Support log successfully added'
 
 
 def get_support_logs_by_mentor(user_id):

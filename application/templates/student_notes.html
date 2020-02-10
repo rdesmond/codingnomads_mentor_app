@@ -21,7 +21,7 @@
     <script>
         // reset link to get back to previous page
         const backlink = document.getElementById('notes-link');
-        backlink.href = "{{ url_for('student.get_student', student_id=student.id) }}";
+        backlink.href = "{{ url_for('student.get_student', user_id=student.id) }}";
     </script>
 
 

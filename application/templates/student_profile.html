@@ -11,7 +11,7 @@
             <div class="col-8">
                 <h1 class="display-2 text-center">{{ student.first_name }} {{ student.last_name }} <a href="https://platform.codingnomads.co/learn/user/profile.php?id={{ student.user_id }}" target="_blank" class="text-muted">({{ student.learning_platform }})</a></h1>
                 {% for course in student.courses %}
-                <a href="https://platform.codingnomads.co/learn/report/outline/user.php?id={{ student.user_id }}&course={{ course.id }}&mode=outline" target="_blank">
+                <a href="https://platform.codingnomads.co/learn/report/outline/user.php?id={{ student.id }}&course={{ course.id }}&mode=outline" target="_blank">
                     <div class="progress">
                         <div class="progress-bar" role="progressbar" style="width: {{ course.progress_percent|int }}%;" aria-valuenow="{{ course.progress_percent }}" aria-valuemin="0" aria-valuemax="100">{{ course.progress_percent }}%</div>
                     </div>
@@ -57,7 +57,7 @@
     </div>
     <div>
         <div class="mb-4">
-            <h2 class="display-5"><a id="progress-link" class="text-muted" href="{{ url_for('student.get_student_progress', student_id=student.id) }}">Progress</a></h2>
+            <h2 class="display-5"><a id="progress-link" class="text-muted" href="{{ url_for('student.get_student_progress', user_id=student.id) }}">Progress</a></h2>
             <hr>
         </div>
 
@@ -66,7 +66,7 @@
         {% endblock %}
 
         <div class="mb-4">
-            <h2 class="display-5"><a id="notes-link" class="text-muted" href="{{ url_for('student.get_student_notes', student_id=student.id) }}">Notes</a></h2>
+            <h2 class="display-5"><a id="notes-link" class="text-muted" href="{{ url_for('student.get_student_notes', user_id=student.id) }}">Notes</a></h2>
             <hr>
         </div>
 
@@ -75,7 +75,7 @@
         {% endblock %}
 
         <div class="mb-4">
-            <h2 class="display-5"><a id="logs-link" class="text-muted" href="{{ url_for('student.get_student_logs', student_id=student.id) }}">Support Logs</a></h2>
+            <h2 class="display-5"><a id="logs-link" class="text-muted" href="{{ url_for('student.get_student_logs', user_id=student.id) }}">Support Logs</a></h2>
             <hr>
         </div>
 

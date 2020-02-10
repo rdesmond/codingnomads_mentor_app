@@ -14,7 +14,7 @@
             </div>
             <div class="col-7">
                 <p class="display-4">
-                    <a class="text-dark" href="{{ url_for('student.get_student', student_id=student.id) }}">{{ student.first_name }} {{ student.last_name }}</a>
+                    <a class="text-dark" href="{{ url_for('student.get_student', user_id=student.id) }}">{{ student.first_name }} {{ student.last_name }}</a>
                     <a href="https://platform.codingnomads.co/learn/user/profile.php?id={{ student.learning_platform }}" target="_blank" class="text-muted">({{ student.username }})</a>
                 </p>
                 {% for course in student.courses %}
@@ -43,13 +43,13 @@
             </div>
             <div class="col">
                 {% if student.mentor_id %}
-                    <p><strong>Mentor:</strong> <a href="{{ url_for('mentor.get_mentor', mentor_id=student.mentor_id) }}">{{ student.mentor_name }}</a></p>
+                    <p><strong>Mentor:</strong> <a href="{{ url_for('mentor.get_mentor', user_id=student.mentor_id) }}">{{ student.mentor_name }}</a></p>
                 {% elif not student.mentor_id %}
                     <label for="mentor-select">Assign Mentor:</label>
                     <select name="mentor" id="mentor-select">
                         <option value="0">Select...</option>
                         {% for mentor in mentors %}
-                        <option value="{{ mentor.mentor_id }}">{{ mentor.name }}</option>
+                        <option value="{{ mentor.id }}">{{ mentor.name }}</option>
                         {% endfor %}
                     </select>
                 {% endif %}

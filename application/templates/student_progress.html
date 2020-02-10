@@ -5,7 +5,7 @@
     {% for course in progress %}
         <div class="container mb-4">
         <h3 class="display-5 mb-4">{{ course.course_name }}</h3>
-            <a href="https://platform.codingnomads.co/learn/report/outline/user.php?id={{ student.user_id }}&course={{ course.course_id }}&mode=outline" target="_blank">
+            <a href="https://platform.codingnomads.co/learn/report/outline/user.php?id={{ student.id }}&course={{ course.course_id }}&mode=outline" target="_blank">
                 <div class="progress mb-3">
                     <div class="progress-bar" role="progressbar" style="width: {{ course.progress_percent|int }}%;" aria-valuenow="{{ course.progress_percent }}" aria-valuemin="0" aria-valuemax="100">{{ course.progress_percent }}%</div>
                 </div>
@@ -28,7 +28,7 @@
     <script>
         // reset link to get back to previous page
         const backlink = document.getElementById('progress-link');
-        backlink.href = "{{ url_for('student.get_student', student_id=student.id) }}";
+        backlink.href = "{{ url_for('student.get_student', user_id=student.id) }}";
     </script>
 
 {% endblock %}
