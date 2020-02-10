@@ -1,11 +1,12 @@
 from pytz import all_timezones_set
 from flask import current_app as app
-from flask import url_for
+from flask import url_for, redirect
 from flask_admin import Admin, BaseView, expose
 from . import db
 from .models import User, Student, Mentor, SupportLog
 from flask_admin.contrib.sqla import ModelView
 from .data_services import get_all_students
+from flask_login import current_user
 
 
 admin = Admin(app, name='CN Mentor Portal', template_mode='bootstrap3')
@@ -28,6 +29,15 @@ class UserView(ModelView):
     form_choices = {
         'timezone': [(tz, tz) for tz in all_timezones_set]
     }
+
+    def is_accessible(self):
+        
+        if current_user.is_authenticated and current_user.is_admin == True:
+            return True
+        return False
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('index'))
 
 
 class StudentView(ModelView):
@@ -52,6 +62,15 @@ class StudentView(ModelView):
         ]
     }
 
+    def is_accessible(self):
+        
+        if current_user.is_authenticated and current_user.is_admin == True:
+            return True
+        return False
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('index'))
+
 
 class MentorView(ModelView):
     page_size = 50
@@ -68,6 +87,15 @@ class MentorView(ModelView):
             (1, 1)
         ]
     }
+
+    def is_accessible(self):
+        
+        if current_user.is_authenticated and current_user.is_admin == True:
+            return True
+        return False
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('index'))
 
 
 class SupportLogView(ModelView):
@@ -94,6 +122,14 @@ class SupportLogView(ModelView):
         ]
     }
 
+    def is_accessible(self):
+        
+        if current_user.is_authenticated and current_user.is_admin == True:
+            return True
+        return False
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('index'))
 
 class AnalyticsView(BaseView):
     # TODO: write the backend calls that gather and display analytics data we want
@@ -152,6 +188,16 @@ class AnalyticsView(BaseView):
         return self.render('admin/analytics.html', data=example_json)
 
 
+    def is_accessible(self):
+        
+        if current_user.is_authenticated and current_user.is_admin == True:
+            return True
+        return False
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('index'))
+
+
 class LeadView(BaseView):
     # TODO: write the backend calls that gather and display analytics data we want
     @expose('/')
@@ -182,6 +228,14 @@ class LeadView(BaseView):
         ]
         return self.render('admin/leads.html', data=leads_json)
 
+    def is_accessible(self):
+        
+        if current_user.is_authenticated and current_user.is_admin == True:
+            return True
+        return False
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('index'))
 
 admin.add_view(UserView(User, db.session, endpoint='users'))
 admin.add_view(StudentView(Student, db.session, endpoint='students'))
