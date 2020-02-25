@@ -2,8 +2,8 @@ import json
 from flask import Blueprint, jsonify, request, abort, render_template
 from flask_login import current_user, login_required
 from application.forms import SupportForm
-from application.data_services import get_all_students, get_mentors_and_students, get_students_with_courses
-from application.data_services import get_mentors_with_courses, assign_students_to_mentor
+from application.data_services import get_all_students, get_mentors_and_students, get_students_with_courses, get_all_student_info
+from application.data_services import get_mentors_with_courses, assign_students_to_mentor, get_all_mentor_info
 
 
 OverviewBlueprint = Blueprint('overview', __name__)
@@ -65,7 +65,7 @@ def show_student_list():
 
 
     mentors_list = []
-    mentors = get_all_mentors_info()
+    mentors = get_all_mentor_info()
     for mentor in mentors:
         mentors_list.append({
             "mentor_id": mentor['id'],
