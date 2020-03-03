@@ -1,11 +1,13 @@
-import requests
-from application.models import User, Student, Mentor, Course, UserCourse
-from sqlalchemy import func
-from . import db
-from geoip import geolite2
 import logging
+from geoip import geolite2
+import requests
+from sqlalchemy import func
+from application import db
+from application.models import User, Student, Mentor, Course, UserCourse
+from .config import MOODLE_API_URL
 
-logging.basicConfig(filename=cron.log, filemode='w', format='%(asctime)s - %(message)s', level=logging.DEBUG)
+
+logging.basicConfig(filename='cron.log', filemode='w', format='%(asctime)s - %(message)s', level=logging.DEBUG)
 
 logging.info('1. Getting max created_at from the DB')
 # Getting the max created_at in the DB
@@ -13,7 +15,7 @@ max_date = db.query(func.max(User.created_at)).scalar()
 logging.info('1. Succesfully extracted max created_at from the DB')
 
 # Getting all users from Jon's endpoint which have been updated since the last user
-users = requests.get(f'base_url/api/users?updated={max_date}')
+users = requests.get(f'{MOODLE_API_URL}/api/users?updated={max_date}').json()
 
 # Gets all user_ids from the D
 current_users = db.query(User.id).all()
@@ -87,6 +89,3 @@ for id, data in users.items():
 
 # Commits all the changes
 db.session.commit()
-
-  
-
